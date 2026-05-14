@@ -586,7 +586,7 @@ function shuffle(arr) {
   return a;
 }
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-function imgUrl(id){ return `https://drive.google.com/uc?export=view&id=${id}`; }
+function imgUrl(id){ return `https://drive.google.com/thumbnail?id=${id}&sz=w1600`; }
 function getMonth(file){
   try {
     const d = file.imageMediaMetadata?.time || file.createdTime;
