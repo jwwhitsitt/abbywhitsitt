@@ -486,10 +486,11 @@ const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10MB
 // ── Counter ──────────────────────────────────────
 async function loadCounter() {
   try {
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/A:A?key=${API_KEY}`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/B:B?key=${API_KEY}`;
     const res = await fetch(url);
     const data = await res.json();
-    const count = Math.max(0, (data.values?.length || 1) - 1);
+    // Count non-empty name cells, minus header row
+    const count = Math.max(0, (data.values?.filter(r => r[0] && r[0].trim()).length || 1) - 1);
     document.getElementById('counter').textContent = count;
   } catch(e) {
     document.getElementById('counter').textContent = '—';
