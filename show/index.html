@@ -265,27 +265,24 @@ body.theme-spring {
   z-index:var(--z, 1);
 }
 
-/* ── Badge ── */
+/* ── Badge — grid cell, not overlay ── */
 .badge {
-  position:absolute; z-index:10;
   background:var(--badge-bg);
   border:1px solid var(--badge-border);
-  border-radius:4px;
-  padding:1rem 1.8rem;
+  border-radius:3px;
+  padding:1rem 1.2rem;
   text-align:center;
   backdrop-filter:blur(10px);
-  box-shadow:0 0 40px rgba(0,0,0,0.7);
-  pointer-events:none;
-  max-width:320px;
-  transition:all .5s ease;
+  box-shadow:inset 0 0 30px rgba(255,255,255,0.03);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  position:relative;
+  width:100%;
+  height:100%;
 }
-.badge.pos-center { top:50%; left:50%; transform:translate(-50%,-50%); }
-.badge.pos-bl { bottom:2rem; left:2rem; transform:none; }
-.badge.pos-br { bottom:2rem; right:2rem; transform:none; }
-.badge.pos-tr { top:2rem; right:2rem; transform:none; }
-.badge.pos-tl { top:2rem; left:2rem; transform:none; }
-.badge.style-watermark { background:rgba(0,0,0,0.4); border-color:rgba(255,255,255,0.15); padding:.6rem 1.2rem; }
-.badge.style-banner { left:0; right:0; max-width:100%; border-radius:0; border-left:none; border-right:none; text-align:center; }
 
 .badge::before { content:'✦'; position:absolute; top:5px; left:7px; color:var(--gold); font-size:.5rem; opacity:.6; }
 .badge::after  { content:'✦'; position:absolute; bottom:5px; right:7px; color:var(--gold); font-size:.5rem; opacity:.6; }
@@ -561,23 +558,20 @@ const SEASONAL = {
 const DEFAULT_THEMES = ['gold','rose','navy','editorial','summer'];
 let defaultThemeIdx = 0;
 
-// ── Layouts by photo count ──
+// ── Layouts by TOTAL cell count (photos + 1 badge cell) ──
+// Badge always occupies one cell in the grid
 const LAYOUTS_BY_COUNT = {
-  2: ['layout-g'],
-  3: ['layout-g'],
-  4: ['layout-f'],
-  5: ['layout-f'],
-  6: ['layout-f','layout-a'],
-  7: ['layout-a','layout-c'],
-  8: ['layout-a','layout-c','layout-h'],
-  9: ['layout-a','layout-c','layout-d'],
-  10:['layout-b','layout-d','layout-e'],
-  11:['layout-b','layout-d'],
-  12:['layout-d','layout-h'],
+  4: ['layout-f'],   // 3 photos + badge
+  5: ['layout-f'],   // 4 photos + badge
+  6: ['layout-a'],   // 5 photos + badge
+  7: ['layout-a'],   // 6 photos + badge
+  8: ['layout-a','layout-c','layout-h'], // 7 photos + badge
+  9: ['layout-a','layout-c','layout-d'], // 8 photos + badge
+  10:['layout-b','layout-d','layout-e'], // 9 photos + badge
+  11:['layout-b','layout-d'],            // 10 photos + badge
+  12:['layout-d','layout-h'],            // 11 photos + badge
 };
-const STYLE_VARIANTS = ['','polaroid','overlap'];
-const BADGE_POSITIONS = ['pos-center','pos-bl','pos-br','pos-tr','pos-tl'];
-const BADGE_STYLES = ['','','','style-watermark','style-banner'];
+const STYLE_VARIANTS = ['','','polaroid','overlap']; // weight plain more heavily
 
 // ── Utilities ──
 function shuffle(arr) {
@@ -704,17 +698,19 @@ function buildEventGroups(files) {
 
 // ── DOM helpers ──
 function makeBadge(opts={}) {
+  // Badge is a grid cell — same structure as photo cells
+  const cell=document.createElement('div');
+  cell.className='cell';
   const el=document.createElement('div');
-  const pos=opts.pos||pick(BADGE_POSITIONS);
-  const style=opts.style||pick(BADGE_STYLES);
-  el.className=`badge ${pos} ${style}`;
+  el.className='badge';
   if(opts.msg) {
     el.innerHTML=`<span class="b-msg">"${opts.msg}"</span>${opts.from?`<span class="b-from">— ${opts.from}</span>`:''}`;
   } else {
     const m=opts.data||pick(DEFAULT_MESSAGES);
     el.innerHTML=`<span class="b-cap">${m.icon}</span><span class="b-co">${m.co}</span><span class="b-grad">${m.grad}</span><span class="b-name">${m.name}</span><span class="b-tag">${m.tag}</span>`;
   }
-  return el;
+  cell.appendChild(el);
+  return cell;
 }
 
 function makeCell(fileId, loading='lazy') {
@@ -731,35 +727,46 @@ function getSeasonalTheme(month) {
 
 // ── Build slide elements ──
 function buildCollageSlide(files, idx, approvedMessages, themeOverride) {
-  const count=Math.min(files.length,12);
-  const layouts=LAYOUTS_BY_COUNT[count]||LAYOUTS_BY_COUNT[10];
-  const layout=pick(layouts);
-  const styleVar=pick(STYLE_VARIANTS);
-  const slide=document.createElement('div');
-  slide.className=`slide ${layout} ${styleVar}`;
+  // Badge takes one cell — so total cells = photos + 1
+  const totalCells = Math.min(files.length + 1, 12);
+  const photoCount = totalCells - 1;
+  const layouts = LAYOUTS_BY_COUNT[totalCells] || LAYOUTS_BY_COUNT[10];
+  const layout = pick(layouts);
+  const styleVar = pick(STYLE_VARIANTS);
+  const slide = document.createElement('div');
+  slide.className = `slide ${layout} ${styleVar}`;
 
   // Seasonal theme from first photo
-  const month=getMonth(files[0]);
-  const seasonal=month?getSeasonalTheme(month):null;
-  if(seasonal) slide.dataset.theme=seasonal.theme;
-  else if(themeOverride) slide.dataset.theme=themeOverride;
+  const month = getMonth(files[0]);
+  const seasonal = month ? getSeasonalTheme(month) : null;
+  if(seasonal) slide.dataset.theme = seasonal.theme;
+  else if(themeOverride) slide.dataset.theme = themeOverride;
 
-  files.slice(0,count).forEach((f,i)=>{
-    const cell=makeCell(f.id, idx<3?'eager':'lazy');
-    if(styleVar==='polaroid'||styleVar==='overlap'){
-      const rot=(Math.random()*6-3).toFixed(1);
-      cell.style.setProperty('--rot',`${rot}deg`);
-      if(styleVar==='overlap') cell.style.setProperty('--z',i+1);
+  // Pick random position for badge within the cells (0 to totalCells-1)
+  const badgePos = Math.floor(Math.random() * totalCells);
+  let photoIdx = 0;
+
+  for(let i = 0; i < totalCells; i++) {
+    if(i === badgePos) {
+      // Insert badge cell
+      let badgeOpts = {};
+      if(approvedMessages.length && Math.random() > .35) {
+        const m = pick(approvedMessages);
+        badgeOpts = { msg: m.message, from: `${m.name}${m.relationship ? ' · ' + m.relationship : ''}` };
+      }
+      slide.appendChild(makeBadge(badgeOpts));
+    } else {
+      // Insert photo cell
+      const f = files[photoIdx++];
+      if(!f) continue;
+      const cell = makeCell(f.id, idx < 3 ? 'eager' : 'lazy');
+      if(styleVar === 'polaroid' || styleVar === 'overlap') {
+        const rot = (Math.random() * 6 - 3).toFixed(1);
+        cell.style.setProperty('--rot', `${rot}deg`);
+        if(styleVar === 'overlap') cell.style.setProperty('--z', i + 1);
+      }
+      slide.appendChild(cell);
     }
-    slide.appendChild(cell);
-  });
-
-  // Badge — sometimes use approved message
-  if(approvedMessages.length && Math.random()>.4) {
-    const m=pick(approvedMessages);
-    slide.appendChild(makeBadge({msg:m.message, from:`${m.name}${m.relationship?' · '+m.relationship:''}`}));
-  } else {
-    slide.appendChild(makeBadge());
   }
 
   return slide;
