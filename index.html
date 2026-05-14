@@ -3,597 +3,1119 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Leave a Message for Abby Whitsitt</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,500&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<title>Abby Whitsitt — Class of 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,500&family=Cinzel:wght@400;600&family=Lato:wght@300;400&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-:root {
+html, body { width:100vw; height:100vh; overflow:hidden; }
+
+/* ══════════════════════════════
+   THEME VARIABLES
+══════════════════════════════ */
+body {
   --gold: #F0C040;
   --gold2: #C9973A;
-  --gold3: #8a6420;
-  --black: #0a0a0f;
-  --dark: #12111a;
-  --cream: #FDF8EE;
-  --muted: rgba(253,248,238,0.55);
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--black);
-  color: var(--cream);
-  font-family: 'Lato', sans-serif;
+  --bg: #0a0a0f;
+  --bg2: #12111a;
+  --text: #FDF8EE;
+  --text2: rgba(253,248,238,0.6);
+  --accent: #F0C040;
+  --particle1: #F0C040;
+  --particle2: #E8407A;
+  --particle3: #7B61FF;
+  --particle4: #42D9C8;
+  --badge-bg: rgba(13,13,13,0.9);
+  --badge-border: #C9973A;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-title: 'Cinzel', serif;
+  --font-body: 'Lato', sans-serif;
+  background: var(--bg);
+  font-family: var(--font-body);
   font-weight: 300;
-  min-height: 100vh;
-  overflow-x: hidden;
+  cursor: none;
 }
 
-/* ── Background atmosphere ── */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(240,192,64,0.08) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(201,151,58,0.06) 0%, transparent 60%);
-  pointer-events: none;
+/* Theme: Cream & Rose */
+body.theme-rose {
+  --bg: #1a0a0d;
+  --bg2: #2a1218;
+  --text: #FDF0F2;
+  --text2: rgba(253,240,242,0.6);
+  --accent: #E8A0B0;
+  --gold: #E8A0B0;
+  --gold2: #C97080;
+  --badge-bg: rgba(26,10,13,0.92);
+  --badge-border: #C97080;
+  --particle1: #E8A0B0;
+  --particle2: #F5C5CF;
+  --particle3: #C97080;
+  --particle4: #FFE4E8;
 }
 
-/* ── Grain overlay ── */
-body::after {
-  content: '';
-  position: fixed; inset: 0; z-index: 0;
-  opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-  pointer-events: none;
+/* Theme: Navy & Silver */
+body.theme-navy {
+  --bg: #050a1a;
+  --bg2: #0a1428;
+  --text: #E8EFF8;
+  --text2: rgba(232,239,248,0.6);
+  --accent: #A0B8D8;
+  --gold: #C0D0E8;
+  --gold2: #8098B8;
+  --badge-bg: rgba(5,10,26,0.92);
+  --badge-border: #8098B8;
+  --particle1: #C0D0E8;
+  --particle2: #E8EFF8;
+  --particle3: #8098B8;
+  --particle4: #4060A0;
 }
 
-.wrap {
-  position: relative; z-index: 1;
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 0 1.5rem 4rem;
+/* Theme: Editorial */
+body.theme-editorial {
+  --bg: #0f0f0f;
+  --bg2: #1a1a1a;
+  --text: #F0F0F0;
+  --text2: rgba(240,240,240,0.5);
+  --accent: #F0F0F0;
+  --gold: #F0F0F0;
+  --gold2: #A0A0A0;
+  --badge-bg: rgba(0,0,0,0.95);
+  --badge-border: #606060;
+  --particle1: #F0F0F0;
+  --particle2: #A0A0A0;
+  --particle3: #606060;
+  --particle4: #D0D0D0;
+  --font-display: 'UnifrakturMaguntia', cursive;
 }
 
-/* ── Hero ── */
-.hero {
-  text-align: center;
-  padding: 4rem 0 2rem;
-  position: relative;
+/* Theme: Summer */
+body.theme-summer {
+  --bg: #0a1510;
+  --bg2: #0f2018;
+  --text: #F0FFF4;
+  --text2: rgba(240,255,244,0.6);
+  --accent: #40C870;
+  --gold: #60D890;
+  --gold2: #40A860;
+  --badge-bg: rgba(10,21,16,0.92);
+  --badge-border: #40A860;
+  --particle1: #60D890;
+  --particle2: #40C8C0;
+  --particle3: #F0C040;
+  --particle4: #E87040;
 }
 
-.hero-photo-wrap {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 2rem;
+/* Seasonal: Christmas */
+body.theme-christmas {
+  --bg: #0a1a08;
+  --bg2: #102008;
+  --text: #FFF8F0;
+  --text2: rgba(255,248,240,0.6);
+  --accent: #E83020;
+  --gold: #F0C040;
+  --gold2: #C83020;
+  --badge-bg: rgba(10,26,8,0.92);
+  --badge-border: #C83020;
+  --particle1: #E83020;
+  --particle2: #F0C040;
+  --particle3: #FFFFFF;
+  --particle4: #40A830;
 }
 
-.hero-photo {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: top center;
-  border: 1px solid rgba(240,192,64,0.3);
-  box-shadow:
-    0 0 0 6px rgba(240,192,64,0.06),
-    0 0 0 12px rgba(240,192,64,0.03),
-    0 20px 60px rgba(0,0,0,0.6);
-  display: block;
+/* Seasonal: July 4th */
+body.theme-july4 {
+  --bg: #08081a;
+  --bg2: #10102a;
+  --text: #F8F8FF;
+  --text2: rgba(248,248,255,0.6);
+  --accent: #E83020;
+  --gold: #E8E8F0;
+  --gold2: #A0A0D0;
+  --badge-bg: rgba(8,8,26,0.92);
+  --badge-border: #E83020;
+  --particle1: #E83020;
+  --particle2: #F8F8FF;
+  --particle3: #2040C8;
+  --particle4: #F0C040;
 }
 
-.hero-photo-wrap::before {
-  content: '';
-  position: absolute;
-  inset: -8px;
-  border-radius: 50%;
-  border: 1px solid rgba(240,192,64,0.15);
+/* Seasonal: Halloween */
+body.theme-halloween {
+  --bg: #0a0500;
+  --bg2: #180a00;
+  --text: #FFF0E0;
+  --text2: rgba(255,240,224,0.6);
+  --accent: #E87020;
+  --gold: #F0A030;
+  --gold2: #C06010;
+  --badge-bg: rgba(10,5,0,0.92);
+  --badge-border: #C06010;
+  --particle1: #F0A030;
+  --particle2: #E87020;
+  --particle3: #800080;
+  --particle4: #FFFFFF;
 }
 
-.cap-icon {
-  position: absolute;
-  bottom: 4px; right: 4px;
-  background: var(--black);
-  border: 1px solid var(--gold2);
-  border-radius: 50%;
-  width: 42px; height: 42px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.3rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+/* Seasonal: Valentine */
+body.theme-valentine {
+  --bg: #1a0810;
+  --bg2: #280a18;
+  --text: #FFF0F4;
+  --text2: rgba(255,240,244,0.6);
+  --accent: #E84060;
+  --gold: #F090A8;
+  --gold2: #C84060;
+  --badge-bg: rgba(26,8,16,0.92);
+  --badge-border: #C84060;
+  --particle1: #E84060;
+  --particle2: #F090A8;
+  --particle3: #FF6688;
+  --particle4: #FFB0C0;
 }
 
-.hero-eyebrow {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(.55rem, 1.5vw, .7rem);
-  letter-spacing: .45em;
-  color: var(--gold2);
-  text-transform: uppercase;
-  margin-bottom: .8rem;
-  opacity: 0;
-  animation: fadeUp .8s ease .2s forwards;
+/* Seasonal: Spring */
+body.theme-spring {
+  --bg: #080f0a;
+  --bg2: #101808;
+  --text: #F0FFF0;
+  --text2: rgba(240,255,240,0.6);
+  --accent: #80C860;
+  --gold: #A0E080;
+  --gold2: #60A840;
+  --badge-bg: rgba(8,15,10,0.92);
+  --badge-border: #60A840;
+  --particle1: #A0E080;
+  --particle2: #E0A0C0;
+  --particle3: #80C860;
+  --particle4: #F0E060;
 }
 
-.hero h1 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2.8rem, 8vw, 5rem);
-  font-weight: 300;
-  line-height: 1;
-  color: var(--cream);
-  margin-bottom: .4rem;
-  opacity: 0;
-  animation: fadeUp .8s ease .35s forwards;
+/* ══════════════════════════════
+   CANVAS & UI CHROME
+══════════════════════════════ */
+#particle-canvas {
+  position:fixed; inset:0; pointer-events:none; z-index:50;
 }
 
-.hero h1 em {
-  font-style: italic;
-  color: var(--gold);
-  display: block;
+#loading {
+  position:fixed; inset:0; z-index:80;
+  background:var(--bg);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem;
+  transition:opacity 1s ease;
+}
+#loading.gone { opacity:0; pointer-events:none; }
+#loading h2 { font-family:var(--font-title); font-size:1rem; letter-spacing:.4em; color:var(--gold2); text-transform:uppercase; }
+#loading-bar-wrap { width:260px; height:2px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden; }
+#loading-bar { height:100%; width:0%; background:linear-gradient(to right,var(--gold2),var(--gold)); transition:width .3s ease; }
+#loading-status { font-size:.6rem; letter-spacing:.25em; color:var(--text2); text-transform:uppercase; }
+
+#splash {
+  position:fixed; inset:0; z-index:70;
+  background:var(--bg);
+  display:none; flex-direction:column; align-items:center; justify-content:center; gap:.8rem;
+  transition:opacity 1.5s ease;
+}
+#splash.gone { opacity:0; pointer-events:none; }
+#splash .s-eye { font-family:var(--font-title); font-size:clamp(.55rem,1.5vw,.7rem); letter-spacing:.5em; color:var(--gold2); text-transform:uppercase; margin-bottom:.5rem; }
+#splash h1 { font-family:var(--font-display); font-size:clamp(4rem,10vw,9rem); font-weight:300; color:var(--text); line-height:1; text-align:center; }
+#splash h1 em { font-style:italic; color:var(--gold); display:block; }
+#splash .s-sub { font-family:var(--font-title); font-size:clamp(.55rem,1.5vw,.75rem); letter-spacing:.4em; color:var(--text2); text-transform:uppercase; margin-top:.5rem; }
+.s-star { position:absolute; color:var(--gold); opacity:0; animation:sp 3s ease-in-out infinite; }
+@keyframes sp { 0%,100%{opacity:0;transform:scale(.5)} 50%{opacity:.7;transform:scale(1)} }
+
+#outro {
+  position:fixed; inset:0; z-index:70;
+  background:var(--bg);
+  display:none; flex-direction:column; align-items:center; justify-content:center; gap:.8rem;
+  opacity:0; transition:opacity 1.5s ease;
+}
+#outro.visible { opacity:1; }
+#outro h1 { font-family:var(--font-display); font-style:italic; font-size:clamp(3rem,8vw,7rem); color:var(--gold); line-height:1; text-align:center; }
+#outro p { font-family:var(--font-title); font-size:clamp(.55rem,1.5vw,.75rem); letter-spacing:.4em; color:var(--text2); text-transform:uppercase; }
+
+/* ══════════════════════════════
+   SLIDESHOW
+══════════════════════════════ */
+#show { position:relative; width:100%; height:100%; }
+
+.slide {
+  position:absolute; inset:0; opacity:0;
+  transition:opacity 1.4s ease;
+  display:grid; padding:8px; gap:6px;
+  background:var(--bg);
+}
+.slide.active { opacity:1; z-index:1; }
+
+.cell { overflow:hidden; border-radius:3px; background:#111; position:relative; }
+.cell img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 8s ease; }
+.slide.active .cell img { transform:scale(1.05); }
+
+/* Polaroid style */
+.slide.polaroid .cell {
+  background:#f8f4e8;
+  padding:8px 8px 28px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.5);
+  transform:rotate(var(--rot, 0deg));
+}
+.slide.polaroid .cell img { border-radius:1px; }
+
+/* Overlapping style */
+.slide.overlap .cell {
+  box-shadow:0 8px 30px rgba(0,0,0,0.7);
+  transform:rotate(var(--rot, 0deg)) scale(1.02);
+  z-index:var(--z, 1);
 }
 
-.hero-sub {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(.6rem, 1.8vw, .75rem);
-  letter-spacing: .3em;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-top: .8rem;
-  opacity: 0;
-  animation: fadeUp .8s ease .5s forwards;
+/* ── Badge ── */
+.badge {
+  position:absolute; z-index:10;
+  background:var(--badge-bg);
+  border:1px solid var(--badge-border);
+  border-radius:4px;
+  padding:1rem 1.8rem;
+  text-align:center;
+  backdrop-filter:blur(10px);
+  box-shadow:0 0 40px rgba(0,0,0,0.7);
+  pointer-events:none;
+  max-width:320px;
+  transition:all .5s ease;
+}
+.badge.pos-center { top:50%; left:50%; transform:translate(-50%,-50%); }
+.badge.pos-bl { bottom:2rem; left:2rem; transform:none; }
+.badge.pos-br { bottom:2rem; right:2rem; transform:none; }
+.badge.pos-tr { top:2rem; right:2rem; transform:none; }
+.badge.pos-tl { top:2rem; left:2rem; transform:none; }
+.badge.style-watermark { background:rgba(0,0,0,0.4); border-color:rgba(255,255,255,0.15); padding:.6rem 1.2rem; }
+.badge.style-banner { left:0; right:0; max-width:100%; border-radius:0; border-left:none; border-right:none; text-align:center; }
+
+.badge::before { content:'✦'; position:absolute; top:5px; left:7px; color:var(--gold); font-size:.5rem; opacity:.6; }
+.badge::after  { content:'✦'; position:absolute; bottom:5px; right:7px; color:var(--gold); font-size:.5rem; opacity:.6; }
+.badge.style-watermark::before, .badge.style-watermark::after { display:none; }
+
+.b-cap  { font-size:1.4rem; display:block; margin-bottom:.15rem; }
+.b-co   { font-family:var(--font-title); font-size:.48rem; letter-spacing:.35em; color:var(--gold); text-transform:uppercase; display:block; margin-bottom:.15rem; }
+.b-grad { font-family:var(--font-display); font-style:italic; font-size:2rem; color:var(--gold); line-height:1; display:block; text-shadow:0 0 20px rgba(255,255,255,.2); }
+.b-name { font-family:var(--font-title); font-size:.65rem; letter-spacing:.18em; color:var(--text); display:block; margin-top:.3rem; text-transform:uppercase; }
+.b-tag  { font-size:.42rem; letter-spacing:.25em; color:var(--gold2); text-transform:uppercase; display:block; margin-top:.35rem; padding-top:.35rem; border-top:1px solid rgba(255,255,255,.12); }
+.b-msg  { font-family:var(--font-display); font-style:italic; font-size:1.1rem; color:var(--text); line-height:1.4; display:block; margin-top:.3rem; }
+.b-from { font-size:.5rem; letter-spacing:.2em; color:var(--gold2); text-transform:uppercase; display:block; margin-top:.3rem; }
+
+/* ── Special slide types ── */
+
+/* Featured submitted photo */
+.slide.featured-photo {
+  display:flex; flex-direction:column;
+  padding:0; gap:0;
+}
+.slide.featured-photo .feat-img {
+  flex:1; overflow:hidden; position:relative;
+}
+.slide.featured-photo .feat-img img {
+  width:100%; height:100%; object-fit:cover;
+  transition:transform 12s ease;
+}
+.slide.featured-photo.active .feat-img img { transform:scale(1.04); }
+.slide.featured-photo .feat-overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%);
+}
+.slide.featured-photo .feat-text {
+  position:absolute; bottom:0; left:0; right:0;
+  padding:2rem 3rem;
+  z-index:5;
+}
+.feat-message {
+  font-family:var(--font-display);
+  font-style:italic;
+  font-size:clamp(1.2rem,3vw,2rem);
+  color:var(--text);
+  line-height:1.5;
+  margin-bottom:.8rem;
+  text-shadow:0 2px 10px rgba(0,0,0,0.5);
+}
+.feat-from {
+  font-family:var(--font-title);
+  font-size:.6rem;
+  letter-spacing:.3em;
+  color:var(--gold);
+  text-transform:uppercase;
+}
+.feat-divider {
+  width:40px; height:1px;
+  background:var(--gold2);
+  margin-bottom:.6rem;
+  opacity:.6;
 }
 
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 2.5rem 0;
-  opacity: 0;
-  animation: fadeUp .8s ease .6s forwards;
+/* Then & Now */
+.slide.then-now {
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr auto;
+  padding:8px; gap:6px;
 }
-.divider-line {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(to right, transparent, rgba(240,192,64,.3), transparent);
+.then-now-label {
+  grid-column:1/-1;
+  display:flex; align-items:center; justify-content:center; gap:1.5rem;
+  padding:.5rem;
 }
-.divider-star { color: var(--gold2); font-size: .7rem; opacity: .7; }
+.tn-word {
+  font-family:var(--font-title);
+  font-size:.6rem;
+  letter-spacing:.35em;
+  color:var(--gold);
+  text-transform:uppercase;
+}
+.tn-line { flex:1; height:1px; background:linear-gradient(to right,transparent,var(--gold2),transparent); opacity:.4; }
+.tn-arrow { color:var(--gold2); font-size:1.2rem; }
 
-/* ── Counter ── */
-.counter-wrap {
-  text-align: center;
-  margin-bottom: 2.5rem;
-  opacity: 0;
-  animation: fadeUp .8s ease .7s forwards;
+/* Title card */
+.slide.title-card {
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:1rem; padding:2rem;
 }
-.counter-number {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 3rem;
-  font-weight: 300;
-  color: var(--gold);
-  line-height: 1;
-  display: block;
+.title-card-year {
+  font-family:var(--font-display);
+  font-size:clamp(5rem,15vw,14rem);
+  font-weight:300;
+  font-style:italic;
+  color:var(--gold);
+  line-height:1;
+  opacity:.15;
+  position:absolute;
 }
-.counter-label {
-  font-size: .65rem;
-  letter-spacing: .35em;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-top: .3rem;
-  display: block;
+.title-card-label {
+  font-family:var(--font-title);
+  font-size:clamp(.7rem,2vw,1rem);
+  letter-spacing:.5em;
+  color:var(--text2);
+  text-transform:uppercase;
+  position:relative; z-index:1;
 }
-
-/* ── Intro text ── */
-.intro {
-  text-align: center;
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: clamp(1.1rem, 3vw, 1.35rem);
-  color: var(--muted);
-  line-height: 1.7;
-  margin-bottom: 2.5rem;
-  opacity: 0;
-  animation: fadeUp .8s ease .8s forwards;
+.title-card-season {
+  font-size:3rem;
+  position:relative; z-index:1;
 }
 
-/* ── Form ── */
-.form-wrap {
-  background: rgba(255,255,255,0.025);
-  border: 1px solid rgba(240,192,64,0.12);
-  border-radius: 6px;
-  padding: 2.5rem 2rem;
-  backdrop-filter: blur(10px);
-  opacity: 0;
-  animation: fadeUp .8s ease .9s forwards;
+/* Guest wall */
+.slide.guest-wall {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:auto 1fr;
+  padding:12px; gap:8px;
+}
+.guest-wall-header {
+  grid-column:1/-1;
+  text-align:center;
+  padding:.5rem 0;
+}
+.guest-wall-header h2 {
+  font-family:var(--font-display);
+  font-style:italic;
+  font-size:clamp(1.5rem,4vw,2.5rem);
+  color:var(--gold);
+}
+.guest-wall-header p {
+  font-family:var(--font-title);
+  font-size:.5rem;
+  letter-spacing:.3em;
+  color:var(--text2);
+  text-transform:uppercase;
+  margin-top:.2rem;
+}
+.guest-card {
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:4px;
+  padding:.8rem 1rem;
+  display:flex; flex-direction:column; gap:.4rem;
+  overflow:hidden;
+}
+.gc-message {
+  font-family:var(--font-display);
+  font-style:italic;
+  font-size:clamp(.8rem,1.5vw,1rem);
+  color:var(--text);
+  line-height:1.5;
+  flex:1;
+}
+.gc-from {
+  font-family:var(--font-title);
+  font-size:.45rem;
+  letter-spacing:.2em;
+  color:var(--gold2);
+  text-transform:uppercase;
+}
+.gc-rel {
+  font-size:.45rem;
+  color:var(--text2);
+  letter-spacing:.1em;
 }
 
-.field {
-  margin-bottom: 1.5rem;
-}
+/* ── Grid layouts ── */
+.layout-a { grid-template-columns:1fr 1fr 1fr; grid-template-rows:1fr 1fr 1fr; }
+.layout-b { grid-template-columns:1.1fr .95fr .95fr 1.1fr; grid-template-rows:1fr 1.2fr 1fr; }
+.layout-b .cell:nth-child(5){grid-column:1;grid-row:2;} .layout-b .cell:nth-child(6){grid-column:4;grid-row:2;}
+.layout-b .cell:nth-child(7){grid-column:1;grid-row:3;} .layout-b .cell:nth-child(8){grid-column:2;grid-row:3;}
+.layout-b .cell:nth-child(9){grid-column:3;grid-row:3;} .layout-b .cell:nth-child(10){grid-column:4;grid-row:3;}
+.layout-c { grid-template-columns:1.35fr 1fr 1fr; grid-template-rows:1fr 1fr 1fr 1fr; }
+.layout-c .cell:nth-child(1){grid-column:1;grid-row:1/3;} .layout-c .cell:nth-child(6){grid-column:1;grid-row:3/5;}
+.layout-d { grid-template-columns:repeat(4,1fr); grid-template-rows:repeat(3,1fr); }
+.layout-e { grid-template-columns:1fr 2fr 1fr; grid-template-rows:1fr 1fr 1fr; }
+.layout-e .cell:nth-child(5){grid-column:2;grid-row:2/4;}
+.layout-f { grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr 1fr; }
+.layout-g { grid-template-columns:2fr 1fr; grid-template-rows:1fr 1fr; }
+.layout-h { grid-template-columns:1fr 1fr 1fr 1fr; grid-template-rows:1fr 1fr; }
 
-label {
-  display: block;
-  font-family: 'Cinzel', serif;
-  font-size: .58rem;
-  letter-spacing: .35em;
-  color: var(--gold2);
-  text-transform: uppercase;
-  margin-bottom: .6rem;
-}
+/* ── UI chrome ── */
+#counter { position:fixed; bottom:1rem; right:1.5rem; z-index:20; font-size:.55rem; letter-spacing:.3em; color:rgba(255,255,255,.3); text-transform:uppercase; }
+#progress { position:fixed; bottom:0; left:0; height:2px; z-index:20; background:linear-gradient(to right,var(--gold2),var(--gold)); width:0%; }
+#theme-indicator { position:fixed; top:1rem; left:1rem; z-index:20; font-size:.5rem; letter-spacing:.2em; color:rgba(255,255,255,.2); text-transform:uppercase; }
+#dots { position:fixed; top:50%; right:1rem; transform:translateY(-50%); z-index:20; display:flex; flex-direction:column; gap:5px; max-height:70vh; overflow:hidden; }
+.dot { width:4px; height:4px; border-radius:50%; background:rgba(255,255,255,.15); cursor:pointer; transition:all .3s; flex-shrink:0; }
+.dot.active { background:var(--gold); transform:scale(1.8); }
 
-input, select, textarea {
-  width: 100%;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(240,192,64,0.18);
-  border-radius: 3px;
-  color: var(--cream);
-  font-family: 'Lato', sans-serif;
-  font-weight: 300;
-  font-size: .95rem;
-  padding: .8rem 1rem;
-  outline: none;
-  transition: border-color .3s, background .3s;
-  -webkit-appearance: none;
-}
-
-input:focus, select:focus, textarea:focus {
-  border-color: rgba(240,192,64,0.5);
-  background: rgba(255,255,255,0.07);
-}
-
-select {
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C9973A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  padding-right: 2.5rem;
-}
-
-select option { background: #1a1828; color: var(--cream); }
-
-textarea {
-  resize: vertical;
-  min-height: 130px;
-  line-height: 1.6;
-}
-
-/* Character counter */
-.char-count {
-  text-align: right;
-  font-size: .6rem;
-  color: rgba(240,192,64,.35);
-  margin-top: .3rem;
-  letter-spacing: .1em;
-}
-
-/* File upload */
-.file-area {
-  border: 1px dashed rgba(240,192,64,0.2);
-  border-radius: 3px;
-  padding: 1.5rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all .3s;
-  position: relative;
-}
-.file-area:hover { border-color: rgba(240,192,64,0.4); background: rgba(240,192,64,0.03); }
-.file-area input[type=file] {
-  position: absolute; inset: 0;
-  opacity: 0; cursor: pointer;
-  width: 100%; height: 100%;
-  padding: 0; border: none; background: none;
-}
-.file-icon { font-size: 1.5rem; display: block; margin-bottom: .4rem; }
-.file-label { font-size: .75rem; color: var(--muted); line-height: 1.5; }
-.file-label strong { color: var(--gold2); }
-#file-name { margin-top: .5rem; font-size: .7rem; color: var(--gold); display: none; }
-
-/* Preview */
-#photo-preview {
-  margin-top: .8rem;
-  display: none;
-  text-align: center;
-}
-#photo-preview img {
-  max-height: 120px;
-  max-width: 100%;
-  border-radius: 3px;
-  border: 1px solid rgba(240,192,64,0.2);
-}
-
-/* Submit */
-.submit-btn {
-  width: 100%;
-  background: transparent;
-  border: 1px solid var(--gold2);
-  border-radius: 3px;
-  color: var(--gold);
-  font-family: 'Cinzel', serif;
-  font-size: .7rem;
-  letter-spacing: .35em;
-  text-transform: uppercase;
-  padding: 1rem;
-  cursor: pointer;
-  transition: all .3s;
-  margin-top: .5rem;
-  position: relative;
-  overflow: hidden;
-}
-.submit-btn::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(240,192,64,0.1), transparent);
-  opacity: 0;
-  transition: opacity .3s;
-}
-.submit-btn:hover { border-color: var(--gold); box-shadow: 0 0 20px rgba(240,192,64,0.15); }
-.submit-btn:hover::before { opacity: 1; }
-.submit-btn:disabled { opacity: .5; cursor: not-allowed; }
-
-/* ── Success state ── */
-#success {
-  display: none;
-  text-align: center;
-  padding: 3rem 1rem;
-}
-#success .success-icon { font-size: 3rem; display: block; margin-bottom: 1rem; animation: pop .5s cubic-bezier(.36,.07,.19,.97); }
-#success h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-style: italic; color: var(--gold); margin-bottom: .8rem; }
-#success p { color: var(--muted); font-size: .9rem; line-height: 1.7; }
-
-/* ── Error msg ── */
-.error-msg { color: #ff6b6b; font-size: .72rem; margin-top: .4rem; display: none; }
-
-/* ── Footer ── */
-footer {
-  text-align: center;
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 1px solid rgba(240,192,64,0.08);
-  font-size: .6rem;
-  letter-spacing: .2em;
-  color: rgba(253,248,238,0.2);
-  text-transform: uppercase;
-}
-
-/* ── Animations ── */
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(16px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-@keyframes pop {
-  0%,100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-}
-
-/* ── Mobile ── */
-@media (max-width: 480px) {
-  .form-wrap { padding: 1.8rem 1.2rem; }
-  .hero { padding: 3rem 0 1.5rem; }
-}
+#error-screen { position:fixed; inset:0; z-index:90; background:var(--bg); display:none; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:2rem; text-align:center; }
+#error-screen h2 { font-family:var(--font-title); color:var(--gold); font-size:1.2rem; letter-spacing:.2em; }
+#error-screen p { color:var(--text2); font-size:.8rem; line-height:1.8; max-width:500px; }
 </style>
 </head>
 <body>
 
-<div class="wrap">
+<canvas id="particle-canvas"></canvas>
 
-  <!-- Hero -->
-  <div class="hero">
-    <div class="hero-photo-wrap">
-      <img
-        class="hero-photo"
-        src="https://drive.google.com/uc?export=view&id=ABBYROSETEST_FILE_ID"
-        alt="Abby Whitsitt"
-        onerror="this.style.display='none'"
-      >
-      <div class="cap-icon">🎓</div>
-    </div>
-    <div class="hero-eyebrow">Celebrating</div>
-    <h1>Abby<em>Whitsitt</em></h1>
-    <div class="hero-sub">Class of 2026 &nbsp;·&nbsp; Graduation Party</div>
-  </div>
-
-  <div class="divider">
-    <div class="divider-line"></div>
-    <span class="divider-star">✦</span>
-    <div class="divider-line"></div>
-  </div>
-
-  <!-- Counter -->
-  <div class="counter-wrap">
-    <span class="counter-number" id="counter">—</span>
-    <span class="counter-label">people have left a message for Abby</span>
-  </div>
-
-  <!-- Intro -->
-  <p class="intro">
-    Abby is heading into her next chapter and we'd love to fill it with your words.
-    Leave her a message, a memory, or a little wisdom for the road ahead.
-    Your note will appear on the slideshow at her graduation party.
-  </p>
-
-  <!-- Form -->
-  <div class="form-wrap" id="form-wrap">
-    <form id="wish-form" novalidate>
-
-      <div class="field">
-        <label for="name">Your Name</label>
-        <input type="text" id="name" placeholder="First and last name" maxlength="80" autocomplete="name">
-        <div class="error-msg" id="name-err">Please enter your name.</div>
-      </div>
-
-      <div class="field">
-        <label for="relationship">Your Relationship to Abby</label>
-        <select id="relationship">
-          <option value="" disabled selected>Select one...</option>
-          <option value="Family">Family</option>
-          <option value="Friend">Friend</option>
-          <option value="Friend of the Family">Friend of the Family</option>
-          <option value="Teacher">Teacher</option>
-          <option value="Coach">Coach</option>
-          <option value="Classmate">Classmate</option>
-          <option value="Coworker">Coworker</option>
-          <option value="Other">Other</option>
-        </select>
-        <div class="error-msg" id="rel-err">Please select your relationship.</div>
-      </div>
-
-      <div class="field">
-        <label for="message">Your Message</label>
-        <textarea id="message" placeholder="Share a memory, a wish, some advice, or just some love..." maxlength="500"></textarea>
-        <div class="char-count"><span id="char-num">0</span> / 500</div>
-        <div class="error-msg" id="msg-err">Please write a message.</div>
-      </div>
-
-      <div class="field">
-        <label>Share a Photo <span style="color:var(--muted);font-size:.85em;letter-spacing:.1em;text-transform:none;font-family:'Lato',sans-serif">(optional)</span></label>
-        <div class="file-area" id="file-area">
-          <input type="file" id="photo" accept="image/*">
-          <span class="file-icon">📷</span>
-          <div class="file-label">
-            <strong>Tap to choose a photo</strong><br>
-            JPG, PNG or HEIC · max 10MB
-          </div>
-          <div id="file-name"></div>
-        </div>
-        <div id="photo-preview"><img id="preview-img" src="" alt="preview"></div>
-        <div class="error-msg" id="photo-err">File too large. Please choose an image under 10MB.</div>
-      </div>
-
-      <div class="error-msg" id="submit-err" style="text-align:center;margin-bottom:.8rem;font-size:.75rem"></div>
-
-      <button type="submit" class="submit-btn" id="submit-btn">
-        ✦ &nbsp; Send My Message to Abby &nbsp; ✦
-      </button>
-
-    </form>
-
-    <!-- Success -->
-    <div id="success">
-      <span class="success-icon">🎉</span>
-      <h2>Message Sent!</h2>
-      <p>Thank you — your words are on their way to Abby.<br>Keep an eye on the slideshow at the party!</p>
-    </div>
-  </div>
-
-  <footer>
-    abbywhitsitt.com &nbsp;·&nbsp; Class of 2026
-  </footer>
-
+<div id="loading">
+  <h2>Loading Abby's Story</h2>
+  <div id="loading-bar-wrap"><div id="loading-bar"></div></div>
+  <div id="loading-status">Connecting...</div>
 </div>
 
+<div id="error-screen">
+  <h2>⚠ Could Not Load</h2>
+  <p id="error-detail">Check Drive folder sharing and API key.</p>
+</div>
+
+<div id="splash">
+  <div class="s-star" style="top:12%;left:8%;animation-delay:0s;font-size:.9rem">✦</div>
+  <div class="s-star" style="top:15%;right:10%;animation-delay:.4s;font-size:.7rem">★</div>
+  <div class="s-star" style="bottom:20%;left:6%;animation-delay:.8s;font-size:.8rem">✦</div>
+  <div class="s-star" style="bottom:18%;right:8%;animation-delay:1.2s;font-size:.6rem">★</div>
+  <div class="s-star" style="top:45%;left:4%;animation-delay:.6s;font-size:.7rem">✦</div>
+  <div class="s-star" style="top:40%;right:5%;animation-delay:.2s;font-size:.9rem">★</div>
+  <div class="s-eye">Celebrating</div>
+  <h1>Abby<em>Whitsitt</em></h1>
+  <div class="s-sub">Class of 2026 · Graduation Party</div>
+</div>
+
+<div id="outro">
+  <h1>Abby Whitsitt</h1>
+  <p>Class of 2026</p>
+</div>
+
+<div id="show"></div>
+<div id="dots"></div>
+<div id="counter"></div>
+<div id="progress"></div>
+<div id="theme-indicator"></div>
+
 <script>
-const WEBHOOK = 'https://n8n.jeffwhitsitt.com/webhook/abby-wishes';
-const SHEET_ID = '15pgn1jsxKvOPlDtADafS4rBXuRvlGumfykjb3QiSoFk';
-const API_KEY  = 'AIzaSyD1dmwLLb63ePWsWUz_FRRK4n89wxPod6Q';
-const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10MB
+// ══════════════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════════════
+const CONFIG = {
+  name:           "Abby Whitsitt",
+  year:           "Class of 2026",
+  apiKey:         "AIzaSyD1dmwLLb63ePWsWUz_FRRK4n89wxPod6Q",
+  mainFolderId:   "1OcTzbVY_M4npzYuXwqIFAfWSACmZg5Ph",
+  subFolderId:    "19LSqhBeSDiMJGGIkuQaLnuFCVFdFrMvO",
+  sheetId:        "15pgn1jsxKvOPlDtADafS4rBXuRvlGumfykjb3QiSoFk",
+  photosPerSlide: 10,
+  defaultInterval:8,   // seconds per collage slide
+  minPhotos:      4,   // minimum photos per slide
+  thenNowFreq:    8,   // insert then&now every N collage slides
+  guestWallSize:  6,   // messages per guest wall slide
+};
 
-// ── Counter ──────────────────────────────────────
-async function loadCounter() {
-  try {
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/A:A?key=${API_KEY}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    const count = Math.max(0, (data.values?.length || 1) - 1);
-    document.getElementById('counter').textContent = count;
-  } catch(e) {
-    document.getElementById('counter').textContent = '—';
-  }
+// ── Default badge messages ──
+const DEFAULT_MESSAGES = [
+  { icon:'🎓', co:CONFIG.year, grad:'Graduate', name:CONFIG.name, tag:'The Adventure Continues!' },
+  { icon:'✨', co:'Congratulations', grad:'Abby', name:'Class of 2026', tag:'Your future is bright' },
+  { icon:'🌟', co:'With love', grad:'& pride', name:CONFIG.name, tag:'We are so proud of you' },
+  { icon:'🎉', co:CONFIG.year, grad:'Graduate', name:'Abby Whitsitt', tag:'Let the adventure begin' },
+  { icon:'💛', co:'Always remember', grad:'how far', name:"you've come", tag:'The best is yet to come' },
+];
+
+// ── Seasonal theme map ──
+const SEASONAL = {
+  12: { theme:'christmas', label:'Christmas', icon:'🎄', particle:'snow' },
+  11: { theme:'halloween', label:'Autumn',    icon:'🍂', particle:'leaves' },
+  10: { theme:'halloween', label:'Halloween', icon:'🎃', particle:'leaves' },
+   7: { theme:'july4',     label:'Independence Day', icon:'🎆', particle:'fireworks' },
+   6: { theme:'summer',    label:'Summer',   icon:'☀️', particle:'sparkle' },
+   8: { theme:'summer',    label:'Summer',   icon:'🌊', particle:'sparkle' },
+   2: { theme:'valentine', label:"Valentine's", icon:'💕', particle:'hearts' },
+   3: { theme:'spring',    label:'Spring',   icon:'🌸', particle:'petals' },
+   4: { theme:'spring',    label:'Spring',   icon:'🌷', particle:'petals' },
+};
+
+// ── Default theme rotation ──
+const DEFAULT_THEMES = ['gold','rose','navy','editorial','summer'];
+let defaultThemeIdx = 0;
+
+// ── Layouts by photo count ──
+const LAYOUTS_BY_COUNT = {
+  2: ['layout-g'],
+  3: ['layout-g'],
+  4: ['layout-f'],
+  5: ['layout-f'],
+  6: ['layout-f','layout-a'],
+  7: ['layout-a','layout-c'],
+  8: ['layout-a','layout-c','layout-h'],
+  9: ['layout-a','layout-c','layout-d'],
+  10:['layout-b','layout-d','layout-e'],
+  11:['layout-b','layout-d'],
+  12:['layout-d','layout-h'],
+};
+const STYLE_VARIANTS = ['','polaroid','overlap'];
+const BADGE_POSITIONS = ['pos-center','pos-bl','pos-br','pos-tr','pos-tl'];
+const BADGE_STYLES = ['','','','style-watermark','style-banner'];
+
+// ── Utilities ──
+function shuffle(arr) {
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
 }
-loadCounter();
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function imgUrl(id){ return `https://drive.google.com/uc?export=view&id=${id}`; }
+function getMonth(file){
+  try {
+    const d = file.imageMediaMetadata?.time || file.createdTime;
+    if(d) return new Date(d).getMonth()+1;
+  } catch(e){}
+  return null;
+}
+function getYear(file){
+  try {
+    const d = file.imageMediaMetadata?.time || file.createdTime;
+    if(d) return new Date(d).getFullYear();
+  } catch(e){}
+  return null;
+}
+function applyTheme(themeName){
+  document.body.className = themeName ? `theme-${themeName}` : '';
+  const indicator = document.getElementById('theme-indicator');
+  if(indicator) indicator.textContent = themeName || 'classic';
+}
+function readTime(msg){ return Math.max(6, Math.min(15, Math.ceil(msg.split(' ').length / 2.5))); }
 
-// ── Char counter ──────────────────────────────────
-const msgEl = document.getElementById('message');
-const charEl = document.getElementById('char-num');
-msgEl.addEventListener('input', () => charEl.textContent = msgEl.value.length);
+const setStatus = m => document.getElementById('loading-status').textContent = m;
+const setProgress = p => document.getElementById('loading-bar').style.width = p+'%';
 
-// ── File picker ───────────────────────────────────
-const photoInput = document.getElementById('photo');
-const fileNameEl = document.getElementById('file-name');
-const previewWrap = document.getElementById('photo-preview');
-const previewImg  = document.getElementById('preview-img');
-const photoErr    = document.getElementById('photo-err');
+// ── Fetch Drive files ──
+const IMAGE_TYPES = ['image/jpeg','image/jpg','image/png','image/webp','image/heic','image/heif'];
+async function fetchFiles(folderId) {
+  let files=[], pageToken=null, page=0;
+  do {
+    page++;
+    let url=`https://www.googleapis.com/drive/v3/files?q=%27${folderId}%27+in+parents+and+trashed%3Dfalse&fields=nextPageToken,files(id,name,mimeType,createdTime,imageMediaMetadata)&pageSize=1000&key=${CONFIG.apiKey}`;
+    if(pageToken) url+=`&pageToken=${encodeURIComponent(pageToken)}`;
+    const res=await fetch(url);
+    if(!res.ok){ const e=await res.json(); throw new Error(e.error?.message||`Drive API ${res.status}`); }
+    const data=await res.json();
+    files=files.concat((data.files||[]).filter(f=>IMAGE_TYPES.includes(f.mimeType)));
+    pageToken=data.nextPageToken||null;
+  } while(pageToken);
+  return files;
+}
 
-photoInput.addEventListener('change', () => {
-  photoErr.style.display = 'none';
-  const file = photoInput.files[0];
-  if (!file) return;
-  if (file.size > MAX_FILE_BYTES) {
-    photoErr.style.display = 'block';
-    photoInput.value = '';
-    fileNameEl.style.display = 'none';
-    previewWrap.style.display = 'none';
-    return;
+// ── Fetch approved Sheet messages ──
+async function fetchApprovedMessages() {
+  try {
+    const url=`https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/A:G?key=${CONFIG.apiKey}`;
+    const res=await fetch(url);
+    const data=await res.json();
+    const rows=data.values||[];
+    if(rows.length<2) return [];
+    const headers=rows[0].map(h=>h.toLowerCase().trim());
+    const nameIdx=headers.indexOf('name');
+    const relIdx=headers.indexOf('relationship');
+    const msgIdx=headers.indexOf('message');
+    const photoIdx=headers.indexOf('photo_url');
+    const approvedIdx=headers.indexOf('approved');
+    return rows.slice(1)
+      .filter(r=>r[approvedIdx]==='TRUE')
+      .map(r=>({
+        name:r[nameIdx]||'',
+        relationship:r[relIdx]||'',
+        message:r[msgIdx]||'',
+        photoUrl:r[photoIdx]||'',
+      }))
+      .filter(r=>r.message);
+  } catch(e){ console.warn('Sheet fetch failed',e); return []; }
+}
+
+// ── Build Then & Now pairs ──
+function buildThenNow(files) {
+  const byMonthYear = {};
+  files.forEach(f => {
+    const m=getMonth(f), y=getYear(f);
+    if(!m||!y) return;
+    const key=m;
+    if(!byMonthYear[key]) byMonthYear[key]=[];
+    byMonthYear[key].push({file:f,year:y});
+  });
+  const pairs=[];
+  Object.entries(byMonthYear).forEach(([month,entries])=>{
+    if(entries.length<2) return;
+    const years=[...new Set(entries.map(e=>e.year))].sort();
+    if(years.length<2) return;
+    const oldest=entries.filter(e=>e.year===years[0]);
+    const newest=entries.filter(e=>e.year===years[years.length-1]);
+    if(oldest.length&&newest.length){
+      pairs.push({
+        month:parseInt(month),
+        oldFile:pick(oldest).file,
+        newFile:pick(newest).file,
+        oldYear:years[0],
+        newYear:years[years.length-1],
+      });
+    }
+  });
+  return shuffle(pairs);
+}
+
+// ── Build date-clustered groups ──
+function buildEventGroups(files) {
+  const byDate={};
+  files.forEach(f=>{
+    try {
+      const d=f.imageMediaMetadata?.time||f.createdTime;
+      if(!d) return;
+      const date=new Date(d).toISOString().split('T')[0];
+      if(!byDate[date]) byDate[date]=[];
+      byDate[date].push(f);
+    } catch(e){}
+  });
+  return Object.entries(byDate)
+    .filter(([,fs])=>fs.length>=4)
+    .map(([date,fs])=>({date,files:fs}))
+    .sort((a,b)=>a.date.localeCompare(b.date));
+}
+
+// ── DOM helpers ──
+function makeBadge(opts={}) {
+  const el=document.createElement('div');
+  const pos=opts.pos||pick(BADGE_POSITIONS);
+  const style=opts.style||pick(BADGE_STYLES);
+  el.className=`badge ${pos} ${style}`;
+  if(opts.msg) {
+    el.innerHTML=`<span class="b-msg">"${opts.msg}"</span>${opts.from?`<span class="b-from">— ${opts.from}</span>`:''}`;
+  } else {
+    const m=opts.data||pick(DEFAULT_MESSAGES);
+    el.innerHTML=`<span class="b-cap">${m.icon}</span><span class="b-co">${m.co}</span><span class="b-grad">${m.grad}</span><span class="b-name">${m.name}</span><span class="b-tag">${m.tag}</span>`;
   }
-  fileNameEl.textContent = '📎 ' + file.name;
-  fileNameEl.style.display = 'block';
-  const reader = new FileReader();
-  reader.onload = e => {
-    previewImg.src = e.target.result;
-    previewWrap.style.display = 'block';
-  };
-  reader.readAsDataURL(file);
-});
+  return el;
+}
 
-// ── Form submit ───────────────────────────────────
-document.getElementById('wish-form').addEventListener('submit', async e => {
-  e.preventDefault();
+function makeCell(fileId, loading='lazy') {
+  const cell=document.createElement('div'); cell.className='cell';
+  const img=document.createElement('img');
+  img.src=imgUrl(fileId); img.alt=''; img.loading=loading;
+  img.onerror=()=>cell.style.display='none';
+  cell.appendChild(img); return cell;
+}
 
-  // Clear errors
-  ['name-err','rel-err','msg-err','submit-err'].forEach(id => {
-    document.getElementById(id).style.display = 'none';
+function getSeasonalTheme(month) {
+  return SEASONAL[month]||null;
+}
+
+// ── Build slide elements ──
+function buildCollageSlide(files, idx, approvedMessages, themeOverride) {
+  const count=Math.min(files.length,12);
+  const layouts=LAYOUTS_BY_COUNT[count]||LAYOUTS_BY_COUNT[10];
+  const layout=pick(layouts);
+  const styleVar=pick(STYLE_VARIANTS);
+  const slide=document.createElement('div');
+  slide.className=`slide ${layout} ${styleVar}`;
+
+  // Seasonal theme from first photo
+  const month=getMonth(files[0]);
+  const seasonal=month?getSeasonalTheme(month):null;
+  if(seasonal) slide.dataset.theme=seasonal.theme;
+  else if(themeOverride) slide.dataset.theme=themeOverride;
+
+  files.slice(0,count).forEach((f,i)=>{
+    const cell=makeCell(f.id, idx<3?'eager':'lazy');
+    if(styleVar==='polaroid'||styleVar==='overlap'){
+      const rot=(Math.random()*6-3).toFixed(1);
+      cell.style.setProperty('--rot',`${rot}deg`);
+      if(styleVar==='overlap') cell.style.setProperty('--z',i+1);
+    }
+    slide.appendChild(cell);
   });
 
-  const name     = document.getElementById('name').value.trim();
-  const rel      = document.getElementById('relationship').value;
-  const message  = msgEl.value.trim();
-  const file     = photoInput.files[0];
+  // Badge — sometimes use approved message
+  if(approvedMessages.length && Math.random()>.4) {
+    const m=pick(approvedMessages);
+    slide.appendChild(makeBadge({msg:m.message, from:`${m.name}${m.relationship?' · '+m.relationship:''}`}));
+  } else {
+    slide.appendChild(makeBadge());
+  }
 
-  // Validate
-  let valid = true;
-  if (!name)    { document.getElementById('name-err').style.display='block'; valid=false; }
-  if (!rel)     { document.getElementById('rel-err').style.display='block';  valid=false; }
-  if (!message) { document.getElementById('msg-err').style.display='block';  valid=false; }
-  if (!valid) return;
+  return slide;
+}
 
-  const btn = document.getElementById('submit-btn');
-  btn.disabled = true;
-  btn.textContent = 'Sending...';
+function buildThenNowSlide(pair) {
+  const slide=document.createElement('div');
+  slide.className='slide then-now';
+  const month=pair.month;
+  const seasonal=getSeasonalTheme(month);
+  if(seasonal) slide.dataset.theme=seasonal.theme;
 
-  try {
-    let photo_base64 = '', photo_name = '', photo_mime = '';
+  slide.appendChild(makeCell(pair.oldFile.id,'lazy'));
+  slide.appendChild(makeCell(pair.newFile.id,'lazy'));
 
-    if (file) {
-      const b64 = await new Promise((res, rej) => {
-        const r = new FileReader();
-        r.onload = () => res(r.result.split(',')[1]);
-        r.onerror = rej;
-        r.readAsDataURL(file);
-      });
-      photo_base64 = b64;
-      photo_name   = file.name;
-      photo_mime   = file.type;
+  const label=document.createElement('div');
+  label.className='then-now-label';
+  const MONTHS=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  label.innerHTML=`<div class="tn-line"></div><span class="tn-word">${MONTHS[month]} ${pair.oldYear}</span><span class="tn-arrow">→</span><span class="tn-word">${MONTHS[month]} ${pair.newYear}</span><div class="tn-line"></div>`;
+  slide.appendChild(label);
+  return slide;
+}
+
+function buildFeaturedPhotoSlide(submission) {
+  const slide=document.createElement('div');
+  slide.className='slide featured-photo';
+  slide.dataset.duration=readTime(submission.message);
+
+  const featImg=document.createElement('div'); featImg.className='feat-img';
+  const img=document.createElement('img');
+  // Extract Drive file ID from URL
+  const match=submission.photoUrl.match(/\/d\/([^\/]+)\//);
+  if(match) img.src=imgUrl(match[1]);
+  else img.src=submission.photoUrl;
+  img.alt=''; img.loading='lazy';
+  img.onerror=()=>slide.style.display='none';
+  const overlay=document.createElement('div'); overlay.className='feat-overlay';
+  featImg.appendChild(img); featImg.appendChild(overlay);
+  slide.appendChild(featImg);
+
+  const featText=document.createElement('div'); featText.className='feat-text';
+  featText.innerHTML=`
+    <div class="feat-divider"></div>
+    <div class="feat-message">"${submission.message}"</div>
+    <div class="feat-from">— ${submission.name}${submission.relationship?' · '+submission.relationship:''}</div>
+  `;
+  slide.appendChild(featText);
+  return slide;
+}
+
+function buildGuestWallSlides(messages) {
+  const slides=[];
+  for(let i=0;i<messages.length;i+=CONFIG.guestWallSize){
+    const chunk=messages.slice(i,i+CONFIG.guestWallSize);
+    if(!chunk.length) break;
+    const slide=document.createElement('div'); slide.className='slide guest-wall';
+    const header=document.createElement('div'); header.className='guest-wall-header';
+    header.innerHTML=`<h2>Messages for Abby</h2><p>From the people who love her most</p>`;
+    slide.appendChild(header);
+    chunk.forEach(m=>{
+      const card=document.createElement('div'); card.className='guest-card';
+      card.innerHTML=`<div class="gc-message">"${m.message}"</div><div class="gc-from">${m.name}</div><div class="gc-rel">${m.relationship}</div>`;
+      slide.appendChild(card);
+    });
+    slides.push(slide);
+  }
+  return slides;
+}
+
+// ── Main build ──
+function buildShowFromData(mainFiles, submittedFiles, approvedMessages) {
+  const showEl=document.getElementById('show');
+  const dotsEl=document.getElementById('dots');
+  showEl.innerHTML=''; dotsEl.innerHTML='';
+
+  // Shuffle main photos
+  const shuffled=shuffle(mainFiles);
+
+  // Build Then & Now pairs
+  const thenNowPairs=buildThenNow(mainFiles);
+  let thenNowIdx=0;
+
+  // Chunk into collage slides
+  const chunks=[];
+  for(let i=0;i<shuffled.length;i+=CONFIG.photosPerSlide){
+    const chunk=shuffled.slice(i,i+CONFIG.photosPerSlide);
+    if(chunk.length>=CONFIG.minPhotos) chunks.push(chunk);
+    else if(chunks.length) chunks[chunks.length-1].push(...chunk);
+  }
+
+  // Submitted photos with messages
+  const featuredSlides=approvedMessages
+    .filter(m=>m.photoUrl)
+    .map(buildFeaturedPhotoSlide);
+
+  // Message-only approved (no photo)
+  const messageOnly=approvedMessages.filter(m=>!m.photoUrl);
+
+  // Guest wall slides
+  const guestWalls=buildGuestWallSlides(approvedMessages);
+
+  // Assemble slide sequence
+  const allSlides=[];
+  let themeGroupIdx=0;
+
+  chunks.forEach((chunk,ci)=>{
+    // Rotate default theme every ~5 collage slides
+    if(ci%5===0 && ci>0) themeGroupIdx=(themeGroupIdx+1)%DEFAULT_THEMES.length;
+    const defaultTheme=DEFAULT_THEMES[themeGroupIdx];
+
+    allSlides.push({type:'collage', chunk, defaultTheme});
+
+    // Sprinkle Then & Now
+    if(ci%CONFIG.thenNowFreq===CONFIG.thenNowFreq-1 && thenNowIdx<thenNowPairs.length){
+      allSlides.push({type:'thenNow', pair:thenNowPairs[thenNowIdx++]});
     }
 
-    const payload = { name, relationship: rel, message, photo_base64, photo_name, photo_mime };
+    // Sprinkle featured submitted photos
+    if(ci%6===5 && featuredSlides.length){
+      const f=featuredSlides.shift();
+      if(f) allSlides.push({type:'featured', el:f});
+    }
+  });
 
-    const res = await fetch(WEBHOOK, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+  // Guest walls near end
+  guestWalls.forEach(w=>allSlides.push({type:'guestWall', el:w}));
 
-    if (!res.ok) throw new Error('Server error ' + res.status);
+  // Render slides
+  const renderedSlides=[];
+  allSlides.forEach((item,si)=>{
+    let slide;
+    if(item.type==='collage'){
+      slide=buildCollageSlide(item.chunk, si, messageOnly, item.defaultTheme);
+    } else if(item.type==='thenNow'){
+      slide=buildThenNowSlide(item.pair);
+    } else {
+      slide=item.el;
+    }
+    if(si===0) slide.classList.add('active');
+    showEl.appendChild(slide);
+    renderedSlides.push(slide);
 
-    // Success
-    document.getElementById('wish-form').style.display = 'none';
-    document.getElementById('success').style.display = 'block';
-    loadCounter(); // refresh count
+    // Dots (max 60)
+    if(allSlides.length<=60){
+      const dot=document.createElement('div'); dot.className=`dot${si===0?' active':''}`;
+      dot.onclick=()=>{clearAuto();goTo(si);startAuto();};
+      dotsEl.appendChild(dot);
+    }
+  });
 
-  } catch(err) {
-    console.error(err);
-    const errEl = document.getElementById('submit-err');
-    errEl.textContent = 'Something went wrong — please try again in a moment.';
-    errEl.style.display = 'block';
-    btn.disabled = false;
-    btn.textContent = '✦   Send My Message to Abby   ✦';
+  return renderedSlides;
+}
+
+// ── Slideshow controller ──
+let slides=[], current=0, autoTimer=null, isLooping=false;
+
+function getSlideInterval(slide) {
+  if(slide.dataset.duration) return parseInt(slide.dataset.duration)*1000;
+  return CONFIG.defaultInterval*1000;
+}
+
+function getSlideTheme(slide) {
+  return slide.dataset.theme||null;
+}
+
+function updateCounter(){
+  document.getElementById('counter').textContent=`${current+1} / ${slides.length}`;
+}
+
+function startProgress(duration){
+  const p=document.getElementById('progress');
+  p.style.transition='none'; p.style.width='0%';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    p.style.transition=`width ${duration/1000}s linear`; p.style.width='100%';
+  }));
+}
+
+function goTo(n){
+  if(!slides.length) return;
+  slides[current].classList.remove('active');
+  const dots=document.querySelectorAll('.dot');
+  if(dots[current]) dots[current].classList.remove('active');
+  current=((n%slides.length)+slides.length)%slides.length;
+  slides[current].classList.add('active');
+  if(dots[current]) dots[current].classList.add('active');
+
+  // Apply theme
+  const theme=getSlideTheme(slides[current]);
+  applyTheme(theme);
+
+  updateCounter();
+  startProgress(getSlideInterval(slides[current]));
+}
+
+function next(){ goTo(current+1); }
+
+function clearAuto(){ clearTimeout(autoTimer); }
+
+function scheduleNext(){
+  const interval=getSlideInterval(slides[current]);
+  autoTimer=setTimeout(async ()=>{
+    if(current===slides.length-1){
+      // End of loop — show outro, refresh data, restart
+      await showOutro();
+      await refreshAndRestart();
+    } else {
+      next();
+      scheduleNext();
+    }
+  }, interval);
+}
+
+function startAuto(){
+  clearAuto();
+  scheduleNext();
+}
+
+async function showOutro(){
+  return new Promise(resolve=>{
+    const outro=document.getElementById('outro');
+    outro.style.display='flex';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      outro.classList.add('visible');
+      setTimeout(()=>{
+        outro.classList.remove('visible');
+        setTimeout(()=>{ outro.style.display='none'; resolve(); },1600);
+      },10000);
+    }));
+  });
+}
+
+async function refreshAndRestart(){
+  try {
+    setStatus('Refreshing photos and messages...');
+    const [mainFiles, submittedFiles, approvedMessages]=await Promise.all([
+      fetchFiles(CONFIG.mainFolderId),
+      fetchFiles(CONFIG.subFolderId),
+      fetchApprovedMessages(),
+    ]);
+    slides=buildShowFromData(mainFiles, submittedFiles, approvedMessages);
+    current=0;
+    goTo(0);
+    startAuto();
+  } catch(e){
+    console.error('Refresh failed',e);
+    current=0; goTo(0); startAuto();
   }
+}
+
+// ── Input handlers ──
+document.addEventListener('click',()=>{ clearAuto(); next(); scheduleNext(); });
+document.addEventListener('touchend',e=>{ e.preventDefault(); clearAuto(); next(); scheduleNext(); },{passive:false});
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '){ clearAuto(); next(); scheduleNext(); }
+  if(e.key==='ArrowLeft'){ clearAuto(); goTo(current-1); scheduleNext(); }
+  if(e.key==='f'||e.key==='F') document.documentElement.requestFullscreen?.();
 });
+
+// ── Wake lock ──
+navigator.wakeLock?.request('screen').catch(()=>{});
+
+// ── Particles ──
+const canvas=document.getElementById('particle-canvas');
+const ctx=canvas.getContext('2d');
+function resize(){ canvas.width=innerWidth; canvas.height=innerHeight; }
+resize(); window.addEventListener('resize',resize);
+
+class Particle {
+  constructor(){this.reset(true);}
+  reset(init=false){
+    this.x=Math.random()*canvas.width;
+    this.y=init?Math.random()*canvas.height:-20;
+    this.r=Math.random()*5+2;
+    this.speed=Math.random()*1.2+.4;
+    this.angle=Math.random()*Math.PI*2;
+    this.spin=(Math.random()-.5)*.07;
+    this.wobble=Math.random()*Math.PI*2;
+    this.wobbleSpeed=Math.random()*.035+.01;
+    this.shape=Math.random()>.4?'rect':'circle';
+    this.w=Math.random()*7+3;
+    this.h=Math.random()*13+5;
+    this.alpha=Math.random()*.5+.3;
+  }
+  getColor(){
+    const colors=['--particle1','--particle2','--particle3','--particle4'];
+    return getComputedStyle(document.body).getPropertyValue(pick(colors)).trim()||'#F0C040';
+  }
+  update(){
+    this.wobble+=this.wobbleSpeed;
+    this.angle+=this.spin;
+    this.y+=this.speed;
+    this.x+=Math.sin(this.wobble)*.65;
+    if(this.y>canvas.height+20) this.reset();
+  }
+  draw(){
+    ctx.save();
+    ctx.translate(this.x,this.y);
+    ctx.rotate(this.angle);
+    ctx.fillStyle=this.getColor();
+    ctx.globalAlpha=this.alpha;
+    if(this.shape==='rect') ctx.fillRect(-this.w/2,-this.h/2,this.w,this.h);
+    else{ ctx.beginPath(); ctx.ellipse(0,0,this.r,this.r*.55,0,0,Math.PI*2); ctx.fill(); }
+    ctx.restore();
+  }
+}
+
+const particles=Array.from({length:80},()=>new Particle());
+(function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{ p.update(); p.draw(); });
+  requestAnimationFrame(drawParticles);
+})();
+
+// ── Init ──
+async function init(){
+  try {
+    setStatus('Fetching photos...');
+    setProgress(20);
+
+    const [mainFiles, submittedFiles, approvedMessages]=await Promise.all([
+      fetchFiles(CONFIG.mainFolderId),
+      fetchFiles(CONFIG.subFolderId),
+      fetchApprovedMessages(),
+    ]);
+
+    if(!mainFiles.length) throw new Error('No photos found in Drive folder.');
+    setStatus(`${mainFiles.length} photos · ${approvedMessages.length} messages`);
+    setProgress(70);
+
+    slides=buildShowFromData(mainFiles, submittedFiles, approvedMessages);
+    setProgress(100);
+
+    // Splash
+    const splash=document.getElementById('splash');
+    splash.style.display='flex';
+    await new Promise(r=>setTimeout(r,400));
+    document.getElementById('loading').classList.add('gone');
+    setTimeout(()=>document.getElementById('loading').remove(),1100);
+
+    setTimeout(()=>{
+      splash.classList.add('gone');
+      setTimeout(()=>splash.remove(),1600);
+      goTo(0);
+      startAuto();
+    },4000);
+
+  } catch(err){
+    console.error(err);
+    document.getElementById('loading').style.display='none';
+    const e=document.getElementById('error-screen');
+    e.style.display='flex';
+    document.getElementById('error-detail').textContent=err.message;
+  }
+}
+
+init();
 </script>
 </body>
 </html>
