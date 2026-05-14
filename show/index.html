@@ -448,20 +448,15 @@ body.theme-spring {
   letter-spacing:.1em;
 }
 
-/* ── Grid layouts ── */
-.layout-a { grid-template-columns:1fr 1fr 1fr; grid-template-rows:1fr 1fr 1fr; }
-.layout-b { grid-template-columns:1.1fr .95fr .95fr 1.1fr; grid-template-rows:1fr 1.2fr 1fr; }
-.layout-b .cell:nth-child(5){grid-column:1;grid-row:2;} .layout-b .cell:nth-child(6){grid-column:4;grid-row:2;}
-.layout-b .cell:nth-child(7){grid-column:1;grid-row:3;} .layout-b .cell:nth-child(8){grid-column:2;grid-row:3;}
-.layout-b .cell:nth-child(9){grid-column:3;grid-row:3;} .layout-b .cell:nth-child(10){grid-column:4;grid-row:3;}
-.layout-c { grid-template-columns:1.35fr 1fr 1fr; grid-template-rows:1fr 1fr 1fr 1fr; }
-.layout-c .cell:nth-child(1){grid-column:1;grid-row:1/3;} .layout-c .cell:nth-child(6){grid-column:1;grid-row:3/5;}
-.layout-d { grid-template-columns:repeat(4,1fr); grid-template-rows:repeat(3,1fr); }
-.layout-e { grid-template-columns:1fr 2fr 1fr; grid-template-rows:1fr 1fr 1fr; }
-.layout-e .cell:nth-child(5){grid-column:2;grid-row:2/4;}
-.layout-f { grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr 1fr; }
-.layout-g { grid-template-columns:2fr 1fr; grid-template-rows:1fr 1fr; }
-.layout-h { grid-template-columns:1fr 1fr 1fr 1fr; grid-template-rows:1fr 1fr; }
+/* ── Dynamic orientation-aware grid ── */
+.slide.dynamic-grid {
+  display: grid;
+  grid-auto-flow: dense;
+}
+.cell.orient-portrait  { grid-row: span 2; }
+.cell.orient-landscape { grid-column: span 2; }
+.cell.orient-square    { grid-row: span 1; grid-column: span 1; }
+.cell.orient-badge     { grid-row: span 1; grid-column: span 1; }
 
 /* ── UI chrome ── */
 #counter { position:fixed; bottom:1rem; right:1.5rem; z-index:20; font-size:.55rem; letter-spacing:.3em; color:rgba(255,255,255,.3); text-transform:uppercase; }
@@ -558,20 +553,35 @@ const SEASONAL = {
 const DEFAULT_THEMES = ['gold','rose','navy','editorial','summer'];
 let defaultThemeIdx = 0;
 
-// ── Layouts by TOTAL cell count (photos + 1 badge cell) ──
-// Badge always occupies one cell in the grid
-const LAYOUTS_BY_COUNT = {
-  4: ['layout-f'],   // 3 photos + badge
-  5: ['layout-f'],   // 4 photos + badge
-  6: ['layout-a'],   // 5 photos + badge
-  7: ['layout-a'],   // 6 photos + badge
-  8: ['layout-a','layout-c','layout-h'], // 7 photos + badge
-  9: ['layout-a','layout-c','layout-d'], // 8 photos + badge
-  10:['layout-b','layout-d','layout-e'], // 9 photos + badge
-  11:['layout-b','layout-d'],            // 10 photos + badge
-  12:['layout-d','layout-h'],            // 11 photos + badge
-};
-const STYLE_VARIANTS = ['','','polaroid','overlap']; // weight plain more heavily
+// ── Orientation detection ──
+function getOrientation(file) {
+  const w = file.imageMediaMetadata?.width;
+  const h = file.imageMediaMetadata?.height;
+  if(!w || !h) return 'square'; // fallback if no metadata
+  const ratio = w / h;
+  if(ratio > 1.2) return 'landscape';
+  if(ratio < 0.85) return 'portrait';
+  return 'square';
+}
+
+// ── Grid columns by orientation mix ──
+// Returns CSS grid-template-columns value and row count
+function getGridConfig(orientations) {
+  const portraits  = orientations.filter(o=>o==='portrait').length;
+  const landscapes = orientations.filter(o=>o==='landscape').length;
+  const total = orientations.length;
+
+  // Mostly portrait — 3 col grid, portraits span 2 rows
+  if(portraits > total * 0.5) return { cols: 3, rows: 4 };
+  // Mostly landscape — 3 col grid, landscapes span 2 cols
+  if(landscapes > total * 0.5) return { cols: 4, rows: 3 };
+  // Mixed — 4 col grid works for most combos
+  if(total <= 6) return { cols: 3, rows: 3 };
+  if(total <= 9) return { cols: 3, rows: 3 };
+  return { cols: 4, rows: 3 };
+}
+
+const STYLE_VARIANTS = ['','','','polaroid','overlap']; // weight plain heavily
 
 // ── Utilities ──
 function shuffle(arr) {
@@ -727,14 +737,18 @@ function getSeasonalTheme(month) {
 
 // ── Build slide elements ──
 function buildCollageSlide(files, idx, approvedMessages, themeOverride) {
-  // Badge takes one cell — so total cells = photos + 1
-  const totalCells = Math.min(files.length + 1, 12);
-  const photoCount = totalCells - 1;
-  const layouts = LAYOUTS_BY_COUNT[totalCells] || LAYOUTS_BY_COUNT[10];
-  const layout = pick(layouts);
+  // Work with up to 11 photos + 1 badge = 12 cells max
+  const photos = files.slice(0, Math.min(files.length, 11));
+  const orientations = photos.map(getOrientation);
+  const gridConfig = getGridConfig(orientations);
   const styleVar = pick(STYLE_VARIANTS);
+
   const slide = document.createElement('div');
-  slide.className = `slide ${layout} ${styleVar}`;
+  slide.className = `slide dynamic-grid ${styleVar}`;
+  slide.style.gridTemplateColumns = `repeat(${gridConfig.cols}, 1fr)`;
+  slide.style.gridTemplateRows = `repeat(${gridConfig.rows}, 1fr)`;
+  slide.style.padding = '10px';
+  slide.style.gap = '8px';
 
   // Seasonal theme from first photo
   const month = getMonth(files[0]);
@@ -742,29 +756,50 @@ function buildCollageSlide(files, idx, approvedMessages, themeOverride) {
   if(seasonal) slide.dataset.theme = seasonal.theme;
   else if(themeOverride) slide.dataset.theme = themeOverride;
 
-  // Pick random position for badge within the cells (0 to totalCells-1)
-  const badgePos = Math.floor(Math.random() * totalCells);
+  // Pick random badge position (not first or last — keep corners for photos)
+  const badgePos = 1 + Math.floor(Math.random() * (photos.length - 1));
   let photoIdx = 0;
 
-  for(let i = 0; i < totalCells; i++) {
+  for(let i = 0; i <= photos.length; i++) {
     if(i === badgePos) {
-      // Insert badge cell
+      // Badge cell
       let badgeOpts = {};
       if(approvedMessages.length && Math.random() > .35) {
         const m = pick(approvedMessages);
         badgeOpts = { msg: m.message, from: `${m.name}${m.relationship ? ' · ' + m.relationship : ''}` };
       }
-      slide.appendChild(makeBadge(badgeOpts));
-    } else {
-      // Insert photo cell
-      const f = files[photoIdx++];
-      if(!f) continue;
+      const badgeCell = makeBadge(badgeOpts);
+      badgeCell.classList.add('orient-badge');
+      slide.appendChild(badgeCell);
+    }
+
+    if(photoIdx < photos.length) {
+      const f = photos[photoIdx];
+      const orient = orientations[photoIdx];
+      photoIdx++;
+
       const cell = makeCell(f.id, idx < 3 ? 'eager' : 'lazy');
+      cell.classList.add(`orient-${orient}`);
+
+      // object-fit based on orientation
+      // Portrait: contain so full height shows — no head cropping
+      // Landscape: cover — wide shots fill naturally
+      // Square: cover
+      const img = cell.querySelector('img');
+      if(orient === 'portrait') {
+        img.style.objectFit = 'contain';
+        img.style.background = 'var(--bg)';
+      } else {
+        img.style.objectFit = 'cover';
+        img.style.objectPosition = 'center top';
+      }
+
       if(styleVar === 'polaroid' || styleVar === 'overlap') {
-        const rot = (Math.random() * 6 - 3).toFixed(1);
+        const rot = (Math.random() * 4 - 2).toFixed(1);
         cell.style.setProperty('--rot', `${rot}deg`);
         if(styleVar === 'overlap') cell.style.setProperty('--z', i + 1);
       }
+
       slide.appendChild(cell);
     }
   }
