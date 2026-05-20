@@ -740,8 +740,8 @@ function getSeasonalTheme(month) {
 }
 
 // ── Build slide elements ──
-function classifyOrientation(fileId, photoCache) {
-  const entry = photoCache[fileId];
+function classifyOrientation(file, photoCache) {
+  const entry = photoCache[file.name] || photoCache[file.id];
   if (!entry || !entry.width || !entry.height) return 'square';
   const ratio = entry.width / entry.height;
   if (ratio > 1.4) return 'landscape';
