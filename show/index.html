@@ -246,7 +246,7 @@ body.theme-spring {
 .slide.active { opacity:1; z-index:1; }
 
 .cell { overflow:hidden; border-radius:3px; background:#111; position:relative; }
-.cell img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 8s ease; }
+.cell img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; transition:transform 8s ease; }
 .slide.active .cell img { transform:scale(1.05); }
 
 /* Polaroid style */
@@ -760,9 +760,13 @@ function buildCollageSlide(files, idx, approvedMessages, themeOverride, photoCac
 
   // Classify orientations and build dynamic grid
   const orientations = photos.map(f => classifyOrientation(f.id, photoCache));
-  // landscape/portrait each consume 2 cell-units; square/badge consume 1
+  const portraitCount = orientations.filter(o => o === 'portrait').length;
+  const landscapeCount = orientations.filter(o => o === 'landscape').length;
+  // portrait = 1col×2rows = 2 units, landscape = 2cols×1row = 2 units, square/badge = 1 unit
   const totalUnits = orientations.reduce((s, o) => s + (o === 'landscape' || o === 'portrait' ? 2 : 1), 0) + 1;
-  const rows = Math.max(2, Math.ceil(totalUnits / 4));
+  // 4 rows for portrait-heavy, 3 rows for landscape-heavy/balanced; floor at units/cols
+  const defaultRows = portraitCount > landscapeCount ? 4 : 3;
+  const rows = Math.max(defaultRows, Math.ceil(totalUnits / 4));
   slide.style.gridTemplateColumns = 'repeat(4, 1fr)';
   slide.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
   slide.style.gridAutoFlow = 'dense';
