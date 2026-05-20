@@ -64,7 +64,7 @@ body.theme-spring { --bg:#080f0a; --text:#F0FFF0; --text2:rgba(240,255,240,0.6);
 
 /* ── Photo cells ── */
 .cell { overflow:hidden; border-radius:3px; background:#111; min-width:0; min-height:0; }
-.cell img { width:100%; height:100%; object-fit:contain; object-position:center center; display:block; transition:transform 8s ease; }
+.cell img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; transition:transform 8s ease; }
 .slide.active .cell img { transform:scale(1.04); }
 
 /* Polaroid */
@@ -280,17 +280,23 @@ function buildCollageSlide(files, si, approvedMessages, themeOverride) {
   const nPortrait  = orients.filter(o=>o==='portrait').length;
   const nLandscape = orients.filter(o=>o==='landscape').length;
 
-  // Grid: always 4 columns
-  // Portrait cells span 2 rows (tall), landscape span 2 cols (wide), square = 1x1
-  // Calculate rows needed: portrait + landscape each need 2 "units", square needs 1
-  // Total units / 4 cols = rows, but portrait-heavy needs more rows
-  const units = orients.reduce((s,o)=>s+(o==='portrait'||o==='landscape'?2:1),0) + 1; // +1 badge
-  const baseRows = nPortrait > nLandscape ? 4 : 3;
-  const rows = Math.max(baseRows, Math.ceil(units / 4));
+  // Build a grid where:
+  // - portrait photos span 1 col × 2 rows (tall cell matches tall photo)
+  // - landscape photos span 2 cols × 1 row (wide cell matches wide photo)
+  // - square photos span 1 col × 1 row
+  // Use 3 columns for portrait-heavy, 4 for landscape-heavy
+  const cols = nPortrait > nLandscape ? 3 : 4;
+
+  // Calculate total grid unit slots needed
+  // portrait = 1col × 2rows = 2 row-slots in 1 col
+  // landscape = 2cols × 1row = 2 col-slots in 1 row
+  // square/badge = 1×1
+  const totalUnits = orients.reduce((s,o)=>s+(o==='portrait'||o==='landscape'?2:1),0)+1;
+  const rows = Math.max(2, Math.ceil(totalUnits / cols));
 
   const slide = document.createElement('div');
   slide.className = `slide ${styleVar}`.trim();
-  slide.style.gridTemplateColumns = 'repeat(4, 1fr)';
+  slide.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
   slide.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
   slide.style.gridAutoFlow = 'dense';
 
@@ -317,7 +323,6 @@ function buildCollageSlide(files, si, approvedMessages, themeOverride) {
       const orient = orients[pi];
       pi++;
       const cell = makeCell(f.id, si < 3 ? 'eager' : 'lazy');
-      // KEY: set grid spans based on actual photo orientation
       if (orient === 'portrait')  cell.style.gridRow    = 'span 2';
       if (orient === 'landscape') cell.style.gridColumn = 'span 2';
       if (styleVar === 'polaroid' || styleVar === 'overlap') {
