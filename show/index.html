@@ -770,6 +770,11 @@ function buildCollageSlide(files, idx, approvedMessages, themeOverride, photoCac
   slide.style.gridTemplateColumns = 'repeat(4, 1fr)';
   slide.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
   slide.style.gridAutoFlow = 'dense';
+  if(idx === 0) {
+    console.log('[collage-debug] slide 0 —', photos.length, 'photos');
+    photos.forEach((f, i) => console.log(`  [${i}] id=${f.id} orient=${orientations[i]} cache=`, photoCache[f.id]));
+    console.log(`  rows=${rows} gridTemplateRows="repeat(${rows}, 1fr)"`);
+  }
 
   // Seasonal theme
   const month = getMonth(files[0]);
