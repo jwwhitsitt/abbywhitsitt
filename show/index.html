@@ -759,7 +759,7 @@ function buildCollageSlide(files, idx, approvedMessages, themeOverride, photoCac
   slide.style.gap = '8px';
 
   // Classify orientations and build dynamic grid
-  const orientations = photos.map(f => classifyOrientation(f.id, photoCache));
+  const orientations = photos.map(f => classifyOrientation(f, photoCache));
   const portraitCount = orientations.filter(o => o === 'portrait').length;
   const landscapeCount = orientations.filter(o => o === 'landscape').length;
   // portrait = 1col×2rows = 2 units, landscape = 2cols×1row = 2 units, square/badge = 1 unit
