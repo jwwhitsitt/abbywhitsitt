@@ -70,7 +70,7 @@ body.theme-spring    { --bg:#080f0a; --text:#F0FFF0; --gold:#A0E080; --gold2:#60
 .cell img {
   position:absolute; inset:0;
   width:100%; height:100%;
-  object-fit:cover;
+  object-fit:contain;
   object-position:center center;
   display:block;
   transition:transform 9s ease;
@@ -372,43 +372,7 @@ function buildCollageSlide(files, si, approvedMessages, themeOverride){
 
     const cell = document.createElement('div');
     cell.className = 'cell';
-
-    // Calculate exact cell size matching photo's aspect ratio within slot bounds
-    const pw = f.imageMediaMetadata?.width  || 4;
-    const ph = f.imageMediaMetadata?.height || 3;
-    const photoRatio = pw / ph; // e.g. 1.333 for landscape, 0.75 for portrait
-
-    // Slot ratio in screen space (account for 16:9 viewport)
-    // slot w% and h% are % of viewport, viewport is 16:9
-    // So actual aspect = (w/100 * 16) / (h/100 * 9) = (w * 16) / (h * 9)
-    const slotRatioScreen = (slot.w * 16) / (slot.h * 9);
-
-    let cellX = slot.x, cellY = slot.y, cellW = slot.w, cellH = slot.h;
-
-    if (photoRatio > slotRatioScreen) {
-      // Photo wider than slot — constrain width, shrink height, center vertically
-      cellW = slot.w;
-      // New height in % = slot.w * (9/16) / photoRatio * (16/9)... simplify:
-      // screen_h = screen_w / photoRatio
-      // screen_w = slot.w% * vw
-      // screen_h = slot.w% * vw / photoRatio
-      // cellH% = screen_h / vh * 100 = slot.w * vw / photoRatio / vh
-      // = slot.w * 16/9 / photoRatio  ... but in % terms:
-      cellH = slot.w * (16/9) / photoRatio * (9/16);
-      // Simplifies to: cellH = slot.w / photoRatio  (the 16/9 * 9/16 cancel)
-      cellH = slot.w / photoRatio;
-      cellY = slot.y + (slot.h - cellH) / 2;
-    } else {
-      // Photo taller than slot — constrain height, shrink width, center horizontally
-      cellH = slot.h;
-      // screen_w = screen_h * photoRatio
-      // screen_h = slot.h% * vh
-      // cellW% = screen_w / vw = slot.h * vh * photoRatio / vw = slot.h * photoRatio * 9/16
-      cellW = slot.h * photoRatio * (9/16);
-      cellX = slot.x + (slot.w - cellW) / 2;
-    }
-
-    cell.setAttribute('style',`left:${cellX.toFixed(2)}%;top:${cellY.toFixed(2)}%;width:${cellW.toFixed(2)}%;height:${cellH.toFixed(2)}%;`);
+    cell.setAttribute('style',`left:${slot.x}%;top:${slot.y}%;width:${slot.w}%;height:${slot.h}%;`);
     const img = document.createElement('img');
     img.src = imgUrl(f.id); img.alt=''; img.loading=si<3?'eager':'lazy';
     img.onerror = ()=>cell.style.display='none';
