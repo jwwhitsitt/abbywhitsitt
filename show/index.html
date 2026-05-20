@@ -70,12 +70,12 @@ body.theme-spring    { --bg:#080f0a; --text:#F0FFF0; --gold:#A0E080; --gold2:#60
 .cell img {
   position:absolute; inset:0;
   width:100%; height:100%;
-  object-fit:cover;
-  object-position:center top;
+  object-fit:contain;
+  object-position:center center;
   display:block;
   transition:transform 9s ease;
 }
-.slide.active .cell img { transform:scale(1.04); }
+.slide.active .cell img { transform:scale(1.02); }
 
 /* ── Badge cell ── */
 .badge {
@@ -411,23 +411,57 @@ function buildCollageSlide(files, si, approvedMessages, themeOverride){
   const seasonal = month ? SEASONAL[month] : null;
   slide.dataset.theme = seasonal ? seasonal.theme : (themeOverride||'');
 
-  // Shuffle files so badge can go anywhere
   const shuffled = shuffle([...files]);
   let pi = 0;
 
   layout.slots.forEach(slot => {
     const el = document.createElement('div');
-    const style = `left:${slot.x}%;top:${slot.y}%;width:${slot.w}%;height:${slot.h}%;`;
 
     if(slot.type === 'badge'){
       el.className = 'badge';
-      el.setAttribute('style', style);
+      el.setAttribute('style', `left:${slot.x}%;top:${slot.y}%;width:${slot.w}%;height:${slot.h}%;`);
       el.innerHTML = badgeHTML(approvedMessages);
     } else {
       const f = shuffled[pi++];
       if(!f) return;
       el.className = 'cell';
-      el.setAttribute('style', style);
+
+      // Get photo dimensions from Drive metadata
+      const pw = f.imageMediaMetadata?.width  || 1;
+      const ph = f.imageMediaMetadata?.height || 1;
+      const photoRatio = pw / ph;
+
+      // Slot dimensions as viewport percentages
+      const sw = slot.w; // slot width %
+      const sh = slot.h; // slot height %
+
+      // Slot aspect ratio (approximate — assume 16:9 viewport)
+      const vw = 16, vh = 9;
+      const slotW = sw / 100 * vw;
+      const slotH = sh / 100 * vh;
+      const slotRatio = slotW / slotH;
+
+      // Fit photo inside slot maintaining its ratio
+      let cellW = sw, cellH = sh, cellX = slot.x, cellY = slot.y;
+      if(photoRatio > slotRatio){
+        // Photo is wider than slot — constrain by width, center vertically
+        cellW = sw;
+        cellH = sw / photoRatio / vw * vh * (vh/vh);
+        // Recalculate: cellH in % = (cellW_vw / photoRatio) / vh * 100
+        const cellH_vw = (sw / 100 * vw) / photoRatio;
+        cellH = cellH_vw / vh * 100;
+        cellY = slot.y + (sh - cellH) / 2;
+      } else {
+        // Photo is taller than slot — constrain by height, center horizontally
+        cellH = sh;
+        const cellW_vh = (sh / 100 * vh) * photoRatio;
+        cellW = cellW_vh / vw * 100;
+        cellX = slot.x + (sw - cellW) / 2;
+      }
+
+      el.setAttribute('style',
+        `left:${cellX.toFixed(2)}%;top:${cellY.toFixed(2)}%;width:${cellW.toFixed(2)}%;height:${cellH.toFixed(2)}%;`
+      );
       const img = document.createElement('img');
       img.src = imgUrl(f.id);
       img.alt = '';
@@ -438,7 +472,7 @@ function buildCollageSlide(files, si, approvedMessages, themeOverride){
     slide.appendChild(el);
   });
 
-  // Custom badge position (for layouts with badgeStyle override)
+  // Custom badge position override
   if(layout.badgeStyle){
     const badge = document.createElement('div');
     badge.className = 'badge';
