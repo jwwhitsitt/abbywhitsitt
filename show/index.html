@@ -9,462 +9,123 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { width:100vw; height:100vh; overflow:hidden; }
 
-/* ══════════════════════════════
-   THEME VARIABLES
-══════════════════════════════ */
 body {
-  --gold: #F0C040;
-  --gold2: #C9973A;
-  --bg: #0a0a0f;
-  --bg2: #12111a;
-  --text: #FDF8EE;
-  --text2: rgba(253,248,238,0.6);
-  --accent: #F0C040;
-  --particle1: #F0C040;
-  --particle2: #E8407A;
-  --particle3: #7B61FF;
-  --particle4: #42D9C8;
-  --badge-bg: rgba(13,13,13,0.9);
-  --badge-border: #C9973A;
-  --font-display: 'Cormorant Garamond', serif;
-  --font-title: 'Cinzel', serif;
-  --font-body: 'Lato', sans-serif;
-  background: var(--bg);
-  font-family: var(--font-body);
-  font-weight: 300;
-  cursor: none;
+  --gold:#F0C040; --gold2:#C9973A; --bg:#0a0a0f; --text:#FDF8EE; --text2:rgba(253,248,238,0.6);
+  --badge-bg:rgba(13,13,13,0.9); --badge-border:#C9973A;
+  --p1:#F0C040; --p2:#E8407A; --p3:#7B61FF; --p4:#42D9C8;
+  --font-d:'Cormorant Garamond',serif; --font-t:'Cinzel',serif; --font-b:'Lato',sans-serif;
+  background:var(--bg); font-family:var(--font-b); font-weight:300; cursor:none;
 }
+body.theme-rose   { --bg:#1a0a0d; --text:#FDF0F2; --text2:rgba(253,240,242,0.6); --gold:#E8A0B0; --gold2:#C97080; --badge-bg:rgba(26,10,13,0.92); --badge-border:#C97080; --p1:#E8A0B0; --p2:#F5C5CF; --p3:#C97080; --p4:#FFE4E8; }
+body.theme-navy   { --bg:#050a1a; --text:#E8EFF8; --text2:rgba(232,239,248,0.6); --gold:#C0D0E8; --gold2:#8098B8; --badge-bg:rgba(5,10,26,0.92); --badge-border:#8098B8; --p1:#C0D0E8; --p2:#E8EFF8; --p3:#8098B8; --p4:#4060A0; }
+body.theme-editorial { --bg:#0f0f0f; --text:#F0F0F0; --text2:rgba(240,240,240,0.5); --gold:#F0F0F0; --gold2:#A0A0A0; --badge-bg:rgba(0,0,0,0.95); --badge-border:#606060; --p1:#F0F0F0; --p2:#A0A0A0; --p3:#606060; --p4:#D0D0D0; --font-d:'UnifrakturMaguntia',cursive; }
+body.theme-summer { --bg:#0a1510; --text:#F0FFF4; --text2:rgba(240,255,244,0.6); --gold:#60D890; --gold2:#40A860; --badge-bg:rgba(10,21,16,0.92); --badge-border:#40A860; --p1:#60D890; --p2:#40C8C0; --p3:#F0C040; --p4:#E87040; }
+body.theme-christmas { --bg:#0a1a08; --text:#FFF8F0; --text2:rgba(255,248,240,0.6); --gold:#F0C040; --gold2:#C83020; --badge-bg:rgba(10,26,8,0.92); --badge-border:#C83020; --p1:#E83020; --p2:#F0C040; --p3:#FFFFFF; --p4:#40A830; }
+body.theme-july4  { --bg:#08081a; --text:#F8F8FF; --text2:rgba(248,248,255,0.6); --gold:#E8E8F0; --gold2:#A0A0D0; --badge-bg:rgba(8,8,26,0.92); --badge-border:#E83020; --p1:#E83020; --p2:#F8F8FF; --p3:#2040C8; --p4:#F0C040; }
+body.theme-halloween { --bg:#0a0500; --text:#FFF0E0; --text2:rgba(255,240,224,0.6); --gold:#F0A030; --gold2:#C06010; --badge-bg:rgba(10,5,0,0.92); --badge-border:#C06010; --p1:#F0A030; --p2:#E87020; --p3:#800080; --p4:#FFFFFF; }
+body.theme-valentine { --bg:#1a0810; --text:#FFF0F4; --text2:rgba(255,240,244,0.6); --gold:#F090A8; --gold2:#C84060; --badge-bg:rgba(26,8,16,0.92); --badge-border:#C84060; --p1:#E84060; --p2:#F090A8; --p3:#FF6688; --p4:#FFB0C0; }
+body.theme-spring { --bg:#080f0a; --text:#F0FFF0; --text2:rgba(240,255,240,0.6); --gold:#A0E080; --gold2:#60A840; --badge-bg:rgba(8,15,10,0.92); --badge-border:#60A840; --p1:#A0E080; --p2:#E0A0C0; --p3:#80C860; --p4:#F0E060; }
 
-/* Theme: Cream & Rose */
-body.theme-rose {
-  --bg: #1a0a0d;
-  --bg2: #2a1218;
-  --text: #FDF0F2;
-  --text2: rgba(253,240,242,0.6);
-  --accent: #E8A0B0;
-  --gold: #E8A0B0;
-  --gold2: #C97080;
-  --badge-bg: rgba(26,10,13,0.92);
-  --badge-border: #C97080;
-  --particle1: #E8A0B0;
-  --particle2: #F5C5CF;
-  --particle3: #C97080;
-  --particle4: #FFE4E8;
-}
+#particle-canvas { position:fixed; inset:0; pointer-events:none; z-index:50; }
 
-/* Theme: Navy & Silver */
-body.theme-navy {
-  --bg: #050a1a;
-  --bg2: #0a1428;
-  --text: #E8EFF8;
-  --text2: rgba(232,239,248,0.6);
-  --accent: #A0B8D8;
-  --gold: #C0D0E8;
-  --gold2: #8098B8;
-  --badge-bg: rgba(5,10,26,0.92);
-  --badge-border: #8098B8;
-  --particle1: #C0D0E8;
-  --particle2: #E8EFF8;
-  --particle3: #8098B8;
-  --particle4: #4060A0;
-}
-
-/* Theme: Editorial */
-body.theme-editorial {
-  --bg: #0f0f0f;
-  --bg2: #1a1a1a;
-  --text: #F0F0F0;
-  --text2: rgba(240,240,240,0.5);
-  --accent: #F0F0F0;
-  --gold: #F0F0F0;
-  --gold2: #A0A0A0;
-  --badge-bg: rgba(0,0,0,0.95);
-  --badge-border: #606060;
-  --particle1: #F0F0F0;
-  --particle2: #A0A0A0;
-  --particle3: #606060;
-  --particle4: #D0D0D0;
-  --font-display: 'UnifrakturMaguntia', cursive;
-}
-
-/* Theme: Summer */
-body.theme-summer {
-  --bg: #0a1510;
-  --bg2: #0f2018;
-  --text: #F0FFF4;
-  --text2: rgba(240,255,244,0.6);
-  --accent: #40C870;
-  --gold: #60D890;
-  --gold2: #40A860;
-  --badge-bg: rgba(10,21,16,0.92);
-  --badge-border: #40A860;
-  --particle1: #60D890;
-  --particle2: #40C8C0;
-  --particle3: #F0C040;
-  --particle4: #E87040;
-}
-
-/* Seasonal: Christmas */
-body.theme-christmas {
-  --bg: #0a1a08;
-  --bg2: #102008;
-  --text: #FFF8F0;
-  --text2: rgba(255,248,240,0.6);
-  --accent: #E83020;
-  --gold: #F0C040;
-  --gold2: #C83020;
-  --badge-bg: rgba(10,26,8,0.92);
-  --badge-border: #C83020;
-  --particle1: #E83020;
-  --particle2: #F0C040;
-  --particle3: #FFFFFF;
-  --particle4: #40A830;
-}
-
-/* Seasonal: July 4th */
-body.theme-july4 {
-  --bg: #08081a;
-  --bg2: #10102a;
-  --text: #F8F8FF;
-  --text2: rgba(248,248,255,0.6);
-  --accent: #E83020;
-  --gold: #E8E8F0;
-  --gold2: #A0A0D0;
-  --badge-bg: rgba(8,8,26,0.92);
-  --badge-border: #E83020;
-  --particle1: #E83020;
-  --particle2: #F8F8FF;
-  --particle3: #2040C8;
-  --particle4: #F0C040;
-}
-
-/* Seasonal: Halloween */
-body.theme-halloween {
-  --bg: #0a0500;
-  --bg2: #180a00;
-  --text: #FFF0E0;
-  --text2: rgba(255,240,224,0.6);
-  --accent: #E87020;
-  --gold: #F0A030;
-  --gold2: #C06010;
-  --badge-bg: rgba(10,5,0,0.92);
-  --badge-border: #C06010;
-  --particle1: #F0A030;
-  --particle2: #E87020;
-  --particle3: #800080;
-  --particle4: #FFFFFF;
-}
-
-/* Seasonal: Valentine */
-body.theme-valentine {
-  --bg: #1a0810;
-  --bg2: #280a18;
-  --text: #FFF0F4;
-  --text2: rgba(255,240,244,0.6);
-  --accent: #E84060;
-  --gold: #F090A8;
-  --gold2: #C84060;
-  --badge-bg: rgba(26,8,16,0.92);
-  --badge-border: #C84060;
-  --particle1: #E84060;
-  --particle2: #F090A8;
-  --particle3: #FF6688;
-  --particle4: #FFB0C0;
-}
-
-/* Seasonal: Spring */
-body.theme-spring {
-  --bg: #080f0a;
-  --bg2: #101808;
-  --text: #F0FFF0;
-  --text2: rgba(240,255,240,0.6);
-  --accent: #80C860;
-  --gold: #A0E080;
-  --gold2: #60A840;
-  --badge-bg: rgba(8,15,10,0.92);
-  --badge-border: #60A840;
-  --particle1: #A0E080;
-  --particle2: #E0A0C0;
-  --particle3: #80C860;
-  --particle4: #F0E060;
-}
-
-/* ══════════════════════════════
-   CANVAS & UI CHROME
-══════════════════════════════ */
-#particle-canvas {
-  position:fixed; inset:0; pointer-events:none; z-index:50;
-}
-
-#loading {
-  position:fixed; inset:0; z-index:80;
-  background:var(--bg);
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem;
-  transition:opacity 1s ease;
-}
+#loading { position:fixed; inset:0; z-index:80; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem; transition:opacity 1s ease; }
 #loading.gone { opacity:0; pointer-events:none; }
-#loading h2 { font-family:var(--font-title); font-size:1rem; letter-spacing:.4em; color:var(--gold2); text-transform:uppercase; }
+#loading h2 { font-family:var(--font-t); font-size:1rem; letter-spacing:.4em; color:var(--gold2); text-transform:uppercase; }
 #loading-bar-wrap { width:260px; height:2px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden; }
 #loading-bar { height:100%; width:0%; background:linear-gradient(to right,var(--gold2),var(--gold)); transition:width .3s ease; }
 #loading-status { font-size:.6rem; letter-spacing:.25em; color:var(--text2); text-transform:uppercase; }
 
-#splash {
-  position:fixed; inset:0; z-index:70;
-  background:var(--bg);
-  display:none; flex-direction:column; align-items:center; justify-content:center; gap:.8rem;
-  transition:opacity 1.5s ease;
-}
+#splash { position:fixed; inset:0; z-index:70; background:var(--bg); display:none; flex-direction:column; align-items:center; justify-content:center; gap:.8rem; transition:opacity 1.5s ease; }
 #splash.gone { opacity:0; pointer-events:none; }
-#splash .s-eye { font-family:var(--font-title); font-size:clamp(.55rem,1.5vw,.7rem); letter-spacing:.5em; color:var(--gold2); text-transform:uppercase; margin-bottom:.5rem; }
-#splash h1 { font-family:var(--font-display); font-size:clamp(4rem,10vw,9rem); font-weight:300; color:var(--text); line-height:1; text-align:center; }
+#splash .s-eye { font-family:var(--font-t); font-size:clamp(.55rem,1.5vw,.7rem); letter-spacing:.5em; color:var(--gold2); text-transform:uppercase; margin-bottom:.5rem; }
+#splash h1 { font-family:var(--font-d); font-size:clamp(4rem,10vw,9rem); font-weight:300; color:var(--text); line-height:1; text-align:center; }
 #splash h1 em { font-style:italic; color:var(--gold); display:block; }
-#splash .s-sub { font-family:var(--font-title); font-size:clamp(.55rem,1.5vw,.75rem); letter-spacing:.4em; color:var(--text2); text-transform:uppercase; margin-top:.5rem; }
+#splash .s-sub { font-family:var(--font-t); font-size:clamp(.55rem,1.5vw,.75rem); letter-spacing:.4em; color:var(--text2); text-transform:uppercase; margin-top:.5rem; }
 .s-star { position:absolute; color:var(--gold); opacity:0; animation:sp 3s ease-in-out infinite; }
 @keyframes sp { 0%,100%{opacity:0;transform:scale(.5)} 50%{opacity:.7;transform:scale(1)} }
 
-#outro {
-  position:fixed; inset:0; z-index:70;
-  background:var(--bg);
-  display:none; flex-direction:column; align-items:center; justify-content:center; gap:.8rem;
-  opacity:0; transition:opacity 1.5s ease;
-}
+#outro { position:fixed; inset:0; z-index:70; background:var(--bg); display:none; flex-direction:column; align-items:center; justify-content:center; gap:.8rem; opacity:0; transition:opacity 1.5s ease; }
 #outro.visible { opacity:1; }
-#outro h1 { font-family:var(--font-display); font-style:italic; font-size:clamp(3rem,8vw,7rem); color:var(--gold); line-height:1; text-align:center; }
-#outro p { font-family:var(--font-title); font-size:clamp(.55rem,1.5vw,.75rem); letter-spacing:.4em; color:var(--text2); text-transform:uppercase; }
+#outro h1 { font-family:var(--font-d); font-style:italic; font-size:clamp(3rem,8vw,7rem); color:var(--gold); line-height:1; text-align:center; }
+#outro p { font-family:var(--font-t); font-size:clamp(.55rem,1.5vw,.75rem); letter-spacing:.4em; color:var(--text2); text-transform:uppercase; }
 
-/* ══════════════════════════════
-   SLIDESHOW
-══════════════════════════════ */
 #show { position:relative; width:100%; height:100%; }
 
+/* ── Base slide — all slides share this ── */
 .slide {
   position:absolute; inset:0; opacity:0;
   transition:opacity 1.4s ease;
-  display:grid; padding:10px; gap:8px;
   background:var(--bg);
+  display:grid;
+  padding:10px;
+  gap:8px;
 }
 .slide.active { opacity:1; z-index:1; }
 
-.cell { overflow:hidden; border-radius:3px; background:#111; position:relative; }
+/* ── Photo cells ── */
+.cell { overflow:hidden; border-radius:3px; background:#111; min-width:0; min-height:0; }
 .cell img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; transition:transform 8s ease; }
-.slide.active .cell img { transform:scale(1.05); }
+.slide.active .cell img { transform:scale(1.04); }
 
-/* Polaroid style */
-.slide.polaroid .cell {
-  background:#f8f4e8;
-  padding:8px 8px 28px;
-  box-shadow:0 4px 15px rgba(0,0,0,0.5);
-  transform:rotate(var(--rot, 0deg));
-}
+/* Polaroid */
+.slide.polaroid .cell { background:#f8f4e8; padding:8px 8px 28px; box-shadow:0 4px 15px rgba(0,0,0,0.5); transform:rotate(var(--rot,0deg)); }
 .slide.polaroid .cell img { border-radius:1px; }
+.slide.overlap .cell { box-shadow:0 8px 30px rgba(0,0,0,0.7); transform:rotate(var(--rot,0deg)) scale(1.02); z-index:var(--z,1); }
 
-/* Overlapping style */
-.slide.overlap .cell {
-  box-shadow:0 8px 30px rgba(0,0,0,0.7);
-  transform:rotate(var(--rot, 0deg)) scale(1.02);
-  z-index:var(--z, 1);
-}
-
-/* ── Badge — grid cell, not overlay ── */
+/* ── Badge cell ── */
 .badge {
-  background:var(--badge-bg);
-  border:1px solid var(--badge-border);
-  border-radius:3px;
-  padding:1rem 1.2rem;
-  text-align:center;
-  backdrop-filter:blur(10px);
-  box-shadow:inset 0 0 30px rgba(255,255,255,0.03);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-  position:relative;
-  width:100%;
-  height:100%;
+  background:var(--badge-bg); border:1px solid var(--badge-border); border-radius:3px;
+  padding:1rem 1.2rem; text-align:center; backdrop-filter:blur(10px);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  overflow:hidden; position:relative; width:100%; height:100%; min-width:0; min-height:0;
 }
-
 .badge::before { content:'✦'; position:absolute; top:5px; left:7px; color:var(--gold); font-size:.5rem; opacity:.6; }
 .badge::after  { content:'✦'; position:absolute; bottom:5px; right:7px; color:var(--gold); font-size:.5rem; opacity:.6; }
-.badge.style-watermark::before, .badge.style-watermark::after { display:none; }
-
 .b-cap  { font-size:1.4rem; display:block; margin-bottom:.15rem; }
-.b-co   { font-family:var(--font-title); font-size:.48rem; letter-spacing:.35em; color:var(--gold); text-transform:uppercase; display:block; margin-bottom:.15rem; }
-.b-grad { font-family:var(--font-display); font-style:italic; font-size:2rem; color:var(--gold); line-height:1; display:block; text-shadow:0 0 20px rgba(255,255,255,.2); }
-.b-name { font-family:var(--font-title); font-size:.65rem; letter-spacing:.18em; color:var(--text); display:block; margin-top:.3rem; text-transform:uppercase; }
+.b-co   { font-family:var(--font-t); font-size:.48rem; letter-spacing:.35em; color:var(--gold); text-transform:uppercase; display:block; margin-bottom:.15rem; }
+.b-grad { font-family:var(--font-d); font-style:italic; font-size:2rem; color:var(--gold); line-height:1; display:block; text-shadow:0 0 20px rgba(255,255,255,.2); }
+.b-name { font-family:var(--font-t); font-size:.65rem; letter-spacing:.18em; color:var(--text); display:block; margin-top:.3rem; text-transform:uppercase; }
 .b-tag  { font-size:.42rem; letter-spacing:.25em; color:var(--gold2); text-transform:uppercase; display:block; margin-top:.35rem; padding-top:.35rem; border-top:1px solid rgba(255,255,255,.12); }
-.b-msg  { font-family:var(--font-display); font-style:italic; font-size:1.1rem; color:var(--text); line-height:1.4; display:block; margin-top:.3rem; }
+.b-msg  { font-family:var(--font-d); font-style:italic; font-size:1.1rem; color:var(--text); line-height:1.4; display:block; margin-top:.3rem; }
 .b-from { font-size:.5rem; letter-spacing:.2em; color:var(--gold2); text-transform:uppercase; display:block; margin-top:.3rem; }
 
-/* ── Special slide types ── */
-
-/* Featured submitted photo */
-.slide.featured-photo {
-  display:flex; flex-direction:column;
-  padding:0; gap:0;
-}
-.slide.featured-photo .feat-img {
-  flex:1; overflow:hidden; position:relative;
-}
-.slide.featured-photo .feat-img img {
-  width:100%; height:100%; object-fit:cover;
-  transition:transform 12s ease;
-}
-.slide.featured-photo.active .feat-img img { transform:scale(1.04); }
-.slide.featured-photo .feat-overlay {
-  position:absolute; inset:0;
-  background:linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%);
-}
-.slide.featured-photo .feat-text {
-  position:absolute; bottom:0; left:0; right:0;
-  padding:2rem 3rem;
-  z-index:5;
-}
-.feat-message {
-  font-family:var(--font-display);
-  font-style:italic;
-  font-size:clamp(1.2rem,3vw,2rem);
-  color:var(--text);
-  line-height:1.5;
-  margin-bottom:.8rem;
-  text-shadow:0 2px 10px rgba(0,0,0,0.5);
-}
-.feat-from {
-  font-family:var(--font-title);
-  font-size:.6rem;
-  letter-spacing:.3em;
-  color:var(--gold);
-  text-transform:uppercase;
-}
-.feat-divider {
-  width:40px; height:1px;
-  background:var(--gold2);
-  margin-bottom:.6rem;
-  opacity:.6;
-}
-
-/* Then & Now */
-.slide.then-now {
-  grid-template-columns:1fr 1fr;
-  grid-template-rows:1fr auto;
-  padding:8px; gap:6px;
-}
-.then-now-label {
-  grid-column:1/-1;
-  display:flex; align-items:center; justify-content:center; gap:1.5rem;
-  padding:.5rem;
-}
-.tn-word {
-  font-family:var(--font-title);
-  font-size:.6rem;
-  letter-spacing:.35em;
-  color:var(--gold);
-  text-transform:uppercase;
-}
+/* ── Then & Now ── */
+.slide.then-now { grid-template-columns:1fr 1fr; grid-template-rows:1fr auto; }
+.then-now-label { grid-column:1/-1; display:flex; align-items:center; justify-content:center; gap:1.5rem; padding:.5rem; }
+.tn-word { font-family:var(--font-t); font-size:.6rem; letter-spacing:.35em; color:var(--gold); text-transform:uppercase; }
 .tn-line { flex:1; height:1px; background:linear-gradient(to right,transparent,var(--gold2),transparent); opacity:.4; }
 .tn-arrow { color:var(--gold2); font-size:1.2rem; }
 
-/* Title card */
-.slide.title-card {
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:1rem; padding:2rem;
-}
-.title-card-year {
-  font-family:var(--font-display);
-  font-size:clamp(5rem,15vw,14rem);
-  font-weight:300;
-  font-style:italic;
-  color:var(--gold);
-  line-height:1;
-  opacity:.15;
-  position:absolute;
-}
-.title-card-label {
-  font-family:var(--font-title);
-  font-size:clamp(.7rem,2vw,1rem);
-  letter-spacing:.5em;
-  color:var(--text2);
-  text-transform:uppercase;
-  position:relative; z-index:1;
-}
-.title-card-season {
-  font-size:3rem;
-  position:relative; z-index:1;
-}
+/* ── Featured submitted photo ── */
+.slide.featured-photo { display:flex; flex-direction:column; padding:0; gap:0; }
+.slide.featured-photo .feat-img { flex:1; overflow:hidden; position:relative; }
+.slide.featured-photo .feat-img img { width:100%; height:100%; object-fit:cover; transition:transform 12s ease; }
+.slide.featured-photo.active .feat-img img { transform:scale(1.04); }
+.feat-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,transparent 50%); }
+.feat-text { position:absolute; bottom:0; left:0; right:0; padding:2rem 3rem; z-index:5; }
+.feat-message { font-family:var(--font-d); font-style:italic; font-size:clamp(1.2rem,3vw,2rem); color:var(--text); line-height:1.5; margin-bottom:.8rem; text-shadow:0 2px 10px rgba(0,0,0,0.5); }
+.feat-from { font-family:var(--font-t); font-size:.6rem; letter-spacing:.3em; color:var(--gold); text-transform:uppercase; }
+.feat-divider { width:40px; height:1px; background:var(--gold2); margin-bottom:.6rem; opacity:.6; }
 
-/* Guest wall */
-.slide.guest-wall {
-  display:grid;
-  padding:12px; gap:8px;
-}
-.guest-wall-header {
-  grid-column:1/-1;
-  text-align:center;
-  padding:.5rem 0;
-}
-.guest-wall-header h2 {
-  font-family:var(--font-display);
-  font-style:italic;
-  font-size:clamp(1.5rem,4vw,2.5rem);
-  color:var(--gold);
-}
-.guest-wall-header p {
-  font-family:var(--font-title);
-  font-size:.5rem;
-  letter-spacing:.3em;
-  color:var(--text2);
-  text-transform:uppercase;
-  margin-top:.2rem;
-}
-.guest-card {
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:4px;
-  padding:.8rem 1rem;
-  display:flex; flex-direction:column; gap:.4rem;
-  overflow:hidden;
-}
-.gc-message {
-  font-family:var(--font-display);
-  font-style:italic;
-  font-size:clamp(.8rem,1.5vw,1rem);
-  color:var(--text);
-  line-height:1.5;
-  flex:1;
-}
-.gc-from {
-  font-family:var(--font-title);
-  font-size:.45rem;
-  letter-spacing:.2em;
-  color:var(--gold2);
-  text-transform:uppercase;
-}
-.gc-rel {
-  font-size:.45rem;
-  color:var(--text2);
-  letter-spacing:.1em;
-}
+/* ── Guest wall ── */
+.slide.guest-wall { padding:12px; gap:8px; }
+.guest-wall-header { grid-column:1/-1; text-align:center; padding:.5rem 0; }
+.guest-wall-header h2 { font-family:var(--font-d); font-style:italic; font-size:clamp(1.5rem,4vw,2.5rem); color:var(--gold); }
+.guest-wall-header p { font-family:var(--font-t); font-size:.5rem; letter-spacing:.3em; color:var(--text2); text-transform:uppercase; margin-top:.2rem; }
+.guest-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:4px; padding:.8rem 1rem; display:flex; flex-direction:column; gap:.4rem; overflow:hidden; min-width:0; min-height:0; }
+.gc-message { font-family:var(--font-d); font-style:italic; font-size:clamp(.8rem,1.5vw,1rem); color:var(--text); line-height:1.5; flex:1; }
+.gc-from { font-family:var(--font-t); font-size:.45rem; letter-spacing:.2em; color:var(--gold2); text-transform:uppercase; }
+.gc-rel { font-size:.45rem; color:var(--text2); letter-spacing:.1em; }
 
-/* ── Fixed grid layouts — always fills completely ── */
-/* Each layout accounts for exactly N cells including badge */
-.grid-2x2 { grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; }
-.grid-2x3 { grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr 1fr; }
-.grid-3x2 { grid-template-columns:1fr 1fr 1fr; grid-template-rows:1fr 1fr; }
-.grid-3x3 { grid-template-columns:1fr 1fr 1fr; grid-template-rows:1fr 1fr 1fr; }
-.grid-4x2 { grid-template-columns:1fr 1fr 1fr 1fr; grid-template-rows:1fr 1fr; }
-.grid-4x3 { grid-template-columns:1fr 1fr 1fr 1fr; grid-template-rows:1fr 1fr 1fr; }
-
-/* ── UI chrome ── */
+/* ── UI ── */
 #counter { position:fixed; bottom:1rem; right:1.5rem; z-index:20; font-size:.55rem; letter-spacing:.3em; color:rgba(255,255,255,.3); text-transform:uppercase; }
 #progress { position:fixed; bottom:0; left:0; height:2px; z-index:20; background:linear-gradient(to right,var(--gold2),var(--gold)); width:0%; }
 #theme-indicator { position:fixed; top:1rem; left:1rem; z-index:20; font-size:.5rem; letter-spacing:.2em; color:rgba(255,255,255,.2); text-transform:uppercase; }
 #dots { position:fixed; top:50%; right:1rem; transform:translateY(-50%); z-index:20; display:flex; flex-direction:column; gap:5px; max-height:70vh; overflow:hidden; }
 .dot { width:4px; height:4px; border-radius:50%; background:rgba(255,255,255,.15); cursor:pointer; transition:all .3s; flex-shrink:0; }
 .dot.active { background:var(--gold); transform:scale(1.8); }
-
 #error-screen { position:fixed; inset:0; z-index:90; background:var(--bg); display:none; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:2rem; text-align:center; }
-#error-screen h2 { font-family:var(--font-title); color:var(--gold); font-size:1.2rem; letter-spacing:.2em; }
+#error-screen h2 { font-family:var(--font-t); color:var(--gold); font-size:1.2rem; letter-spacing:.2em; }
 #error-screen p { color:var(--text2); font-size:.8rem; line-height:1.8; max-width:500px; }
 </style>
 </head>
@@ -507,116 +168,64 @@ body.theme-spring {
 <div id="theme-indicator"></div>
 
 <script>
-// ══════════════════════════════════════════════════
-//  CONFIG
-// ══════════════════════════════════════════════════
 const CONFIG = {
-  name:           "Abby Whitsitt",
-  year:           "Class of 2026",
-  apiKey:         "AIzaSyD1dmwLLb63ePWsWUz_FRRK4n89wxPod6Q",
-  mainFolderId:   "1-8Y2OJeaGlWjhBvcPRMW6xuqbwscj3tP",
-  subFolderId:    "19LSqhBeSDiMJGGIkuQaLnuFCVFdFrMvO",
-  sheetId:        "15pgn1jsxKvOPlDtADafS4rBXuRvlGumfykjb3QiSoFk",
-  photosPerSlide: 10,
-  defaultInterval:8,   // seconds per collage slide
-  minPhotos:      4,   // minimum photos per slide
-  thenNowFreq:    8,   // insert then&now every N collage slides
-  guestWallSize:  6,   // messages per guest wall slide
+  name:'Abby Whitsitt', year:'Class of 2026',
+  apiKey:'AIzaSyD1dmwLLb63ePWsWUz_FRRK4n89wxPod6Q',
+  mainFolderId:'1-8Y2OJeaGlWjhBvcPRMW6xuqbwscj3tP',
+  subFolderId:'19LSqhBeSDiMJGGIkuQaLnuFCVFdFrMvO',
+  sheetId:'15pgn1jsxKvOPlDtADafS4rBXuRvlGumfykjb3QiSoFk',
+  photosPerSlide:10, defaultInterval:8, minPhotos:4, thenNowFreq:8, guestWallSize:6,
 };
 
-// ── Default badge messages ──
 const DEFAULT_MESSAGES = [
-  { icon:'🎓', co:CONFIG.year, grad:'Graduate', name:CONFIG.name, tag:'The Adventure Continues!' },
-  { icon:'✨', co:'Congratulations', grad:'Abby', name:'Class of 2026', tag:'Your future is bright' },
-  { icon:'🌟', co:'With love', grad:'& pride', name:CONFIG.name, tag:'We are so proud of you' },
-  { icon:'🎉', co:CONFIG.year, grad:'Graduate', name:'Abby Whitsitt', tag:'Let the adventure begin' },
-  { icon:'💛', co:'Always remember', grad:'how far', name:"you've come", tag:'The best is yet to come' },
+  {icon:'🎓',co:CONFIG.year,grad:'Graduate',name:CONFIG.name,tag:'The Adventure Continues!'},
+  {icon:'✨',co:'Congratulations',grad:'Abby',name:'Class of 2026',tag:'Your future is bright'},
+  {icon:'🌟',co:'With love',grad:'& pride',name:CONFIG.name,tag:'We are so proud of you'},
+  {icon:'🎉',co:CONFIG.year,grad:'Graduate',name:'Abby Whitsitt',tag:'Let the adventure begin'},
+  {icon:'💛',co:'Always remember',grad:'how far',name:"you've come",tag:'The best is yet to come'},
 ];
 
-// ── Seasonal theme map ──
 const SEASONAL = {
-  12: { theme:'christmas', label:'Christmas', icon:'🎄', particle:'snow' },
-  11: { theme:'halloween', label:'Autumn',    icon:'🍂', particle:'leaves' },
-  10: { theme:'halloween', label:'Halloween', icon:'🎃', particle:'leaves' },
-   7: { theme:'july4',     label:'Independence Day', icon:'🎆', particle:'fireworks' },
-   6: { theme:'summer',    label:'Summer',   icon:'☀️', particle:'sparkle' },
-   8: { theme:'summer',    label:'Summer',   icon:'🌊', particle:'sparkle' },
-   2: { theme:'valentine', label:"Valentine's", icon:'💕', particle:'hearts' },
-   3: { theme:'spring',    label:'Spring',   icon:'🌸', particle:'petals' },
-   4: { theme:'spring',    label:'Spring',   icon:'🌷', particle:'petals' },
+  12:{theme:'christmas'}, 11:{theme:'halloween'}, 10:{theme:'halloween'},
+   7:{theme:'july4'}, 6:{theme:'summer'}, 8:{theme:'summer'},
+   2:{theme:'valentine'}, 3:{theme:'spring'}, 4:{theme:'spring'},
 };
 
-// ── Default theme rotation ──
-const DEFAULT_THEMES = ['gold','rose','navy','editorial','summer'];
+const DEFAULT_THEMES = ['','rose','navy','editorial','summer'];
 let defaultThemeIdx = 0;
-
-// ── Layout picker — exact cell count, no gaps ever ──
-// Each layout has a fixed total cell count (photos + 1 badge)
-const GRID_LAYOUTS = [
-  { cells:4,  cls:'grid-2x2' },
-  { cells:6,  cls:'grid-2x3' },
-  { cells:6,  cls:'grid-3x2' },
-  { cells:9,  cls:'grid-3x3' },
-  { cells:8,  cls:'grid-4x2' },
-  { cells:12, cls:'grid-4x3' },
-];
-
-function pickLayout(photoCount) {
-  // Total cells = photos + 1 badge
-  const total = photoCount + 1;
-  // Find layouts that exactly fit, or find closest without wasting cells
-  const exact = GRID_LAYOUTS.filter(l => l.cells === total);
-  if(exact.length) return pick(exact);
-  // Find smallest layout that fits all photos + badge
-  const bigger = GRID_LAYOUTS.filter(l => l.cells >= total).sort((a,b)=>a.cells-b.cells);
-  if(bigger.length) return bigger[0];
-  return GRID_LAYOUTS[GRID_LAYOUTS.length-1]; // fallback 4x3
-}
-
 const STYLE_VARIANTS = ['','','','polaroid','overlap'];
 
 // ── Utilities ──
-function shuffle(arr) {
-  const a=[...arr];
-  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
-  return a;
-}
-function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-function imgUrl(id){ return `https://drive.google.com/thumbnail?id=${id}&sz=w1600`; }
-function getMonth(file){
-  try {
-    const d = file.imageMediaMetadata?.time || file.createdTime;
-    if(d) return new Date(d).getMonth()+1;
-  } catch(e){}
-  return null;
-}
-function getYear(file){
-  try {
-    const d = file.imageMediaMetadata?.time || file.createdTime;
-    if(d) return new Date(d).getFullYear();
-  } catch(e){}
-  return null;
-}
-function applyTheme(themeName){
-  document.body.className = themeName ? `theme-${themeName}` : '';
-  const indicator = document.getElementById('theme-indicator');
-  if(indicator) indicator.textContent = themeName || 'classic';
-}
-function readTime(msg){ return Math.max(6, Math.min(15, Math.ceil(msg.split(' ').length / 2.5))); }
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+function imgUrl(id){return `https://drive.google.com/thumbnail?id=${id}&sz=w1600`;}
+function getMonth(f){try{const d=f.imageMediaMetadata?.time||f.createdTime;if(d)return new Date(d).getMonth()+1;}catch(e){}return null;}
+function getYear(f){try{const d=f.imageMediaMetadata?.time||f.createdTime;if(d)return new Date(d).getFullYear();}catch(e){}return null;}
+function applyTheme(t){document.body.className=t?`theme-${t}`:'';const el=document.getElementById('theme-indicator');if(el)el.textContent=t||'gold';}
+function readTime(msg){return Math.max(6,Math.min(15,Math.ceil(msg.split(' ').length/2.5)));}
+const setStatus=m=>document.getElementById('loading-status').textContent=m;
+const setProgress=p=>document.getElementById('loading-bar').style.width=p+'%';
 
-const setStatus = m => document.getElementById('loading-status').textContent = m;
-const setProgress = p => document.getElementById('loading-bar').style.width = p+'%';
+// ── Orientation from Drive metadata (already in file object!) ──
+function getOrientation(file) {
+  const w = file.imageMediaMetadata?.width;
+  const h = file.imageMediaMetadata?.height;
+  if (!w || !h) return 'square';
+  const r = w / h;
+  if (r > 1.35) return 'landscape';
+  if (r < 0.75) return 'portrait';
+  return 'square';
+}
 
 // ── Fetch Drive files ──
-const IMAGE_TYPES = ['image/jpeg','image/jpg','image/png','image/webp','image/heic','image/heif'];
-async function fetchFiles(folderId) {
-  let files=[], pageToken=null, page=0;
+const IMAGE_TYPES=['image/jpeg','image/jpg','image/png','image/webp','image/heic','image/heif'];
+async function fetchFiles(folderId){
+  let files=[],pageToken=null;
   do {
-    page++;
     let url=`https://www.googleapis.com/drive/v3/files?q=%27${folderId}%27+in+parents+and+trashed%3Dfalse&fields=nextPageToken,files(id,name,mimeType,createdTime,imageMediaMetadata)&pageSize=1000&key=${CONFIG.apiKey}`;
     if(pageToken) url+=`&pageToken=${encodeURIComponent(pageToken)}`;
     const res=await fetch(url);
-    if(!res.ok){ const e=await res.json(); throw new Error(e.error?.message||`Drive API ${res.status}`); }
+    if(!res.ok){const e=await res.json();throw new Error(e.error?.message||`Drive API ${res.status}`);}
     const data=await res.json();
     files=files.concat((data.files||[]).filter(f=>IMAGE_TYPES.includes(f.mimeType)));
     pageToken=data.nextPageToken||null;
@@ -624,262 +233,164 @@ async function fetchFiles(folderId) {
   return files;
 }
 
-// ── Fetch approved Sheet messages ──
-async function fetchApprovedMessages() {
+// ── Fetch approved messages ──
+async function fetchApprovedMessages(){
   try {
     const url=`https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/A:G?key=${CONFIG.apiKey}`;
     const res=await fetch(url);
     const data=await res.json();
     const rows=data.values||[];
     if(rows.length<2) return [];
-    const headers=rows[0].map(h=>h.toLowerCase().trim());
-    const nameIdx=headers.indexOf('name');
-    const relIdx=headers.indexOf('relationship');
-    const msgIdx=headers.indexOf('message');
-    const photoIdx=headers.indexOf('photo_url');
-    const approvedIdx=headers.indexOf('approved');
-    return rows.slice(1)
-      .filter(r=>r[approvedIdx]==='TRUE')
-      .map(r=>({
-        name:r[nameIdx]||'',
-        relationship:r[relIdx]||'',
-        message:r[msgIdx]||'',
-        photoUrl:r[photoIdx]||'',
-      }))
-      .filter(r=>r.message);
-  } catch(e){ console.warn('Sheet fetch failed',e); return []; }
-}
-
-// ── Fetch photo dimension cache ──
-async function fetchCache() {
-  try {
-    const res = await fetch('/show/cache.json');
-    if (!res.ok) return {};
-    return await res.json();
-  } catch(e) {
-    console.warn('Cache fetch failed', e);
-    return {};
-  }
-}
-
-// ── Build Then & Now pairs ──
-function buildThenNow(files) {
-  const byMonthYear = {};
-  files.forEach(f => {
-    const m=getMonth(f), y=getYear(f);
-    if(!m||!y) return;
-    const key=m;
-    if(!byMonthYear[key]) byMonthYear[key]=[];
-    byMonthYear[key].push({file:f,year:y});
-  });
-  const pairs=[];
-  Object.entries(byMonthYear).forEach(([month,entries])=>{
-    if(entries.length<2) return;
-    const years=[...new Set(entries.map(e=>e.year))].sort();
-    if(years.length<2) return;
-    const oldest=entries.filter(e=>e.year===years[0]);
-    const newest=entries.filter(e=>e.year===years[years.length-1]);
-    if(oldest.length&&newest.length){
-      pairs.push({
-        month:parseInt(month),
-        oldFile:pick(oldest).file,
-        newFile:pick(newest).file,
-        oldYear:years[0],
-        newYear:years[years.length-1],
-      });
-    }
-  });
-  return shuffle(pairs);
-}
-
-// ── Build date-clustered groups ──
-function buildEventGroups(files) {
-  const byDate={};
-  files.forEach(f=>{
-    try {
-      const d=f.imageMediaMetadata?.time||f.createdTime;
-      if(!d) return;
-      const date=new Date(d).toISOString().split('T')[0];
-      if(!byDate[date]) byDate[date]=[];
-      byDate[date].push(f);
-    } catch(e){}
-  });
-  return Object.entries(byDate)
-    .filter(([,fs])=>fs.length>=4)
-    .map(([date,fs])=>({date,files:fs}))
-    .sort((a,b)=>a.date.localeCompare(b.date));
+    const h=rows[0].map(x=>x.toLowerCase().trim());
+    const ni=h.indexOf('name'),ri=h.indexOf('relationship'),mi=h.indexOf('message'),pi=h.indexOf('photo_url'),ai=h.indexOf('approved');
+    return rows.slice(1).filter(r=>r[ai]==='TRUE').map(r=>({name:r[ni]||'',relationship:r[ri]||'',message:r[mi]||'',photoUrl:r[pi]||''})).filter(r=>r.message);
+  } catch(e){console.warn('Sheet fetch failed',e);return [];}
 }
 
 // ── DOM helpers ──
-function makeBadge(opts={}) {
-  // Badge is a grid cell — same structure as photo cells
-  const cell=document.createElement('div');
-  cell.className='cell';
-  const el=document.createElement('div');
-  el.className='badge';
-  if(opts.msg) {
+function makeBadge(opts={}){
+  const cell=document.createElement('div');cell.className='cell';
+  const el=document.createElement('div');el.className='badge';
+  if(opts.msg){
     el.innerHTML=`<span class="b-msg">"${opts.msg}"</span>${opts.from?`<span class="b-from">— ${opts.from}</span>`:''}`;
   } else {
     const m=opts.data||pick(DEFAULT_MESSAGES);
     el.innerHTML=`<span class="b-cap">${m.icon}</span><span class="b-co">${m.co}</span><span class="b-grad">${m.grad}</span><span class="b-name">${m.name}</span><span class="b-tag">${m.tag}</span>`;
   }
-  cell.appendChild(el);
-  return cell;
+  cell.appendChild(el);return cell;
 }
 
-function makeCell(fileId, loading='lazy') {
-  const cell=document.createElement('div'); cell.className='cell';
+function makeCell(fileId,loading='lazy'){
+  const cell=document.createElement('div');cell.className='cell';
   const img=document.createElement('img');
-  img.src=imgUrl(fileId); img.alt=''; img.loading=loading;
+  img.src=imgUrl(fileId);img.alt='';img.loading=loading;
   img.onerror=()=>cell.style.display='none';
-  cell.appendChild(img); return cell;
+  cell.appendChild(img);return cell;
 }
 
-function getSeasonalTheme(month) {
-  return SEASONAL[month]||null;
-}
+function getSeasonalTheme(month){return SEASONAL[month]||null;}
 
-// ── Build slide elements ──
-function classifyOrientation(file, photoCache) {
-  const entry = photoCache[file.name] || photoCache[file.id];
-  if (!entry || !entry.width || !entry.height) return 'square';
-  const ratio = entry.width / entry.height;
-  if (ratio > 1.4) return 'landscape';
-  if (ratio < 0.75) return 'portrait';
-  return 'square';
-}
-
-function buildCollageSlide(files, idx, approvedMessages, themeOverride, photoCache = {}) {
+// ── Build collage slide with aspect-ratio-aware grid ──
+function buildCollageSlide(files, si, approvedMessages, themeOverride) {
   const photos = files.slice(0, CONFIG.photosPerSlide);
   const styleVar = pick(STYLE_VARIANTS);
 
-  const slide = document.createElement('div');
-  slide.className = `slide ${styleVar}`;
-  slide.style.padding = '10px';
-  slide.style.gap = '8px';
+  // Classify every photo using Drive metadata
+  const orients = photos.map(f => getOrientation(f));
+  const nPortrait  = orients.filter(o=>o==='portrait').length;
+  const nLandscape = orients.filter(o=>o==='landscape').length;
 
-  // Classify orientations and build dynamic grid
-  const orientations = photos.map(f => classifyOrientation(f, photoCache));
-  const portraitCount = orientations.filter(o => o === 'portrait').length;
-  const landscapeCount = orientations.filter(o => o === 'landscape').length;
-  // portrait = 1col×2rows = 2 units, landscape = 2cols×1row = 2 units, square/badge = 1 unit
-  const totalUnits = orientations.reduce((s, o) => s + (o === 'landscape' || o === 'portrait' ? 2 : 1), 0) + 1;
-  // 4 rows for portrait-heavy, 3 rows for landscape-heavy/balanced; floor at units/cols
-  const defaultRows = portraitCount > landscapeCount ? 4 : 3;
-  const rows = Math.max(defaultRows, Math.ceil(totalUnits / 4));
+  // Grid: always 4 columns
+  // Portrait cells span 2 rows (tall), landscape span 2 cols (wide), square = 1x1
+  // Calculate rows needed: portrait + landscape each need 2 "units", square needs 1
+  // Total units / 4 cols = rows, but portrait-heavy needs more rows
+  const units = orients.reduce((s,o)=>s+(o==='portrait'||o==='landscape'?2:1),0) + 1; // +1 badge
+  const baseRows = nPortrait > nLandscape ? 4 : 3;
+  const rows = Math.max(baseRows, Math.ceil(units / 4));
+
+  const slide = document.createElement('div');
+  slide.className = `slide ${styleVar}`.trim();
   slide.style.gridTemplateColumns = 'repeat(4, 1fr)';
   slide.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
   slide.style.gridAutoFlow = 'dense';
-  if(idx === 0) {
-    console.log('[collage-debug] slide 0 —', photos.length, 'photos');
-    photos.forEach((f, i) => console.log(`  [${i}] id=${f.id} orient=${orientations[i]} cache=`, photoCache[f.id]));
-    console.log(`  rows=${rows} gridTemplateRows="repeat(${rows}, 1fr)"`);
-  }
 
-  // Seasonal theme
+  // Seasonal / default theme
   const month = getMonth(files[0]);
   const seasonal = month ? getSeasonalTheme(month) : null;
-  if(seasonal) slide.dataset.theme = seasonal.theme;
-  else if(themeOverride) slide.dataset.theme = themeOverride;
+  slide.dataset.theme = seasonal ? seasonal.theme : (themeOverride || '');
 
-  // Random badge position — not first, not last
+  // Badge at random mid position
   const totalCells = photos.length + 1;
-  const badgePos = 1 + Math.floor(Math.random() * (totalCells - 2));
-  let photoIdx = 0;
+  const badgePos = 1 + Math.floor(Math.random() * Math.max(1, totalCells - 2));
+  let pi = 0;
 
-  for(let i = 0; i < totalCells; i++) {
-    if(i === badgePos) {
-      let badgeOpts = {};
-      if(approvedMessages.length && Math.random() > .35) {
+  for (let i = 0; i < totalCells; i++) {
+    if (i === badgePos) {
+      let opts = {};
+      if (approvedMessages.length && Math.random() > .35) {
         const m = pick(approvedMessages);
-        badgeOpts = { msg: m.message, from: `${m.name}${m.relationship ? ' · ' + m.relationship : ''}` };
+        opts = {msg:m.message, from:`${m.name}${m.relationship?' · '+m.relationship:''}`};
       }
-      slide.appendChild(makeBadge(badgeOpts));
-    } else if(photoIdx < photos.length) {
-      const orient = orientations[photoIdx];
-      const f = photos[photoIdx++];
-      const cell = makeCell(f.id, idx < 3 ? 'eager' : 'lazy');
-      const img = cell.querySelector('img');
-      img.style.objectFit = 'cover';
-      img.style.objectPosition = 'center top';
-      if(orient === 'portrait') cell.style.gridRow = 'span 2';
-      if(orient === 'landscape') cell.style.gridColumn = 'span 2';
-      if(styleVar === 'polaroid' || styleVar === 'overlap') {
-        const rot = (Math.random() * 4 - 2).toFixed(1);
-        cell.style.setProperty('--rot', `${rot}deg`);
-        if(styleVar === 'overlap') cell.style.setProperty('--z', i + 1);
+      slide.appendChild(makeBadge(opts));
+    } else if (pi < photos.length) {
+      const f = photos[pi];
+      const orient = orients[pi];
+      pi++;
+      const cell = makeCell(f.id, si < 3 ? 'eager' : 'lazy');
+      // KEY: set grid spans based on actual photo orientation
+      if (orient === 'portrait')  cell.style.gridRow    = 'span 2';
+      if (orient === 'landscape') cell.style.gridColumn = 'span 2';
+      if (styleVar === 'polaroid' || styleVar === 'overlap') {
+        const rot = (Math.random()*4-2).toFixed(1);
+        cell.style.setProperty('--rot',`${rot}deg`);
+        if(styleVar==='overlap') cell.style.setProperty('--z',i+1);
       }
       slide.appendChild(cell);
     }
   }
-
   return slide;
 }
 
-function buildThenNowSlide(pair) {
-  const slide=document.createElement('div');
-  slide.className='slide then-now';
-  const month=pair.month;
-  const seasonal=getSeasonalTheme(month);
-  if(seasonal) slide.dataset.theme=seasonal.theme;
+// ── Then & Now ──
+function buildThenNow(files){
+  const byMonth={};
+  files.forEach(f=>{const m=getMonth(f),y=getYear(f);if(!m||!y)return;if(!byMonth[m])byMonth[m]=[];byMonth[m].push({file:f,year:y});});
+  const pairs=[];
+  Object.entries(byMonth).forEach(([month,entries])=>{
+    if(entries.length<2)return;
+    const years=[...new Set(entries.map(e=>e.year))].sort();
+    if(years.length<2)return;
+    const oldest=entries.filter(e=>e.year===years[0]);
+    const newest=entries.filter(e=>e.year===years[years.length-1]);
+    if(oldest.length&&newest.length) pairs.push({month:parseInt(month),oldFile:pick(oldest).file,newFile:pick(newest).file,oldYear:years[0],newYear:years[years.length-1]});
+  });
+  return shuffle(pairs);
+}
 
+function buildThenNowSlide(pair){
+  const slide=document.createElement('div');slide.className='slide then-now';
+  const seasonal=getSeasonalTheme(pair.month);
+  slide.dataset.theme=seasonal?seasonal.theme:'';
   slide.appendChild(makeCell(pair.oldFile.id,'lazy'));
   slide.appendChild(makeCell(pair.newFile.id,'lazy'));
-
-  const label=document.createElement('div');
-  label.className='then-now-label';
-  const MONTHS=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  label.innerHTML=`<div class="tn-line"></div><span class="tn-word">${MONTHS[month]} ${pair.oldYear}</span><span class="tn-arrow">→</span><span class="tn-word">${MONTHS[month]} ${pair.newYear}</span><div class="tn-line"></div>`;
+  const label=document.createElement('div');label.className='then-now-label';
+  const M=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  label.innerHTML=`<div class="tn-line"></div><span class="tn-word">${M[pair.month]} ${pair.oldYear}</span><span class="tn-arrow">→</span><span class="tn-word">${M[pair.month]} ${pair.newYear}</span><div class="tn-line"></div>`;
   slide.appendChild(label);
   return slide;
 }
 
-function buildFeaturedPhotoSlide(submission) {
-  const slide=document.createElement('div');
-  slide.className='slide featured-photo';
-  slide.dataset.duration=readTime(submission.message);
-
-  const featImg=document.createElement('div'); featImg.className='feat-img';
+// ── Featured photo ──
+function buildFeaturedPhotoSlide(sub){
+  const slide=document.createElement('div');slide.className='slide featured-photo';slide.dataset.duration=readTime(sub.message);
+  const featImg=document.createElement('div');featImg.className='feat-img';
   const img=document.createElement('img');
-  // Extract Drive file ID from URL
-  const match=submission.photoUrl.match(/\/d\/([^\/]+)\//);
-  if(match) img.src=imgUrl(match[1]);
-  else img.src=submission.photoUrl;
-  img.alt=''; img.loading='lazy';
+  const match=sub.photoUrl.match(/\/d\/([^\/]+)\//);
+  img.src=match?imgUrl(match[1]):sub.photoUrl;img.alt='';img.loading='lazy';
   img.onerror=()=>slide.style.display='none';
-  const overlay=document.createElement('div'); overlay.className='feat-overlay';
-  featImg.appendChild(img); featImg.appendChild(overlay);
-  slide.appendChild(featImg);
-
-  const featText=document.createElement('div'); featText.className='feat-text';
-  featText.innerHTML=`
-    <div class="feat-divider"></div>
-    <div class="feat-message">"${submission.message}"</div>
-    <div class="feat-from">— ${submission.name}${submission.relationship?' · '+submission.relationship:''}</div>
-  `;
-  slide.appendChild(featText);
-  return slide;
+  const overlay=document.createElement('div');overlay.className='feat-overlay';
+  featImg.appendChild(img);featImg.appendChild(overlay);slide.appendChild(featImg);
+  const featText=document.createElement('div');featText.className='feat-text';
+  featText.innerHTML=`<div class="feat-divider"></div><div class="feat-message">"${sub.message}"</div><div class="feat-from">— ${sub.name}${sub.relationship?' · '+sub.relationship:''}</div>`;
+  slide.appendChild(featText);return slide;
 }
 
-function buildGuestWallSlides(messages) {
+// ── Guest wall ──
+function buildGuestWallSlides(messages){
   const slides=[];
   for(let i=0;i<messages.length;i+=CONFIG.guestWallSize){
-    const chunk=messages.slice(i,i+CONFIG.guestWallSize);
-    if(!chunk.length) break;
-    const slide=document.createElement('div'); slide.className='slide guest-wall';
-
-    // Dynamic grid: long messages span 2 rows, short messages are 1×1
-    const totalUnits=chunk.reduce((s,m)=>s+(m.message.length>=120?2:1),0);
-    const contentRows=Math.max(2,Math.ceil(totalUnits/3));
-    slide.style.gridTemplateColumns='repeat(3, 1fr)';
-    slide.style.gridTemplateRows=`auto repeat(${contentRows}, 1fr)`;
+    const chunk=messages.slice(i,i+CONFIG.guestWallSize);if(!chunk.length)break;
+    const slide=document.createElement('div');slide.className='slide guest-wall';
+    const units=chunk.reduce((s,m)=>s+(m.message.length>=120?2:1),0);
+    const contentRows=Math.max(2,Math.ceil(units/3));
+    slide.style.gridTemplateColumns='repeat(3,1fr)';
+    slide.style.gridTemplateRows=`auto repeat(${contentRows},1fr)`;
     slide.style.gridAutoFlow='dense';
-
-    const header=document.createElement('div'); header.className='guest-wall-header';
+    const header=document.createElement('div');header.className='guest-wall-header';
     header.innerHTML=`<h2>Messages for Abby</h2><p>From the people who love her most</p>`;
     slide.appendChild(header);
     chunk.forEach(m=>{
-      const card=document.createElement('div'); card.className='guest-card';
+      const card=document.createElement('div');card.className='guest-card';
       card.innerHTML=`<div class="gc-message">"${m.message}"</div><div class="gc-from">${m.name}</div><div class="gc-rel">${m.relationship}</div>`;
       if(m.message.length>=120) card.style.gridRow='span 2';
       slide.appendChild(card);
@@ -889,294 +400,130 @@ function buildGuestWallSlides(messages) {
   return slides;
 }
 
-// ── Main build ──
-function buildShowFromData(mainFiles, submittedFiles, approvedMessages, photoCache = {}) {
-  const showEl=document.getElementById('show');
-  const dotsEl=document.getElementById('dots');
-  showEl.innerHTML=''; dotsEl.innerHTML='';
-
-  // Shuffle main photos
+// ── Build show ──
+function buildShowFromData(mainFiles, submittedFiles, approvedMessages){
+  const showEl=document.getElementById('show');const dotsEl=document.getElementById('dots');
+  showEl.innerHTML='';dotsEl.innerHTML='';
   const shuffled=shuffle(mainFiles);
-
-  // Build Then & Now pairs
-  const thenNowPairs=buildThenNow(mainFiles);
-  let thenNowIdx=0;
-
-  // Chunk into collage slides
+  const thenNowPairs=buildThenNow(mainFiles);let thenNowIdx=0;
   const chunks=[];
   for(let i=0;i<shuffled.length;i+=CONFIG.photosPerSlide){
     const chunk=shuffled.slice(i,i+CONFIG.photosPerSlide);
     if(chunk.length>=CONFIG.minPhotos) chunks.push(chunk);
     else if(chunks.length) chunks[chunks.length-1].push(...chunk);
   }
-
-  // Submitted photos with messages
-  const featuredSlides=approvedMessages
-    .filter(m=>m.photoUrl)
-    .map(buildFeaturedPhotoSlide);
-
-  // Message-only approved (no photo)
+  const featuredSlides=approvedMessages.filter(m=>m.photoUrl).map(buildFeaturedPhotoSlide);
   const messageOnly=approvedMessages.filter(m=>!m.photoUrl);
-
-  // Guest wall slides
   const guestWalls=buildGuestWallSlides(approvedMessages);
-
-  // Assemble slide sequence
   const allSlides=[];
-  let themeGroupIdx=0;
-
   chunks.forEach((chunk,ci)=>{
-    // Rotate default theme every ~5 collage slides
-    if(ci%5===0 && ci>0) themeGroupIdx=(themeGroupIdx+1)%DEFAULT_THEMES.length;
-    const defaultTheme=DEFAULT_THEMES[themeGroupIdx];
-
-    allSlides.push({type:'collage', chunk, defaultTheme});
-
-    // Sprinkle Then & Now
-    if(ci%CONFIG.thenNowFreq===CONFIG.thenNowFreq-1 && thenNowIdx<thenNowPairs.length){
-      allSlides.push({type:'thenNow', pair:thenNowPairs[thenNowIdx++]});
-    }
-
-    // Sprinkle featured submitted photos
-    if(ci%6===5 && featuredSlides.length){
-      const f=featuredSlides.shift();
-      if(f) allSlides.push({type:'featured', el:f});
-    }
+    if(ci%5===0&&ci>0) defaultThemeIdx=(defaultThemeIdx+1)%DEFAULT_THEMES.length;
+    allSlides.push({type:'collage',chunk,theme:DEFAULT_THEMES[defaultThemeIdx]});
+    if(ci%CONFIG.thenNowFreq===CONFIG.thenNowFreq-1&&thenNowIdx<thenNowPairs.length) allSlides.push({type:'thenNow',pair:thenNowPairs[thenNowIdx++]});
+    if(ci%6===5&&featuredSlides.length){const f=featuredSlides.shift();if(f)allSlides.push({type:'featured',el:f});}
   });
-
-  // Guest walls near end
-  guestWalls.forEach(w=>allSlides.push({type:'guestWall', el:w}));
-
-  // Render slides
-  const renderedSlides=[];
+  guestWalls.forEach(w=>allSlides.push({type:'guestWall',el:w}));
+  const rendered=[];
   allSlides.forEach((item,si)=>{
     let slide;
-    if(item.type==='collage'){
-      slide=buildCollageSlide(item.chunk, si, messageOnly, item.defaultTheme, photoCache);
-    } else if(item.type==='thenNow'){
-      slide=buildThenNowSlide(item.pair);
-    } else {
-      slide=item.el;
-    }
+    if(item.type==='collage') slide=buildCollageSlide(item.chunk,si,messageOnly,item.theme);
+    else if(item.type==='thenNow') slide=buildThenNowSlide(item.pair);
+    else slide=item.el;
     if(si===0) slide.classList.add('active');
-    showEl.appendChild(slide);
-    renderedSlides.push(slide);
-
-    // Dots (max 60)
+    showEl.appendChild(slide);rendered.push(slide);
     if(allSlides.length<=60){
-      const dot=document.createElement('div'); dot.className=`dot${si===0?' active':''}`;
-      dot.onclick=()=>{clearAuto();goTo(si);startAuto();};
-      dotsEl.appendChild(dot);
+      const dot=document.createElement('div');dot.className=`dot${si===0?' active':''}`;
+      dot.onclick=()=>{clearAuto();goTo(si);startAuto();};dotsEl.appendChild(dot);
     }
   });
-
-  return renderedSlides;
+  return rendered;
 }
 
-// ── Slideshow controller ──
-let slides=[], current=0, autoTimer=null, isLooping=false;
-
-function getSlideInterval(slide) {
-  if(slide.dataset.duration) return parseInt(slide.dataset.duration)*1000;
-  return CONFIG.defaultInterval*1000;
+// ── Controller ──
+let slides=[],current=0,autoTimer=null;
+function getSlideInterval(s){return s.dataset.duration?parseInt(s.dataset.duration)*1000:CONFIG.defaultInterval*1000;}
+function updateCounter(){document.getElementById('counter').textContent=`${current+1} / ${slides.length}`;}
+function startProgress(dur){
+  const p=document.getElementById('progress');p.style.transition='none';p.style.width='0%';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{p.style.transition=`width ${dur/1000}s linear`;p.style.width='100%';}));
 }
-
-function getSlideTheme(slide) {
-  return slide.dataset.theme||null;
-}
-
-function updateCounter(){
-  document.getElementById('counter').textContent=`${current+1} / ${slides.length}`;
-}
-
-function startProgress(duration){
-  const p=document.getElementById('progress');
-  p.style.transition='none'; p.style.width='0%';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    p.style.transition=`width ${duration/1000}s linear`; p.style.width='100%';
-  }));
-}
-
 function goTo(n){
-  if(!slides.length) return;
+  if(!slides.length)return;
   slides[current].classList.remove('active');
-  const dots=document.querySelectorAll('.dot');
-  if(dots[current]) dots[current].classList.remove('active');
+  const dots=document.querySelectorAll('.dot');if(dots[current])dots[current].classList.remove('active');
   current=((n%slides.length)+slides.length)%slides.length;
-  slides[current].classList.add('active');
-  if(dots[current]) dots[current].classList.add('active');
-
-  // Apply theme
-  const theme=getSlideTheme(slides[current]);
-  applyTheme(theme);
-
-  updateCounter();
-  startProgress(getSlideInterval(slides[current]));
+  slides[current].classList.add('active');if(dots[current])dots[current].classList.add('active');
+  applyTheme(slides[current].dataset.theme||'');
+  updateCounter();startProgress(getSlideInterval(slides[current]));
 }
-
-function next(){ goTo(current+1); }
-
-function clearAuto(){ clearTimeout(autoTimer); }
-
+function next(){goTo(current+1);}
+function clearAuto(){clearTimeout(autoTimer);}
 function scheduleNext(){
-  const interval=getSlideInterval(slides[current]);
-  autoTimer=setTimeout(async ()=>{
-    if(current===slides.length-1){
-      // End of loop — show outro, refresh data, restart
-      await showOutro();
-      await refreshAndRestart();
-    } else {
-      next();
-      scheduleNext();
-    }
-  }, interval);
+  autoTimer=setTimeout(async()=>{
+    if(current===slides.length-1){await showOutro();await refreshAndRestart();}
+    else{next();scheduleNext();}
+  },getSlideInterval(slides[current]));
 }
-
-function startAuto(){
-  clearAuto();
-  scheduleNext();
-}
+function startAuto(){clearAuto();scheduleNext();}
 
 async function showOutro(){
   return new Promise(resolve=>{
-    const outro=document.getElementById('outro');
-    outro.style.display='flex';
+    const outro=document.getElementById('outro');outro.style.display='flex';
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
       outro.classList.add('visible');
-      setTimeout(()=>{
-        outro.classList.remove('visible');
-        setTimeout(()=>{ outro.style.display='none'; resolve(); },1600);
-      },10000);
+      setTimeout(()=>{outro.classList.remove('visible');setTimeout(()=>{outro.style.display='none';resolve();},1600);},10000);
     }));
   });
 }
 
 async function refreshAndRestart(){
   try {
-    setStatus('Refreshing photos and messages...');
-    const [mainFiles, submittedFiles, approvedMessages, photoCache]=await Promise.all([
-      fetchFiles(CONFIG.mainFolderId),
-      fetchFiles(CONFIG.subFolderId),
-      fetchApprovedMessages(),
-      fetchCache(),
-    ]);
-    slides=buildShowFromData(mainFiles, submittedFiles, approvedMessages, photoCache);
-    current=0;
-    goTo(0);
-    startAuto();
-  } catch(e){
-    console.error('Refresh failed',e);
-    current=0; goTo(0); startAuto();
-  }
+    const [mf,sf,am]=await Promise.all([fetchFiles(CONFIG.mainFolderId),fetchFiles(CONFIG.subFolderId),fetchApprovedMessages()]);
+    slides=buildShowFromData(mf,sf,am);current=0;goTo(0);startAuto();
+  } catch(e){console.error('Refresh failed',e);current=0;goTo(0);startAuto();}
 }
 
-// ── Input handlers ──
-document.addEventListener('click',()=>{ clearAuto(); next(); scheduleNext(); });
-document.addEventListener('touchend',e=>{ e.preventDefault(); clearAuto(); next(); scheduleNext(); },{passive:false});
+document.addEventListener('click',()=>{clearAuto();next();scheduleNext();});
+document.addEventListener('touchend',e=>{e.preventDefault();clearAuto();next();scheduleNext();},{passive:false});
 document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight'||e.key===' '){ clearAuto(); next(); scheduleNext(); }
-  if(e.key==='ArrowLeft'){ clearAuto(); goTo(current-1); scheduleNext(); }
-  if(e.key==='f'||e.key==='F') document.documentElement.requestFullscreen?.();
+  if(e.key==='ArrowRight'||e.key===' '){clearAuto();next();scheduleNext();}
+  if(e.key==='ArrowLeft'){clearAuto();goTo(current-1);scheduleNext();}
+  if(e.key==='f'||e.key==='F')document.documentElement.requestFullscreen?.();
 });
-
-// ── Wake lock ──
 navigator.wakeLock?.request('screen').catch(()=>{});
 
 // ── Particles ──
-const canvas=document.getElementById('particle-canvas');
-const ctx=canvas.getContext('2d');
-function resize(){ canvas.width=innerWidth; canvas.height=innerHeight; }
-resize(); window.addEventListener('resize',resize);
-
-class Particle {
+const canvas=document.getElementById('particle-canvas');const ctx=canvas.getContext('2d');
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}resize();window.addEventListener('resize',resize);
+class Particle{
   constructor(){this.reset(true);}
-  reset(init=false){
-    this.x=Math.random()*canvas.width;
-    this.y=init?Math.random()*canvas.height:-20;
-    this.r=Math.random()*5+2;
-    this.speed=Math.random()*1.2+.4;
-    this.angle=Math.random()*Math.PI*2;
-    this.spin=(Math.random()-.5)*.07;
-    this.wobble=Math.random()*Math.PI*2;
-    this.wobbleSpeed=Math.random()*.035+.01;
-    this.shape=Math.random()>.4?'rect':'circle';
-    this.w=Math.random()*7+3;
-    this.h=Math.random()*13+5;
-    this.alpha=Math.random()*.5+.3;
-  }
-  getColor(){
-    const colors=['--particle1','--particle2','--particle3','--particle4'];
-    return getComputedStyle(document.body).getPropertyValue(pick(colors)).trim()||'#F0C040';
-  }
-  update(){
-    this.wobble+=this.wobbleSpeed;
-    this.angle+=this.spin;
-    this.y+=this.speed;
-    this.x+=Math.sin(this.wobble)*.65;
-    if(this.y>canvas.height+20) this.reset();
-  }
-  draw(){
-    ctx.save();
-    ctx.translate(this.x,this.y);
-    ctx.rotate(this.angle);
-    ctx.fillStyle=this.getColor();
-    ctx.globalAlpha=this.alpha;
-    if(this.shape==='rect') ctx.fillRect(-this.w/2,-this.h/2,this.w,this.h);
-    else{ ctx.beginPath(); ctx.ellipse(0,0,this.r,this.r*.55,0,0,Math.PI*2); ctx.fill(); }
-    ctx.restore();
-  }
+  reset(init=false){this.x=Math.random()*canvas.width;this.y=init?Math.random()*canvas.height:-20;this.r=Math.random()*5+2;this.speed=Math.random()*1.2+.4;this.angle=Math.random()*Math.PI*2;this.spin=(Math.random()-.5)*.07;this.wobble=Math.random()*Math.PI*2;this.wobbleSpeed=Math.random()*.035+.01;this.shape=Math.random()>.4?'rect':'circle';this.w=Math.random()*7+3;this.h=Math.random()*13+5;this.alpha=Math.random()*.5+.3;}
+  getColor(){return getComputedStyle(document.body).getPropertyValue(pick(['--p1','--p2','--p3','--p4'])).trim()||'#F0C040';}
+  update(){this.wobble+=this.wobbleSpeed;this.angle+=this.spin;this.y+=this.speed;this.x+=Math.sin(this.wobble)*.65;if(this.y>canvas.height+20)this.reset();}
+  draw(){ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.angle);ctx.fillStyle=this.getColor();ctx.globalAlpha=this.alpha;if(this.shape==='rect')ctx.fillRect(-this.w/2,-this.h/2,this.w,this.h);else{ctx.beginPath();ctx.ellipse(0,0,this.r,this.r*.55,0,0,Math.PI*2);ctx.fill();}ctx.restore();}
 }
-
 const particles=Array.from({length:80},()=>new Particle());
-(function drawParticles(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach(p=>{ p.update(); p.draw(); });
-  requestAnimationFrame(drawParticles);
-})();
+(function drawP(){ctx.clearRect(0,0,canvas.width,canvas.height);particles.forEach(p=>{p.update();p.draw();});requestAnimationFrame(drawP);})();
 
 // ── Init ──
 async function init(){
   try {
-    setStatus('Fetching photos...');
-    setProgress(20);
-
-    const [mainFiles, submittedFiles, approvedMessages, photoCache]=await Promise.all([
-      fetchFiles(CONFIG.mainFolderId),
-      fetchFiles(CONFIG.subFolderId),
-      fetchApprovedMessages(),
-      fetchCache(),
-    ]);
-
-    if(!mainFiles.length) throw new Error('No photos found in Drive folder.');
-    setStatus(`${mainFiles.length} photos · ${approvedMessages.length} messages`);
-    setProgress(70);
-
-    slides=buildShowFromData(mainFiles, submittedFiles, approvedMessages, photoCache);
-    setProgress(100);
-
-    // Splash
-    const splash=document.getElementById('splash');
-    splash.style.display='flex';
+    setStatus('Fetching photos...');setProgress(20);
+    const [mf,sf,am]=await Promise.all([fetchFiles(CONFIG.mainFolderId),fetchFiles(CONFIG.subFolderId),fetchApprovedMessages()]);
+    if(!mf.length)throw new Error('No photos found in Drive folder.');
+    setStatus(`${mf.length} photos · ${am.length} messages`);setProgress(70);
+    slides=buildShowFromData(mf,sf,am);setProgress(100);
+    const splash=document.getElementById('splash');splash.style.display='flex';
     await new Promise(r=>setTimeout(r,400));
     document.getElementById('loading').classList.add('gone');
     setTimeout(()=>document.getElementById('loading').remove(),1100);
-
-    setTimeout(()=>{
-      splash.classList.add('gone');
-      setTimeout(()=>splash.remove(),1600);
-      goTo(0);
-      startAuto();
-    },4000);
-
+    setTimeout(()=>{splash.classList.add('gone');setTimeout(()=>splash.remove(),1600);goTo(0);startAuto();},4000);
   } catch(err){
-    console.error(err);
-    document.getElementById('loading').style.display='none';
-    const e=document.getElementById('error-screen');
-    e.style.display='flex';
+    console.error(err);document.getElementById('loading').style.display='none';
+    const e=document.getElementById('error-screen');e.style.display='flex';
     document.getElementById('error-detail').textContent=err.message;
   }
 }
-
 init();
 </script>
 </body>
