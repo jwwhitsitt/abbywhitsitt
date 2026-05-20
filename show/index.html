@@ -222,53 +222,60 @@ let defaultThemeIdx = 0;
 //               landscape slot w = h * (9/16) * (4/3)
 // ══════════════════════════════════════════════════
 const LAYOUTS = [
-  // L1: portrait left + landscape right
+  // ── Portrait slot math: w = h * 0.5625 * 0.75 = h * 0.422 ──
+  // ── Landscape slot math: w = h * 0.5625 * 1.333 = h * 0.75 ──
+  // (viewport is 16:9, so w%/h% ratio = actual_aspect * 9/16)
+  // Portrait h:98 → w:41 | Landscape h:47 → w:35 | Landscape h:98 → w:74
+
+  // L1: portrait left + landscape right (no badge — clean)
   { slots:[{x:0,y:1,w:41,h:98,orient:'portrait'},{x:43,y:1,w:56,h:98,orient:'landscape'}],
-    badgeStyle:{bottom:'3%',right:'0.5%',width:'20%',padding:'0.8rem 1rem'} },
+    badge:false },
 
-  // L2: landscape left + portrait right
+  // L2: landscape left + portrait right (no badge — clean)
   { slots:[{x:0,y:1,w:57,h:98,orient:'landscape'},{x:59,y:1,w:40,h:98,orient:'portrait'}],
-    badgeStyle:{bottom:'3%',left:'0.5%',width:'20%',padding:'0.8rem 1rem'} },
+    badge:false },
 
-  // L3: 2 portraits side by side
+  // L3: 2 portraits side by side + badge
   { slots:[{x:0,y:1,w:37,h:98,orient:'portrait'},{x:38,y:1,w:37,h:98,orient:'portrait'}],
-    badgeStyle:{top:'1%',right:'0.5%',width:'23%',padding:'1rem 1.2rem'} },
+    badge:true, badgeStyle:{top:'1%',right:'0.5%',width:'23%',padding:'1rem 1.2rem'} },
 
-  // L4: 3 portraits in a row
+  // L4: 3 portraits in a row + badge
   { slots:[{x:0,y:1,w:24,h:98,orient:'portrait'},{x:25.5,y:1,w:24,h:98,orient:'portrait'},{x:51,y:1,w:24,h:98,orient:'portrait'}],
-    badgeStyle:{bottom:'3%',right:'0.5%',width:'22%',padding:'0.9rem 1.1rem'} },
+    badge:true, badgeStyle:{bottom:'3%',right:'0.5%',width:'22%',padding:'0.9rem 1.1rem'} },
 
-  // L5: portrait left + 2 landscapes right stacked
+  // L5: portrait left + 2 proper 4:3 landscapes right stacked + badge
+  // h:47 landscape → w:35, gap 1% → starts at 43
   { slots:[{x:0,y:1,w:41,h:98,orient:'portrait'},{x:43,y:1,w:56,h:47,orient:'landscape'},{x:43,y:51,w:56,h:47,orient:'landscape'}],
-    badgeStyle:{bottom:'3%',left:'0.5%',width:'20%',padding:'0.8rem 1rem'} },
+    badge:true, badgeStyle:{bottom:'3%',left:'0.5%',width:'20%',padding:'0.8rem 1rem'} },
 
-  // L6: 2 landscapes left stacked + portrait right
+  // L6: 2 proper 4:3 landscapes left stacked + portrait right + badge
   { slots:[{x:0,y:1,w:56,h:47,orient:'landscape'},{x:0,y:51,w:56,h:47,orient:'landscape'},{x:58,y:1,w:41,h:98,orient:'portrait'}],
-    badgeStyle:{bottom:'3%',right:'0.5%',width:'19%',padding:'0.8rem 1rem'} },
+    badge:true, badgeStyle:{bottom:'3%',right:'0.5%',width:'19%',padding:'0.8rem 1rem'} },
 
-  // L7: Full-bleed single hero
+  // L7: Full-bleed single hero + badge overlay
   { slots:[{x:0,y:0,w:100,h:100,orient:'any',contain:true}],
-    badgeStyle:{bottom:'4%',left:'3%',width:'30%',padding:'1.1rem 1.5rem'} },
+    badge:true, badgeStyle:{bottom:'4%',left:'3%',width:'30%',padding:'1.1rem 1.5rem'} },
 
-  // L8: 2 portraits top-left + landscape bottom-left + landscape bottom-right + badge top-right
-  { slots:[{x:0,y:1,w:24,h:52,orient:'portrait'},{x:25,y:1,w:24,h:52,orient:'portrait'},{x:0,y:55,w:49,h:44,orient:'landscape'},{x:51,y:55,w:48,h:44,orient:'landscape'}],
-    badgeStyle:{top:'1%',right:'0.5%',width:'23%',padding:'0.9rem 1.1rem'} },
+  // L8: 2 portraits top-left + 2 landscapes bottom + badge top-right
+  // portraits: h:50, w:21 | landscapes: h:47, w:49
+  { slots:[{x:0,y:1,w:21,h:50,orient:'portrait'},{x:22,y:1,w:21,h:50,orient:'portrait'},{x:0,y:53,w:49,h:46,orient:'landscape'},{x:51,y:53,w:48,h:46,orient:'landscape'}],
+    badge:true, badgeStyle:{top:'1%',right:'0.5%',width:'56%',height:'50%',padding:'1.5rem 2rem',textAlign:'center'} },
 
-  // L9: portrait left + landscape upper-right + badge lower-right
+  // L9: portrait left + landscape upper-right + badge lower-right (framed)
   { slots:[{x:0,y:1,w:41,h:98,orient:'portrait'},{x:43,y:1,w:56,h:47,orient:'landscape'}],
-    badgeStyle:{bottom:'1%',right:'0%',width:'56%',height:'46%',padding:'1.2rem 1.5rem',textAlign:'center',display:'flex',alignItems:'center',justifyContent:'center'} },
+    badge:true, badgeStyle:{bottom:'1%',right:'0%',width:'56%',height:'46%',padding:'1.5rem 2rem',textAlign:'center'} },
 
-  // L10: landscape upper-left + badge lower-left + portrait right
+  // L10: landscape upper-left + badge lower-left (framed) + portrait right
   { slots:[{x:0,y:1,w:56,h:47,orient:'landscape'},{x:58,y:1,w:41,h:98,orient:'portrait'}],
-    badgeStyle:{bottom:'1%',left:'0%',width:'56%',height:'46%',padding:'1.2rem 1.5rem',textAlign:'center',display:'flex',alignItems:'center',justifyContent:'center'} },
+    badge:true, badgeStyle:{bottom:'1%',left:'0%',width:'56%',height:'46%',padding:'1.5rem 2rem',textAlign:'center'} },
 
-  // L11: big portrait center + 4 landscapes flanking
+  // L11: big portrait center + 4 landscapes flanking + badge
   { slots:[{x:29,y:1,w:41,h:98,orient:'portrait'},{x:0,y:1,w:27,h:47,orient:'landscape'},{x:0,y:51,w:27,h:47,orient:'landscape'},{x:72,y:1,w:27,h:47,orient:'landscape'},{x:72,y:51,w:27,h:47,orient:'landscape'}],
-    badgeStyle:{bottom:'3%',left:'0.5%',width:'26%',padding:'0.7rem 1rem'} },
+    badge:true, badgeStyle:{bottom:'3%',left:'0.5%',width:'26%',padding:'0.7rem 1rem'} },
 
-  // L12: 2 portraits + 2 landscapes (quad)
-  { slots:[{x:0,y:1,w:24,h:98,orient:'portrait'},{x:26,y:1,w:24,h:98,orient:'portrait'},{x:52,y:1,w:47,h:47,orient:'landscape'},{x:52,y:51,w:47,h:47,orient:'landscape'}],
-    badgeStyle:{bottom:'3%',right:'0.5%',width:'20%',padding:'0.8rem 1rem'} },
+  // L12: 2 portraits left + 2 landscapes right stacked + badge
+  { slots:[{x:0,y:1,w:20,h:98,orient:'portrait'},{x:21.5,y:1,w:20,h:98,orient:'portrait'},{x:43,y:1,w:56,h:47,orient:'landscape'},{x:43,y:51,w:56,h:47,orient:'landscape'}],
+    badge:true, badgeStyle:{bottom:'3%',right:'0.5%',width:'20%',padding:'0.8rem 1rem'} },
 ];
 
 // ── Utilities ──
@@ -313,7 +320,6 @@ async function fetchApprovedMessages(){
 // ── Badge message rotation — shuffle queue so no repeats ──
 let _badgeQueue=[];
 function nextBadgeMsg(approvedMessages){
-  // Only short messages in badges (under 100 chars)
   const shortApproved=approvedMessages.filter(m=>m.message.length<100);
   const pool=[...DEFAULT_MESSAGES,...shortApproved.map(m=>({_approved:true,name:m.name,relationship:m.relationship,message:m.message}))];
   if(!_badgeQueue.length)_badgeQueue=shuffle([...pool]);
@@ -332,23 +338,23 @@ function photoOrient(f){
   return w>=h ? 'landscape' : 'portrait';
 }
 
-// ── Build collage slide — photos matched to slots by orientation ──
+// ── Build collage slide — strict orientation matching, badge optional ──
 function buildCollageSlide(files, si, approvedMessages, themeOverride){
-  // Classify all available photos
-  const portraits = shuffle(files.filter(f=>photoOrient(f)==='portrait'));
+  const portraits  = shuffle(files.filter(f=>photoOrient(f)==='portrait'));
   const landscapes = shuffle(files.filter(f=>photoOrient(f)==='landscape'));
-  const any = shuffle([...files]); // fallback pool
 
-  // Count how many portrait/landscape slots each layout needs
+  // Strict fit — only pick layouts where we have EXACT orientation counts
   function canFit(layout){
     const pNeeded = layout.slots.filter(s=>s.orient==='portrait').length;
     const lNeeded = layout.slots.filter(s=>s.orient==='landscape').length;
-    const aNeeded = layout.slots.filter(s=>s.orient==='any').length;
-    return portraits.length >= pNeeded && landscapes.length >= lNeeded && any.length >= (pNeeded+lNeeded+aNeeded);
+    // No fallback — must have exactly enough of each orientation
+    return portraits.length >= pNeeded && landscapes.length >= lNeeded;
   }
 
   const available = LAYOUTS.filter(canFit);
-  const layout = pick(available.length ? available : LAYOUTS.filter(l=>l.slots.length<=files.length).slice(0,3));
+  // If nothing fits strictly, use simpler 1-2 photo layouts
+  const fallbacks = LAYOUTS.filter(l=>l.slots.length<=2);
+  const layout = pick(available.length ? available : fallbacks);
 
   const slide = document.createElement('div');
   slide.className = 'slide';
@@ -356,13 +362,12 @@ function buildCollageSlide(files, si, approvedMessages, themeOverride){
   const seasonal = month ? SEASONAL[month] : null;
   slide.dataset.theme = seasonal ? seasonal.theme : (themeOverride||'');
 
-  // Assign photos to slots by orientation
-  let pi=0, li=0, ai=0;
+  let pi=0, li=0;
   layout.slots.forEach(slot=>{
     let f;
-    if(slot.orient==='portrait')      f = portraits[pi++] || any[ai++];
-    else if(slot.orient==='landscape') f = landscapes[li++] || any[ai++];
-    else                               f = any[ai++];
+    if(slot.orient==='portrait')       f = portraits[pi++];
+    else if(slot.orient==='landscape') f = landscapes[li++];
+    else                               f = files[0]; // 'any' slot — use first file
     if(!f) return;
 
     const cell = document.createElement('div');
@@ -376,11 +381,14 @@ function buildCollageSlide(files, si, approvedMessages, themeOverride){
     slide.appendChild(cell);
   });
 
-  const badge = document.createElement('div');
-  badge.className = 'badge';
-  Object.assign(badge.style, layout.badgeStyle, {position:'absolute'});
-  badge.innerHTML = badgeHTML(approvedMessages);
-  slide.appendChild(badge);
+  // Badge is optional per layout
+  if(layout.badge){
+    const badge = document.createElement('div');
+    badge.className = 'badge';
+    Object.assign(badge.style, layout.badgeStyle, {position:'absolute'});
+    badge.innerHTML = badgeHTML(approvedMessages);
+    slide.appendChild(badge);
+  }
 
   return slide;
 }
