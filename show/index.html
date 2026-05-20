@@ -396,8 +396,6 @@ body.theme-spring {
 /* Guest wall */
 .slide.guest-wall {
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  grid-template-rows:auto 1fr;
   padding:12px; gap:8px;
 }
 .guest-wall-header {
@@ -860,12 +858,21 @@ function buildGuestWallSlides(messages) {
     const chunk=messages.slice(i,i+CONFIG.guestWallSize);
     if(!chunk.length) break;
     const slide=document.createElement('div'); slide.className='slide guest-wall';
+
+    // Dynamic grid: long messages span 2 rows, short messages are 1×1
+    const totalUnits=chunk.reduce((s,m)=>s+(m.message.length>=120?2:1),0);
+    const contentRows=Math.max(2,Math.ceil(totalUnits/3));
+    slide.style.gridTemplateColumns='repeat(3, 1fr)';
+    slide.style.gridTemplateRows=`auto repeat(${contentRows}, 1fr)`;
+    slide.style.gridAutoFlow='dense';
+
     const header=document.createElement('div'); header.className='guest-wall-header';
     header.innerHTML=`<h2>Messages for Abby</h2><p>From the people who love her most</p>`;
     slide.appendChild(header);
     chunk.forEach(m=>{
       const card=document.createElement('div'); card.className='guest-card';
       card.innerHTML=`<div class="gc-message">"${m.message}"</div><div class="gc-from">${m.name}</div><div class="gc-rel">${m.relationship}</div>`;
+      if(m.message.length>=120) card.style.gridRow='span 2';
       slide.appendChild(card);
     });
     slides.push(slide);
