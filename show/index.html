@@ -652,6 +652,18 @@ async function fetchApprovedMessages() {
   } catch(e){ console.warn('Sheet fetch failed',e); return []; }
 }
 
+// ── Fetch photo dimension cache ──
+async function fetchCache() {
+  try {
+    const res = await fetch('/show/cache.json');
+    if (!res.ok) return {};
+    return await res.json();
+  } catch(e) {
+    console.warn('Cache fetch failed', e);
+    return {};
+  }
+}
+
 // ── Build Then & Now pairs ──
 function buildThenNow(files) {
   const byMonthYear = {};
@@ -730,16 +742,32 @@ function getSeasonalTheme(month) {
 }
 
 // ── Build slide elements ──
-function buildCollageSlide(files, idx, approvedMessages, themeOverride) {
-  const layout = pickLayout(Math.min(files.length, 11));
-  const photoCount = layout.cells - 1; // badge takes one cell
-  const photos = files.slice(0, photoCount);
+function classifyOrientation(fileId, photoCache) {
+  const entry = photoCache[fileId];
+  if (!entry || !entry.width || !entry.height) return 'square';
+  const ratio = entry.width / entry.height;
+  if (ratio > 1.4) return 'landscape';
+  if (ratio < 0.75) return 'portrait';
+  return 'square';
+}
+
+function buildCollageSlide(files, idx, approvedMessages, themeOverride, photoCache = {}) {
+  const photos = files.slice(0, CONFIG.photosPerSlide);
   const styleVar = pick(STYLE_VARIANTS);
 
   const slide = document.createElement('div');
-  slide.className = `slide ${layout.cls} ${styleVar}`;
+  slide.className = `slide ${styleVar}`;
   slide.style.padding = '10px';
   slide.style.gap = '8px';
+
+  // Classify orientations and build dynamic grid
+  const orientations = photos.map(f => classifyOrientation(f.id, photoCache));
+  // landscape/portrait each consume 2 cell-units; square/badge consume 1
+  const totalUnits = orientations.reduce((s, o) => s + (o === 'landscape' || o === 'portrait' ? 2 : 1), 0) + 1;
+  const rows = Math.max(2, Math.ceil(totalUnits / 4));
+  slide.style.gridTemplateColumns = 'repeat(4, 1fr)';
+  slide.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+  slide.style.gridAutoFlow = 'dense';
 
   // Seasonal theme
   const month = getMonth(files[0]);
@@ -748,10 +776,11 @@ function buildCollageSlide(files, idx, approvedMessages, themeOverride) {
   else if(themeOverride) slide.dataset.theme = themeOverride;
 
   // Random badge position — not first, not last
-  const badgePos = 1 + Math.floor(Math.random() * (layout.cells - 2));
+  const totalCells = photos.length + 1;
+  const badgePos = 1 + Math.floor(Math.random() * (totalCells - 2));
   let photoIdx = 0;
 
-  for(let i = 0; i < layout.cells; i++) {
+  for(let i = 0; i < totalCells; i++) {
     if(i === badgePos) {
       let badgeOpts = {};
       if(approvedMessages.length && Math.random() > .35) {
@@ -760,11 +789,14 @@ function buildCollageSlide(files, idx, approvedMessages, themeOverride) {
       }
       slide.appendChild(makeBadge(badgeOpts));
     } else if(photoIdx < photos.length) {
+      const orient = orientations[photoIdx];
       const f = photos[photoIdx++];
       const cell = makeCell(f.id, idx < 3 ? 'eager' : 'lazy');
       const img = cell.querySelector('img');
       img.style.objectFit = 'cover';
       img.style.objectPosition = 'center top';
+      if(orient === 'portrait') cell.style.gridRow = 'span 2';
+      if(orient === 'landscape') cell.style.gridColumn = 'span 2';
       if(styleVar === 'polaroid' || styleVar === 'overlap') {
         const rot = (Math.random() * 4 - 2).toFixed(1);
         cell.style.setProperty('--rot', `${rot}deg`);
@@ -842,7 +874,7 @@ function buildGuestWallSlides(messages) {
 }
 
 // ── Main build ──
-function buildShowFromData(mainFiles, submittedFiles, approvedMessages) {
+function buildShowFromData(mainFiles, submittedFiles, approvedMessages, photoCache = {}) {
   const showEl=document.getElementById('show');
   const dotsEl=document.getElementById('dots');
   showEl.innerHTML=''; dotsEl.innerHTML='';
@@ -904,7 +936,7 @@ function buildShowFromData(mainFiles, submittedFiles, approvedMessages) {
   allSlides.forEach((item,si)=>{
     let slide;
     if(item.type==='collage'){
-      slide=buildCollageSlide(item.chunk, si, messageOnly, item.defaultTheme);
+      slide=buildCollageSlide(item.chunk, si, messageOnly, item.defaultTheme, photoCache);
     } else if(item.type==='thenNow'){
       slide=buildThenNowSlide(item.pair);
     } else {
@@ -1006,12 +1038,13 @@ async function showOutro(){
 async function refreshAndRestart(){
   try {
     setStatus('Refreshing photos and messages...');
-    const [mainFiles, submittedFiles, approvedMessages]=await Promise.all([
+    const [mainFiles, submittedFiles, approvedMessages, photoCache]=await Promise.all([
       fetchFiles(CONFIG.mainFolderId),
       fetchFiles(CONFIG.subFolderId),
       fetchApprovedMessages(),
+      fetchCache(),
     ]);
-    slides=buildShowFromData(mainFiles, submittedFiles, approvedMessages);
+    slides=buildShowFromData(mainFiles, submittedFiles, approvedMessages, photoCache);
     current=0;
     goTo(0);
     startAuto();
@@ -1091,17 +1124,18 @@ async function init(){
     setStatus('Fetching photos...');
     setProgress(20);
 
-    const [mainFiles, submittedFiles, approvedMessages]=await Promise.all([
+    const [mainFiles, submittedFiles, approvedMessages, photoCache]=await Promise.all([
       fetchFiles(CONFIG.mainFolderId),
       fetchFiles(CONFIG.subFolderId),
       fetchApprovedMessages(),
+      fetchCache(),
     ]);
 
     if(!mainFiles.length) throw new Error('No photos found in Drive folder.');
     setStatus(`${mainFiles.length} photos · ${approvedMessages.length} messages`);
     setProgress(70);
 
-    slides=buildShowFromData(mainFiles, submittedFiles, approvedMessages);
+    slides=buildShowFromData(mainFiles, submittedFiles, approvedMessages, photoCache);
     setProgress(100);
 
     // Splash
