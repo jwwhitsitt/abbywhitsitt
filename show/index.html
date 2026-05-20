@@ -243,7 +243,7 @@ const LAYOUTS = [
     badgeStyle:{bottom:'3%',right:'0.5%',width:'19%',padding:'0.8rem 1rem'} },
 
   // L6: Full-bleed single hero
-  { slots:[{x:0,y:0,w:100,h:100,orient:'any'}],
+  { slots:[{x:0,y:0,w:100,h:100,orient:'any',contain:true}],
     badgeStyle:{bottom:'4%',left:'3%',width:'30%',padding:'1.1rem 1.5rem'} },
 
   // L7: 2 landscapes side by side
@@ -370,6 +370,7 @@ function buildCollageSlide(files, si, approvedMessages, themeOverride){
     cell.setAttribute('style',`left:${slot.x}%;top:${slot.y}%;width:${slot.w}%;height:${slot.h}%;`);
     const img = document.createElement('img');
     img.src = imgUrl(f.id); img.alt=''; img.loading=si<3?'eager':'lazy';
+    if(slot.contain) img.style.objectFit='contain';
     img.onerror = ()=>cell.style.display='none';
     cell.appendChild(img);
     slide.appendChild(cell);
