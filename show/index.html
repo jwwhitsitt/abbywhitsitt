@@ -223,60 +223,87 @@ let defaultThemeIdx = 0;
 //               landscape slot w = h * (9/16) * (4/3)
 // ══════════════════════════════════════════════════
 const LAYOUTS = [
-  // ── Portrait slot math: w = h * 0.5625 * 0.75 = h * 0.422 ──
-  // ── Landscape slot math: w = h * 0.5625 * 1.333 = h * 0.75 ──
-  // (viewport is 16:9, so w%/h% ratio = actual_aspect * 9/16)
-  // Portrait h:98 → w:41 | Landscape h:47 → w:35 | Landscape h:98 → w:74
+  // Portrait slot: h:98 → w:41  |  Landscape slot: h:47 → w:56  |  Gap: 1%
 
-  // L1: portrait left + landscape right (no badge — clean)
+  // L1: portrait left + landscape right — clean, no badge
   { slots:[{x:0,y:1,w:41,h:98,orient:'portrait'},{x:43,y:1,w:56,h:98,orient:'landscape'}],
     badge:false },
 
-  // L2: landscape left + portrait right (no badge — clean)
+  // L2: landscape left + portrait right — clean, no badge
   { slots:[{x:0,y:1,w:57,h:98,orient:'landscape'},{x:59,y:1,w:40,h:98,orient:'portrait'}],
     badge:false },
 
-  // L3: 2 portraits side by side + badge
-  { slots:[{x:0,y:1,w:37,h:98,orient:'portrait'},{x:38,y:1,w:37,h:98,orient:'portrait'}],
-    badge:true, badgeStyle:{top:'1%',right:'0.5%',width:'23%',padding:'1rem 1.2rem'} },
+  // L3a: portrait left + portrait center + badge right (full height)
+  { slots:[{x:0,y:1,w:37,h:98,orient:'portrait'},{x:39,y:1,w:37,h:98,orient:'portrait'}],
+    badge:true, badgeStyle:{top:'1%',right:'0.5%',width:'22%',height:'98%'} },
 
-  // L4: 3 portraits in a row + badge
+  // L3b: badge left (full height) + portrait center + portrait right
+  { slots:[{x:25,y:1,w:37,h:98,orient:'portrait'},{x:63,y:1,w:37,h:98,orient:'portrait'}],
+    badge:true, badgeStyle:{top:'1%',left:'0%',width:'23%',height:'98%'} },
+
+  // L3c: portrait left + badge center + portrait right
+  { slots:[{x:0,y:1,w:37,h:98,orient:'portrait'},{x:62,y:1,w:37,h:98,orient:'portrait'}],
+    badge:true, badgeStyle:{top:'1%',left:'38%',width:'23%',height:'98%'} },
+
+  // L4a: 3 portraits + badge bottom-right
   { slots:[{x:0,y:1,w:24,h:98,orient:'portrait'},{x:25.5,y:1,w:24,h:98,orient:'portrait'},{x:51,y:1,w:24,h:98,orient:'portrait'}],
-    badge:true, badgeStyle:{bottom:'3%',right:'0.5%',width:'22%',padding:'0.9rem 1.1rem'} },
+    badge:true, badgeStyle:{bottom:'1%',right:'0.5%',width:'23%',height:'30%'} },
 
-  // L5: portrait left + 2 proper 4:3 landscapes right stacked + badge
-  // h:47 landscape → w:35, gap 1% → starts at 43
+  // L4b: badge bottom-left + 3 portraits
+  { slots:[{x:25.5,y:1,w:24,h:98,orient:'portrait'},{x:51,y:1,w:24,h:98,orient:'portrait'},{x:76.5,y:1,w:24,h:98,orient:'portrait'}],
+    badge:true, badgeStyle:{bottom:'1%',left:'0%',width:'23%',height:'30%'} },
+
+  // L5a: portrait left + 2 landscapes right stacked + badge bottom-left
   { slots:[{x:0,y:1,w:41,h:98,orient:'portrait'},{x:43,y:1,w:56,h:47,orient:'landscape'},{x:43,y:51,w:56,h:47,orient:'landscape'}],
-    badge:true, badgeStyle:{bottom:'3%',left:'0.5%',width:'20%',padding:'0.8rem 1rem'} },
+    badge:true, badgeStyle:{bottom:'1%',left:'0%',width:'41%',height:'30%'} },
 
-  // L6: 2 proper 4:3 landscapes left stacked + portrait right + badge
+  // L5b: portrait left + 2 landscapes right stacked + badge top-left
+  { slots:[{x:0,y:1,w:41,h:98,orient:'portrait'},{x:43,y:1,w:56,h:47,orient:'landscape'},{x:43,y:51,w:56,h:47,orient:'landscape'}],
+    badge:true, badgeStyle:{top:'1%',left:'0%',width:'41%',height:'30%'} },
+
+  // L6a: 2 landscapes left stacked + portrait right + badge bottom-right
   { slots:[{x:0,y:1,w:56,h:47,orient:'landscape'},{x:0,y:51,w:56,h:47,orient:'landscape'},{x:58,y:1,w:41,h:98,orient:'portrait'}],
-    badge:true, badgeStyle:{bottom:'3%',right:'0.5%',width:'19%',padding:'0.8rem 1rem'} },
+    badge:true, badgeStyle:{bottom:'1%',right:'0%',width:'41%',height:'30%'} },
 
-  // L7: Full-bleed single hero + badge overlay
-  { slots:[{x:0,y:0,w:100,h:100,orient:'any',contain:true}],
-    badge:true, badgeStyle:{bottom:'4%',left:'3%',width:'30%',padding:'1.1rem 1.5rem'} },
+  // L6b: 2 landscapes left stacked + portrait right + badge top-right
+  { slots:[{x:0,y:1,w:56,h:47,orient:'landscape'},{x:0,y:51,w:56,h:47,orient:'landscape'},{x:58,y:1,w:41,h:98,orient:'portrait'}],
+    badge:true, badgeStyle:{top:'1%',right:'0%',width:'41%',height:'30%'} },
+
+  // L7a: full-bleed hero + badge bottom-left
+  { slots:[{x:0,y:0,w:100,h:100,orient:'any'}],
+    badge:true, badgeStyle:{bottom:'4%',left:'3%',width:'30%'} },
+
+  // L7b: full-bleed hero + badge bottom-right
+  { slots:[{x:0,y:0,w:100,h:100,orient:'any'}],
+    badge:true, badgeStyle:{bottom:'4%',right:'3%',width:'30%'} },
+
+  // L7c: full-bleed hero + badge bottom-center
+  { slots:[{x:0,y:0,w:100,h:100,orient:'any'}],
+    badge:true, badgeStyle:{bottom:'4%',left:'35%',width:'30%'} },
 
   // L8: 2 portraits top-left + 2 landscapes bottom + badge top-right
-  // portraits: h:50, w:21 | landscapes: h:47, w:49
   { slots:[{x:0,y:1,w:21,h:50,orient:'portrait'},{x:22,y:1,w:21,h:50,orient:'portrait'},{x:0,y:53,w:49,h:46,orient:'landscape'},{x:51,y:53,w:48,h:46,orient:'landscape'}],
-    badge:true, badgeStyle:{top:'1%',right:'0.5%',width:'56%',height:'50%',padding:'1.5rem 2rem',textAlign:'center'} },
+    badge:true, badgeStyle:{top:'1%',right:'0.5%',width:'56%',height:'50%'} },
 
-  // L9: portrait left + landscape upper-right + badge lower-right (framed)
+  // L9: portrait left + landscape upper-right + badge lower-right
   { slots:[{x:0,y:1,w:41,h:98,orient:'portrait'},{x:43,y:1,w:56,h:47,orient:'landscape'}],
-    badge:true, badgeStyle:{bottom:'1%',right:'0%',width:'56%',height:'46%',padding:'1.5rem 2rem',textAlign:'center'} },
+    badge:true, badgeStyle:{bottom:'1%',right:'0%',width:'56%',height:'46%'} },
 
-  // L10: landscape upper-left + badge lower-left (framed) + portrait right
+  // L10: landscape upper-left + badge lower-left + portrait right
   { slots:[{x:0,y:1,w:56,h:47,orient:'landscape'},{x:58,y:1,w:41,h:98,orient:'portrait'}],
-    badge:true, badgeStyle:{bottom:'1%',left:'0%',width:'56%',height:'46%',padding:'1.5rem 2rem',textAlign:'center'} },
+    badge:true, badgeStyle:{bottom:'1%',left:'0%',width:'56%',height:'46%'} },
 
-  // L11: big portrait center + 4 landscapes flanking + badge
+  // L11a: portrait center + 4 landscapes flanking + badge bottom-left
   { slots:[{x:29,y:1,w:41,h:98,orient:'portrait'},{x:0,y:1,w:27,h:47,orient:'landscape'},{x:0,y:51,w:27,h:47,orient:'landscape'},{x:72,y:1,w:27,h:47,orient:'landscape'},{x:72,y:51,w:27,h:47,orient:'landscape'}],
-    badge:true, badgeStyle:{bottom:'3%',left:'0.5%',width:'26%',padding:'0.7rem 1rem'} },
+    badge:true, badgeStyle:{bottom:'1%',left:'0%',width:'27%',height:'46%'} },
 
-  // L12: 2 portraits left + 2 landscapes right stacked + badge
+  // L11b: portrait center + 4 landscapes flanking + badge bottom-right
+  { slots:[{x:29,y:1,w:41,h:98,orient:'portrait'},{x:0,y:1,w:27,h:47,orient:'landscape'},{x:0,y:51,w:27,h:47,orient:'landscape'},{x:72,y:1,w:27,h:47,orient:'landscape'},{x:72,y:51,w:27,h:47,orient:'landscape'}],
+    badge:true, badgeStyle:{bottom:'1%',right:'0%',width:'27%',height:'46%'} },
+
+  // L12: 2 portraits left + 2 landscapes right stacked + badge bottom-right
   { slots:[{x:0,y:1,w:20,h:98,orient:'portrait'},{x:21.5,y:1,w:20,h:98,orient:'portrait'},{x:43,y:1,w:56,h:47,orient:'landscape'},{x:43,y:51,w:56,h:47,orient:'landscape'}],
-    badge:true, badgeStyle:{bottom:'3%',right:'0.5%',width:'20%',padding:'0.8rem 1rem'} },
+    badge:true, badgeStyle:{bottom:'1%',right:'0%',width:'20%',height:'46%'} },
 ];
 
 // ── Utilities ──
