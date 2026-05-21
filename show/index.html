@@ -70,8 +70,8 @@ body.theme-spring    { --bg:#080f0a; --text:#F0FFF0; --gold:#A0E080; --gold2:#60
 .cell img {
   position:absolute; inset:0;
   width:100%; height:100%;
-  object-fit:contain;
-  object-position:center center;
+  object-fit:cover;
+  object-position:center top;
   display:block;
   transition:transform 9s ease;
 }
@@ -131,7 +131,7 @@ body.theme-spring    { --bg:#080f0a; --text:#F0FFF0; --gold:#A0E080; --gold2:#60
 .guest-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:4px; padding:1rem 1.2rem; display:flex; flex-direction:column; gap:.5rem; overflow:hidden; }
 .gc-message { font-family:var(--font-d); font-style:italic; font-size:clamp(1.2rem,2.2vw,2rem); color:var(--text); line-height:1.5; flex:1; }
 .gc-from { font-family:var(--font-t); font-size:clamp(.75rem,1vw,1.1rem); letter-spacing:.2em; color:var(--gold2); text-transform:uppercase; }
-.gc-rel { font-size:.45rem; color:var(--text2); letter-spacing:.1em; }
+.gc-rel { font-size:clamp(.65rem,.9vw,1rem); color:var(--text2); letter-spacing:.1em; }
 
 /* ── UI Chrome ── */
 #counter { position:fixed; bottom:1rem; right:1.5rem; z-index:20; font-size:.55rem; letter-spacing:.3em; color:rgba(255,255,255,.25); text-transform:uppercase; }
@@ -224,86 +224,72 @@ let defaultThemeIdx = 0;
 // ══════════════════════════════════════════════════
 const LAYOUTS = [
   // Portrait slot: h:98 → w:41  |  Landscape slot: h:47 → w:56  |  Gap: 1%
+  // RULE: badge only in confirmed dead space, never over photo content
+  // All badge bottom values >= 8% to clear progress bar
 
-  // L1: portrait left + landscape right — clean, no badge
+  // L1: portrait left + landscape right — no badge, clean
   { slots:[{x:0,y:1,w:41,h:98,orient:'portrait'},{x:43,y:1,w:56,h:98,orient:'landscape'}],
     badge:false },
 
-  // L2: landscape left + portrait right — clean, no badge
+  // L2: landscape left + portrait right — no badge, clean
   { slots:[{x:0,y:1,w:57,h:98,orient:'landscape'},{x:59,y:1,w:40,h:98,orient:'portrait'}],
     badge:false },
 
-  // L3a: portrait left + portrait center + badge right (full height)
+  // L3a: 2 portraits + badge fills right column (pure dead space)
   { slots:[{x:0,y:1,w:37,h:98,orient:'portrait'},{x:39,y:1,w:37,h:98,orient:'portrait'}],
-    badge:true, badgeStyle:{top:'1%',right:'0.5%',width:'22%',height:'98%'} },
+    badge:true, badgeStyle:{top:'1%',right:'0%',width:'23%',height:'98%'} },
 
-  // L3b: badge left (full height) + portrait center + portrait right
-  { slots:[{x:25,y:1,w:37,h:98,orient:'portrait'},{x:63,y:1,w:37,h:98,orient:'portrait'}],
-    badge:true, badgeStyle:{top:'1%',left:'0%',width:'23%',height:'98%'} },
+  // L3b: badge fills left column + 2 portraits right
+  { slots:[{x:26,y:1,w:37,h:98,orient:'portrait'},{x:64,y:1,w:37,h:98,orient:'portrait'}],
+    badge:true, badgeStyle:{top:'1%',left:'0%',width:'24%',height:'98%'} },
 
-  // L3c: portrait left + badge center + portrait right
-  { slots:[{x:0,y:1,w:37,h:98,orient:'portrait'},{x:62,y:1,w:37,h:98,orient:'portrait'}],
-    badge:true, badgeStyle:{top:'1%',left:'38%',width:'23%',height:'98%'} },
+  // L3c: portrait left + badge center column + portrait right
+  { slots:[{x:0,y:1,w:37,h:98,orient:'portrait'},{x:63,y:1,w:37,h:98,orient:'portrait'}],
+    badge:true, badgeStyle:{top:'1%',left:'38%',width:'24%',height:'98%'} },
 
-  // L4a: 3 portraits + badge bottom-right
+  // L4: 3 portraits in a row — no badge, no clean dead space
   { slots:[{x:0,y:1,w:24,h:98,orient:'portrait'},{x:25.5,y:1,w:24,h:98,orient:'portrait'},{x:51,y:1,w:24,h:98,orient:'portrait'}],
-    badge:true, badgeStyle:{bottom:'1%',right:'0.5%',width:'23%',height:'30%'} },
+    badge:false },
 
-  // L4b: badge bottom-left + 3 portraits
-  { slots:[{x:25.5,y:1,w:24,h:98,orient:'portrait'},{x:51,y:1,w:24,h:98,orient:'portrait'},{x:76.5,y:1,w:24,h:98,orient:'portrait'}],
-    badge:true, badgeStyle:{bottom:'1%',left:'0%',width:'23%',height:'30%'} },
+  // L5a: badge top-left + portrait bottom-left + 2 landscapes stacked right
+  { slots:[{x:0,y:54,w:41,h:44,orient:'portrait'},{x:43,y:1,w:56,h:47,orient:'landscape'},{x:43,y:51,w:56,h:47,orient:'landscape'}],
+    badge:true, badgeStyle:{top:'1%',left:'0%',width:'41%',height:'51%'} },
 
-  // L5a: portrait left + 2 landscapes right stacked + badge bottom-left
-  { slots:[{x:0,y:1,w:41,h:98,orient:'portrait'},{x:43,y:1,w:56,h:47,orient:'landscape'},{x:43,y:51,w:56,h:47,orient:'landscape'}],
-    badge:true, badgeStyle:{bottom:'1%',left:'0%',width:'41%',height:'30%'} },
+  // L5b: portrait top-left + badge bottom-left + 2 landscapes stacked right
+  { slots:[{x:0,y:1,w:41,h:44,orient:'portrait'},{x:43,y:1,w:56,h:47,orient:'landscape'},{x:43,y:51,w:56,h:47,orient:'landscape'}],
+    badge:true, badgeStyle:{bottom:'8%',left:'0%',width:'41%',height:'44%'} },
 
-  // L5b: portrait left + 2 landscapes right stacked + badge top-left
-  { slots:[{x:0,y:1,w:41,h:98,orient:'portrait'},{x:43,y:1,w:56,h:47,orient:'landscape'},{x:43,y:51,w:56,h:47,orient:'landscape'}],
-    badge:true, badgeStyle:{top:'1%',left:'0%',width:'41%',height:'30%'} },
+  // L6a: 2 landscapes stacked left + badge top-right + portrait bottom-right
+  { slots:[{x:0,y:1,w:56,h:47,orient:'landscape'},{x:0,y:51,w:56,h:47,orient:'landscape'},{x:58,y:54,w:41,h:44,orient:'portrait'}],
+    badge:true, badgeStyle:{top:'1%',right:'0%',width:'41%',height:'51%'} },
 
-  // L6a: 2 landscapes left stacked + portrait right + badge bottom-right
-  { slots:[{x:0,y:1,w:56,h:47,orient:'landscape'},{x:0,y:51,w:56,h:47,orient:'landscape'},{x:58,y:1,w:41,h:98,orient:'portrait'}],
-    badge:true, badgeStyle:{bottom:'1%',right:'0%',width:'41%',height:'30%'} },
+  // L6b: 2 landscapes stacked left + portrait top-right + badge bottom-right
+  { slots:[{x:0,y:1,w:56,h:47,orient:'landscape'},{x:0,y:51,w:56,h:47,orient:'landscape'},{x:58,y:1,w:41,h:44,orient:'portrait'}],
+    badge:true, badgeStyle:{bottom:'8%',right:'0%',width:'41%',height:'44%'} },
 
-  // L6b: 2 landscapes left stacked + portrait right + badge top-right
-  { slots:[{x:0,y:1,w:56,h:47,orient:'landscape'},{x:0,y:51,w:56,h:47,orient:'landscape'},{x:58,y:1,w:41,h:98,orient:'portrait'}],
-    badge:true, badgeStyle:{top:'1%',right:'0%',width:'41%',height:'30%'} },
-
-  // L7a: full-bleed hero + badge bottom-left
+  // L7: full-bleed hero — no badge, photo fills everything
   { slots:[{x:0,y:0,w:100,h:100,orient:'any'}],
-    badge:true, badgeStyle:{bottom:'4%',left:'3%',width:'30%'} },
+    badge:false },
 
-  // L7b: full-bleed hero + badge bottom-right
-  { slots:[{x:0,y:0,w:100,h:100,orient:'any'}],
-    badge:true, badgeStyle:{bottom:'4%',right:'3%',width:'30%'} },
-
-  // L7c: full-bleed hero + badge bottom-center
-  { slots:[{x:0,y:0,w:100,h:100,orient:'any'}],
-    badge:true, badgeStyle:{bottom:'4%',left:'35%',width:'30%'} },
-
-  // L8: 2 portraits top-left + 2 landscapes bottom + badge top-right
+  // L8: 2 portraits top-left + 2 landscapes bottom + badge top-right (pure dead space)
   { slots:[{x:0,y:1,w:21,h:50,orient:'portrait'},{x:22,y:1,w:21,h:50,orient:'portrait'},{x:0,y:53,w:49,h:46,orient:'landscape'},{x:51,y:53,w:48,h:46,orient:'landscape'}],
-    badge:true, badgeStyle:{top:'1%',right:'0.5%',width:'56%',height:'50%'} },
+    badge:true, badgeStyle:{top:'1%',right:'0%',width:'56%',height:'50%'} },
 
-  // L9: portrait left + landscape upper-right + badge lower-right
+  // L9: portrait left + landscape upper-right + badge lower-right (dead space below landscape)
   { slots:[{x:0,y:1,w:41,h:98,orient:'portrait'},{x:43,y:1,w:56,h:47,orient:'landscape'}],
-    badge:true, badgeStyle:{bottom:'1%',right:'0%',width:'56%',height:'46%'} },
+    badge:true, badgeStyle:{bottom:'8%',right:'0%',width:'56%',height:'38%'} },
 
-  // L10: landscape upper-left + badge lower-left + portrait right
+  // L10: landscape upper-left + portrait right + badge lower-left (dead space below landscape)
   { slots:[{x:0,y:1,w:56,h:47,orient:'landscape'},{x:58,y:1,w:41,h:98,orient:'portrait'}],
-    badge:true, badgeStyle:{bottom:'1%',left:'0%',width:'56%',height:'46%'} },
+    badge:true, badgeStyle:{bottom:'8%',left:'0%',width:'56%',height:'38%'} },
 
-  // L11a: portrait center + 4 landscapes flanking + badge bottom-left
+  // L11: portrait center + 4 landscapes flanking — no badge, all space filled
   { slots:[{x:29,y:1,w:41,h:98,orient:'portrait'},{x:0,y:1,w:27,h:47,orient:'landscape'},{x:0,y:51,w:27,h:47,orient:'landscape'},{x:72,y:1,w:27,h:47,orient:'landscape'},{x:72,y:51,w:27,h:47,orient:'landscape'}],
-    badge:true, badgeStyle:{bottom:'1%',left:'0%',width:'27%',height:'46%'} },
+    badge:false },
 
-  // L11b: portrait center + 4 landscapes flanking + badge bottom-right
-  { slots:[{x:29,y:1,w:41,h:98,orient:'portrait'},{x:0,y:1,w:27,h:47,orient:'landscape'},{x:0,y:51,w:27,h:47,orient:'landscape'},{x:72,y:1,w:27,h:47,orient:'landscape'},{x:72,y:51,w:27,h:47,orient:'landscape'}],
-    badge:true, badgeStyle:{bottom:'1%',right:'0%',width:'27%',height:'46%'} },
-
-  // L12: 2 portraits left + 2 landscapes right stacked + badge bottom-right
+  // L12: 2 portraits left + 2 landscapes right — no badge, no clean dead space
   { slots:[{x:0,y:1,w:20,h:98,orient:'portrait'},{x:21.5,y:1,w:20,h:98,orient:'portrait'},{x:43,y:1,w:56,h:47,orient:'landscape'},{x:43,y:51,w:56,h:47,orient:'landscape'}],
-    badge:true, badgeStyle:{bottom:'1%',right:'0%',width:'20%',height:'46%'} },
+    badge:false },
 ];
 
 // ── Utilities ──
@@ -466,21 +452,33 @@ function buildFeaturedPhotoSlide(sub){
 }
 
 // ── Guest wall — dynamic timing based on word count ──
+function chunkSize(messages, startIdx){
+  const sample=messages.slice(startIdx,startIdx+4);
+  const avgLen=sample.reduce((s,m)=>s+m.message.length,0)/Math.max(1,sample.length);
+  if(avgLen>300) return 1;
+  if(avgLen>150) return 2;
+  if(avgLen>80)  return 3;
+  return 4;
+}
 function buildGuestWallSlides(messages){
   const slides=[];
-  for(let i=0;i<messages.length;i+=CONFIG.guestWallSize){
-    const chunk=messages.slice(i,i+CONFIG.guestWallSize);if(!chunk.length)break;
+  let i=0;
+  while(i<messages.length){
+    const size=chunkSize(messages,i);
+    const chunk=messages.slice(i,i+size);if(!chunk.length)break;
+    i+=size;
     const slide=document.createElement('div');slide.className='slide guest-wall';
-    // Dynamic read time: ~2.5 words/sec, min 15s, max 30s
     const totalWords=chunk.reduce((s,m)=>s+m.message.split(' ').length,0);
-    slide.dataset.duration=Math.max(15,Math.min(30,Math.ceil(totalWords/2.5)));
+    slide.dataset.duration=Math.max(12,Math.min(35,Math.ceil(totalWords/2.5)));
     const header=document.createElement('div');header.className='guest-wall-header';
     header.innerHTML=`<h2>Messages for Abby</h2><p>From the people who love her most</p>`;
     slide.appendChild(header);
-    const cards=document.createElement('div');cards.className='guest-cards';
+    const cols=chunk.length===1?'1fr':chunk.length===2?'repeat(2,1fr)':'repeat(3,1fr)';
+    const cards=document.createElement('div');cards.className='guest-cards';cards.style.gridTemplateColumns=cols;
     chunk.forEach(m=>{
       const card=document.createElement('div');card.className='guest-card';
-      card.innerHTML=`<div class="gc-message">"${m.message}"</div><div class="gc-from">${m.name}</div><div class="gc-rel">${m.relationship}</div>`;
+      const fs=chunk.length===1?'clamp(1.6rem,3vw,3rem)':chunk.length===2?'clamp(1.3rem,2.5vw,2.4rem)':'clamp(1.1rem,2vw,1.9rem)';
+      card.innerHTML=`<div class="gc-message" style="font-size:${fs}">"${m.message}"</div><div class="gc-from">${m.name}</div><div class="gc-rel">${m.relationship}</div>`;
       cards.appendChild(card);
     });
     slide.appendChild(cards);slides.push(slide);
