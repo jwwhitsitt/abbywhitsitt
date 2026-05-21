@@ -83,21 +83,22 @@ body.theme-spring    { --bg:#080f0a; --text:#F0FFF0; --gold:#A0E080; --gold2:#60
   background:var(--badge-bg);
   border:1px solid var(--badge-border);
   border-radius:4px;
-  padding:1.2rem 1.8rem;
+  padding:clamp(1rem,2vw,2.5rem) clamp(1.2rem,2.5vw,3rem);
   text-align:center;
   backdrop-filter:blur(12px);
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   overflow:hidden;
+  box-sizing:border-box;
 }
 .badge::before { content:'✦'; position:absolute; top:6px; left:8px; color:var(--gold); font-size:.5rem; opacity:.6; }
 .badge::after  { content:'✦'; position:absolute; bottom:6px; right:8px; color:var(--gold); font-size:.5rem; opacity:.6; }
-.b-cap  { font-size:1.6rem; display:block; margin-bottom:.2rem; }
-.b-co   { font-family:var(--font-t); font-size:.5rem; letter-spacing:.35em; color:var(--gold); text-transform:uppercase; display:block; margin-bottom:.2rem; }
-.b-grad { font-family:var(--font-d); font-style:italic; font-size:2.2rem; color:var(--gold); line-height:1; display:block; text-shadow:0 0 20px rgba(255,255,255,.15); }
-.b-name { font-family:var(--font-t); font-size:.65rem; letter-spacing:.18em; color:var(--text); display:block; margin-top:.35rem; text-transform:uppercase; }
-.b-tag  { font-size:.42rem; letter-spacing:.25em; color:var(--gold2); text-transform:uppercase; display:block; margin-top:.4rem; padding-top:.4rem; border-top:1px solid rgba(255,255,255,.12); }
-.b-msg  { font-family:var(--font-d); font-style:italic; font-size:1.05rem; color:var(--text); line-height:1.45; display:block; margin-top:.3rem; }
-.b-from { font-size:.48rem; letter-spacing:.2em; color:var(--gold2); text-transform:uppercase; display:block; margin-top:.3rem; }
+.b-cap  { font-size:clamp(2rem,3vw,3.5rem); display:block; margin-bottom:.3rem; }
+.b-co   { font-family:var(--font-t); font-size:clamp(.8rem,1.1vw,1.3rem); letter-spacing:.35em; color:var(--gold); text-transform:uppercase; display:block; margin-bottom:.3rem; }
+.b-grad { font-family:var(--font-d); font-style:italic; font-size:clamp(2.4rem,4.5vw,6rem); color:var(--gold); line-height:1; display:block; text-shadow:0 0 20px rgba(255,255,255,.15); }
+.b-name { font-family:var(--font-t); font-size:clamp(.9rem,1.3vw,1.6rem); letter-spacing:.18em; color:var(--text); display:block; margin-top:.4rem; text-transform:uppercase; }
+.b-tag  { font-size:clamp(.75rem,1vw,1.2rem); letter-spacing:.2em; color:var(--gold2); text-transform:uppercase; display:block; margin-top:.5rem; padding-top:.5rem; border-top:1px solid rgba(255,255,255,.2); }
+.b-msg  { font-family:var(--font-d); font-style:italic; font-size:clamp(1.2rem,2vw,2.2rem); color:var(--text); line-height:1.45; display:block; margin-top:.4rem; }
+.b-from { font-size:clamp(.75rem,1vw,1.2rem); letter-spacing:.2em; color:var(--gold2); text-transform:uppercase; display:block; margin-top:.4rem; }
 
 /* ── Then & Now ── */
 .slide.then-now .cell-old { position:absolute; left:1%; top:1%; width:48.5%; height:85%; overflow:hidden; border-radius:3px; }
@@ -128,8 +129,8 @@ body.theme-spring    { --bg:#080f0a; --text:#F0FFF0; --gold:#A0E080; --gold2:#60
 .guest-wall-header p { font-family:var(--font-t); font-size:.55rem; letter-spacing:.3em; color:var(--text2); text-transform:uppercase; margin-top:.3rem; }
 .guest-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; flex:1; }
 .guest-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:4px; padding:1rem 1.2rem; display:flex; flex-direction:column; gap:.5rem; overflow:hidden; }
-.gc-message { font-family:var(--font-d); font-style:italic; font-size:clamp(.85rem,1.6vw,1.05rem); color:var(--text); line-height:1.5; flex:1; }
-.gc-from { font-family:var(--font-t); font-size:.48rem; letter-spacing:.2em; color:var(--gold2); text-transform:uppercase; }
+.gc-message { font-family:var(--font-d); font-style:italic; font-size:clamp(1.2rem,2.2vw,2rem); color:var(--text); line-height:1.5; flex:1; }
+.gc-from { font-family:var(--font-t); font-size:clamp(.75rem,1vw,1.1rem); letter-spacing:.2em; color:var(--gold2); text-transform:uppercase; }
 .gc-rel { font-size:.45rem; color:var(--text2); letter-spacing:.1em; }
 
 /* ── UI Chrome ── */
@@ -189,10 +190,10 @@ body.theme-spring    { --bg:#080f0a; --text:#F0FFF0; --gold:#A0E080; --gold2:#60
 const CONFIG = {
   name:'Abby Whitsitt', year:'Class of 2026',
   apiKey:'AIzaSyD1dmwLLb63ePWsWUz_FRRK4n89wxPod6Q',
-  mainFolderId:'1lYKIcRSlxCYxfeFQfDfGCmdVdipna1p0',
+  mainFolderId:'1-8Y2OJeaGlWjhBvcPRMW6xuqbwscj3tP',
   subFolderId:'19LSqhBeSDiMJGGIkuQaLnuFCVFdFrMvO',
   sheetId:'15pgn1jsxKvOPlDtADafS4rBXuRvlGumfykjb3QiSoFk',
-  defaultInterval:8, minPhotos:2, thenNowFreq:8, guestWallSize:6,
+  defaultInterval:8, minPhotos:2, thenNowFreq:8, guestWallSize:4,
 };
 
 const DEFAULT_MESSAGES = [
