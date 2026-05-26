@@ -64,8 +64,13 @@ body.theme-spring    { --bg:#080f0a; --text:#F0FFF0; --gold:#A0E080; --gold2:#60
 .cell {
   position:absolute;
   overflow:hidden;
-  border-radius:3px;
+  border-radius:2px;
   background:var(--bg);
+  /* Gold offset frame — alternated per slide via JS */
+  box-shadow: 5px 5px 0 2px var(--gold2);
+}
+.cell.frame-left {
+  box-shadow: -5px 5px 0 2px var(--gold2);
 }
 .cell img {
   position:absolute; inset:0;
@@ -76,6 +81,7 @@ body.theme-spring    { --bg:#080f0a; --text:#F0FFF0; --gold:#A0E080; --gold2:#60
   transition:transform 9s ease;
 }
 .slide.active .cell img { transform:scale(1.02); }
+.cell.card-cell { box-shadow:none !important; overflow:visible; background:transparent; }
 
 /* ── Badge cell ── */
 .badge {
@@ -217,105 +223,90 @@ const DEFAULT_THEMES = ['','rose','navy','editorial','summer'];
 let defaultThemeIdx = 0;
 
 // ══════════════════════════════════════════════════
-//  LAYOUT TEMPLATES
-//  orient:'portrait' → 3:4 photo slot
-//  orient:'landscape' → 4:3 photo slot
-//  orient:'card' → filled with badge card, never a photo
-//  orient:'any' → accepts either orientation
-//  HERO layouts: photo fills 72-76%, card in dead space with 3% overlap
-//  RULE: cards only in defined dead space, never floating over photos
+//  LAYOUT TEMPLATES — v3
+//  5% breathing room on all sides (x:5-95, y:5-95)
+//  Portrait slot: w/h ratio = (3/4)*(9/16) = 0.422
+//  Landscape slot: w/h ratio = (4/3)*(9/16) = 0.75
+//  orient:'card' → badge card fills slot
+//  RULE: one card max per slide, always in dead space
+//  Gold frame offset alternates: frame-left class on even slides
 // ══════════════════════════════════════════════════
 const LAYOUTS = [
 
-  // ── COLLAGE LAYOUTS ──────────────────────────────
+  // ── CLEAN (no card) ──────────────────────────────
 
-  // L1: portrait left + landscape right — clean
-  { slots:[{x:0,y:1,w:41,h:98,orient:'portrait'},{x:43,y:1,w:56,h:98,orient:'landscape'}],
+  // L1: portrait left + landscape right
+  // portrait: h=86,w=36  landscape: h=86,w=64  gap=1  total=36+1+64=101... too wide
+  // portrait: h=86,w=36  landscape fills rest: w=52,h=86 (slight 4:3 stretch ok)
+  { slots:[{x:5,y:5,w:36,h:88,orient:'portrait'},{x:43,y:5,w:52,h:88,orient:'landscape'}],
     badge:false },
 
-  // L2: landscape left + portrait right — clean
-  { slots:[{x:0,y:1,w:57,h:98,orient:'landscape'},{x:59,y:1,w:40,h:98,orient:'portrait'}],
+  // L2: landscape left + portrait right
+  { slots:[{x:5,y:5,w:52,h:88,orient:'landscape'},{x:59,y:5,w:36,h:88,orient:'portrait'}],
     badge:false },
 
-  // L3a: portrait + portrait + card fills right column
-  { slots:[{x:0,y:1,w:37,h:98,orient:'portrait'},{x:39,y:1,w:37,h:98,orient:'portrait'},{x:77,y:1,w:22,h:98,orient:'card'}],
+  // L3: 3 portraits in a row
+  { slots:[{x:5,y:5,w:27,h:88,orient:'portrait'},{x:34,y:5,w:27,h:88,orient:'portrait'},{x:63,y:5,w:27,h:88,orient:'portrait'}],
     badge:false },
 
-  // L3b: card fills left column + portrait + portrait
-  { slots:[{x:25,y:1,w:37,h:98,orient:'portrait'},{x:63,y:1,w:37,h:98,orient:'portrait'},{x:0,y:1,w:23,h:98,orient:'card'}],
+  // L4: portrait center + 4 landscapes flanking
+  { slots:[{x:31,y:5,w:36,h:88,orient:'portrait'},{x:5,y:5,w:24,h:43,orient:'landscape'},{x:5,y:50,w:24,h:43,orient:'landscape'},{x:69,y:5,w:24,h:43,orient:'landscape'},{x:69,y:50,w:24,h:43,orient:'landscape'}],
     badge:false },
 
-  // L3c: portrait + card center column + portrait
-  { slots:[{x:0,y:1,w:37,h:98,orient:'portrait'},{x:62,y:1,w:37,h:98,orient:'portrait'},{x:38,y:1,w:23,h:98,orient:'card'}],
+  // L5: 2 portraits + 2 landscapes stacked right
+  { slots:[{x:5,y:5,w:18,h:88,orient:'portrait'},{x:25,y:5,w:18,h:88,orient:'portrait'},{x:45,y:5,w:50,h:43,orient:'landscape'},{x:45,y:50,w:50,h:43,orient:'landscape'}],
     badge:false },
 
-  // L4: 3 portraits in a row — clean
-  { slots:[{x:0,y:1,w:24,h:98,orient:'portrait'},{x:25.5,y:1,w:24,h:98,orient:'portrait'},{x:51,y:1,w:24,h:98,orient:'portrait'}],
+  // ── WITH CARD ────────────────────────────────────
+
+  // L6a: portrait + portrait + card right column
+  { slots:[{x:5,y:5,w:35,h:88,orient:'portrait'},{x:42,y:5,w:35,h:88,orient:'portrait'},{x:79,y:5,w:16,h:88,orient:'card'}],
     badge:false },
 
-  // L5a: card top-left + portrait bottom-left + 2 landscapes stacked right
-  { slots:[{x:43,y:1,w:56,h:47,orient:'landscape'},{x:43,y:51,w:56,h:47,orient:'landscape'},{x:0,y:54,w:41,h:44,orient:'portrait'},{x:0,y:1,w:41,h:51,orient:'card'}],
+  // L6b: card left + portrait + portrait
+  { slots:[{x:5,y:5,w:35,h:88,orient:'portrait'},{x:42,y:5,w:35,h:88,orient:'portrait'},{x:79,y:5,w:16,h:88,orient:'card'}],
     badge:false },
 
-  // L5b: portrait top-left + card bottom-left + 2 landscapes stacked right
-  { slots:[{x:43,y:1,w:56,h:47,orient:'landscape'},{x:43,y:51,w:56,h:47,orient:'landscape'},{x:0,y:1,w:41,h:44,orient:'portrait'},{x:0,y:47,w:41,h:51,orient:'card'}],
+  // L7a: portrait left + landscape upper-right + card lower-right
+  { slots:[{x:5,y:5,w:36,h:88,orient:'portrait'},{x:43,y:5,w:52,h:42,orient:'landscape'},{x:43,y:49,w:52,h:44,orient:'card'}],
     badge:false },
 
-  // L6a: 2 landscapes stacked left + card top-right + portrait bottom-right
-  { slots:[{x:0,y:1,w:56,h:47,orient:'landscape'},{x:0,y:51,w:56,h:47,orient:'landscape'},{x:58,y:54,w:41,h:44,orient:'portrait'},{x:58,y:1,w:41,h:51,orient:'card'}],
+  // L7b: landscape upper-left + portrait right + card lower-left
+  { slots:[{x:5,y:5,w:52,h:42,orient:'landscape'},{x:59,y:5,w:36,h:88,orient:'portrait'},{x:5,y:49,w:52,h:44,orient:'card'}],
     badge:false },
 
-  // L6b: 2 landscapes stacked left + portrait top-right + card bottom-right
-  { slots:[{x:0,y:1,w:56,h:47,orient:'landscape'},{x:0,y:51,w:56,h:47,orient:'landscape'},{x:58,y:1,w:41,h:44,orient:'portrait'},{x:58,y:47,w:41,h:51,orient:'card'}],
+  // L8a: card top-left + portrait bottom-left + 2 landscapes stacked right
+  { slots:[{x:5,y:5,w:36,h:44,orient:'card'},{x:5,y:51,w:36,h:42,orient:'portrait'},{x:43,y:5,w:52,h:42,orient:'landscape'},{x:43,y:49,w:52,h:44,orient:'landscape'}],
     badge:false },
 
-  // L8: 2 portraits top-left + 2 landscapes bottom + card top-right
-  { slots:[{x:0,y:1,w:21,h:50,orient:'portrait'},{x:22,y:1,w:21,h:50,orient:'portrait'},{x:0,y:53,w:49,h:46,orient:'landscape'},{x:51,y:53,w:48,h:46,orient:'landscape'},{x:44,y:1,w:55,h:50,orient:'card'}],
+  // L8b: portrait top-left + card bottom-left + 2 landscapes stacked right
+  { slots:[{x:5,y:5,w:36,h:42,orient:'portrait'},{x:5,y:49,w:36,h:44,orient:'card'},{x:43,y:5,w:52,h:42,orient:'landscape'},{x:43,y:49,w:52,h:44,orient:'landscape'}],
     badge:false },
 
-  // L9: portrait left + landscape upper-right + card lower-right
-  { slots:[{x:0,y:1,w:41,h:98,orient:'portrait'},{x:43,y:1,w:56,h:47,orient:'landscape'},{x:43,y:50,w:56,h:48,orient:'card'}],
+  // L9: 2 portraits top + 2 landscapes bottom + card top-right
+  { slots:[{x:5,y:5,w:18,h:42,orient:'portrait'},{x:25,y:5,w:18,h:42,orient:'portrait'},{x:5,y:49,w:43,h:44,orient:'landscape'},{x:50,y:49,w:45,h:44,orient:'landscape'},{x:45,y:5,w:50,h:42,orient:'card'}],
     badge:false },
 
-  // L10: landscape upper-left + portrait right + card lower-left
-  { slots:[{x:0,y:1,w:56,h:47,orient:'landscape'},{x:58,y:1,w:41,h:98,orient:'portrait'},{x:0,y:50,w:56,h:48,orient:'card'}],
+  // ── HERO ─────────────────────────────────────────
+  // Photo upper 68% of slide in frame, card lower-opposite overlapping by ~4%
+
+  // H1: landscape hero upper-right + card lower-left overlapping corner
+  { slots:[{x:22,y:5,w:73,h:62,orient:'landscape'},{x:5,y:55,w:38,h:40,orient:'card'}],
     badge:false },
 
-  // L11: portrait center + 4 landscapes flanking — no card
-  { slots:[{x:29,y:1,w:41,h:98,orient:'portrait'},{x:0,y:1,w:27,h:47,orient:'landscape'},{x:0,y:51,w:27,h:47,orient:'landscape'},{x:72,y:1,w:27,h:47,orient:'landscape'},{x:72,y:51,w:27,h:47,orient:'landscape'}],
+  // H2: landscape hero upper-left + card lower-right overlapping corner
+  { slots:[{x:5,y:5,w:73,h:62,orient:'landscape'},{x:57,y:55,w:38,h:40,orient:'card'}],
     badge:false },
 
-  // L12: 2 portraits left + 2 landscapes right stacked — no card
-  { slots:[{x:0,y:1,w:20,h:98,orient:'portrait'},{x:21.5,y:1,w:20,h:98,orient:'portrait'},{x:43,y:1,w:56,h:47,orient:'landscape'},{x:43,y:51,w:56,h:47,orient:'landscape'}],
+  // H3: portrait hero upper-left + card lower-right overlapping corner
+  { slots:[{x:5,y:5,w:36,h:88,orient:'portrait'},{x:30,y:55,w:65,h:40,orient:'card'}],
     badge:false },
 
-  // ── HERO LAYOUTS — photo dominates, card in dead space with slight overlap ──
-
-  // H1: landscape hero left (76%) + card right overlapping by ~3%
-  { slots:[{x:0,y:1,w:76,h:98,orient:'landscape'},{x:74,y:8,w:25,h:82,orient:'card'}],
+  // H4: portrait hero upper-right + card lower-left overlapping corner
+  { slots:[{x:59,y:5,w:36,h:88,orient:'portrait'},{x:5,y:55,w:65,h:40,orient:'card'}],
     badge:false },
 
-  // H2: landscape hero right (76%) + card left overlapping by ~3%
-  { slots:[{x:23,y:1,w:76,h:98,orient:'landscape'},{x:1,y:8,w:25,h:82,orient:'card'}],
-    badge:false },
-
-  // H3: landscape hero left (72%) + card right with more overlap
-  { slots:[{x:0,y:1,w:72,h:98,orient:'landscape'},{x:70,y:15,w:28,h:68,orient:'card'}],
-    badge:false },
-
-  // H4: portrait hero left + card in right dead space
-  { slots:[{x:0,y:1,w:41,h:98,orient:'portrait'},{x:44,y:8,w:30,h:82,orient:'card'}],
-    badge:false },
-
-  // H5: portrait hero right + card in left dead space
-  { slots:[{x:58,y:1,w:41,h:98,orient:'portrait'},{x:1,y:8,w:30,h:82,orient:'card'}],
-    badge:false },
-
-  // H6: portrait hero center + cards flanking both sides
-  { slots:[{x:27,y:1,w:46,h:98,orient:'portrait'},{x:24,y:15,w:26,h:68,orient:'card'},{x:72,y:15,w:26,h:68,orient:'card'}],
-    badge:false },
-];
-// ── Utilities ──
+];// ── Utilities ──
 function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
 function imgUrl(id){return `https://drive.google.com/thumbnail?id=${id}&sz=w1600`;}
@@ -379,33 +370,31 @@ function photoOrient(f){
 function buildCard(approvedMessages){
   const card = document.createElement('div');
   card.className = 'badge';
-  card.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border-radius:3px;';
+  card.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border-radius:2px;';
   card.innerHTML = badgeHTML(approvedMessages);
   return card;
 }
 
-// ── Build collage slide — card slots fill with badge content, photo slots fill with photos ──
+// ── Build collage slide ──
+let _slideCount = 0;
 function buildCollageSlide(files, si, approvedMessages, themeOverride){
   const portraits  = shuffle(files.filter(f=>photoOrient(f)==='portrait'));
   const landscapes = shuffle(files.filter(f=>photoOrient(f)==='landscape'));
 
-  // Count how many photo slots of each type a layout needs
   function photoSlots(layout){
     const p = layout.slots.filter(s=>s.orient==='portrait').length;
     const l = layout.slots.filter(s=>s.orient==='landscape').length;
     return {p, l};
   }
 
-  // A layout fits if we have enough photos for its photo slots
-  // Card slots are always fillable
   function canFit(layout){
     const {p, l} = photoSlots(layout);
     return portraits.length >= p && landscapes.length >= l;
   }
 
   const available = LAYOUTS.filter(canFit);
-  const fallbacks = LAYOUTS.filter(l=>photoSlots(l).p<=1 && photoSlots(l).l<=1);
-  const layout = pick(available.length ? available : fallbacks);
+  const fallbacks = LAYOUTS.filter(l=>{ const {p,l2}={p:photoSlots(l).p,l2:photoSlots(l).l}; return p<=1&&l2<=1; });
+  const layout = pick(available.length ? available : LAYOUTS.slice(0,2));
 
   const slide = document.createElement('div');
   slide.className = 'slide';
@@ -413,14 +402,19 @@ function buildCollageSlide(files, si, approvedMessages, themeOverride){
   const seasonal = month ? SEASONAL[month] : null;
   slide.dataset.theme = seasonal ? seasonal.theme : (themeOverride||'');
 
+  // Alternate frame direction per slide
+  const frameLeft = (_slideCount++ % 2 === 0);
+
   let pi=0, li=0;
   layout.slots.forEach(slot=>{
     const cell = document.createElement('div');
-    cell.className = 'cell';
+    // Photo cells get gold frame, card cells don't
+    cell.className = slot.orient==='card' ? 'cell card-cell' : (frameLeft ? 'cell frame-left' : 'cell');
     cell.setAttribute('style',`left:${slot.x}%;top:${slot.y}%;width:${slot.w}%;height:${slot.h}%;`);
 
     if(slot.orient==='card'){
-      // Fill with a badge card
+      cell.style.boxShadow = 'none';
+      cell.style.overflow = 'visible';
       const card = buildCard(approvedMessages);
       cell.appendChild(card);
     } else {
@@ -428,23 +422,21 @@ function buildCollageSlide(files, si, approvedMessages, themeOverride){
       if(slot.orient==='portrait')       f = portraits[pi++];
       else if(slot.orient==='landscape') f = landscapes[li++];
       else                               f = files[0];
-      if(!f){ cell.appendChild(buildCard(approvedMessages)); slide.appendChild(cell); return; }
+      if(!f){
+        cell.className = 'cell card-cell';
+        cell.style.boxShadow = 'none';
+        const card = buildCard(approvedMessages);
+        cell.appendChild(card);
+        slide.appendChild(cell);
+        return;
+      }
       const img = document.createElement('img');
       img.src = imgUrl(f.id); img.alt=''; img.loading=si<3?'eager':'lazy';
-      img.onerror = ()=>{ cell.innerHTML=''; cell.appendChild(buildCard(approvedMessages)); };
+      img.onerror = ()=>{ cell.innerHTML=''; cell.className='cell card-cell'; cell.style.boxShadow='none'; cell.appendChild(buildCard(approvedMessages)); };
       cell.appendChild(img);
     }
     slide.appendChild(cell);
   });
-
-  // Legacy badge support (none of the new layouts use this, but keep for safety)
-  if(layout.badge){
-    const badge = document.createElement('div');
-    badge.className = 'badge';
-    Object.assign(badge.style, layout.badgeStyle, {position:'absolute'});
-    badge.innerHTML = badgeHTML(approvedMessages);
-    slide.appendChild(badge);
-  }
 
   return slide;
 }
