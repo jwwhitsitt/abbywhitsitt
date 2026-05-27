@@ -71,8 +71,10 @@ body.theme-spring    { --bg:#080f0a; --text:#F0FFF0; --gold:#A0E080; --gold2:#60
   box-shadow: 0 0 0 6px var(--bg), 0 0 0 7px var(--gold2);
 }
 .cell.frame-inset {
-  outline: none;
-  box-shadow: inset 0 0 0 3px var(--gold2), inset 0 0 12px rgba(201,151,58,0.25), 0 0 0 1px var(--gold2);
+  /* same as double border — inset shadow removed */
+  outline: 1px solid var(--gold2);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 6px var(--bg), 0 0 0 7px var(--gold2);
 }
 .cell.card-cell { outline:none; box-shadow:none !important; overflow:visible; background:transparent; }
 .cell img {
