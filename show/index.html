@@ -249,11 +249,12 @@ const LAYOUTS = [
   { slots:[{x:5,y:5,w:37,h:42,orient:'portrait'},{x:5,y:49,w:37,h:44,orient:'card'},{x:44,y:5,w:51,h:42,orient:'landscape'},{x:44,y:49,w:51,h:44,orient:'landscape'}], badge:false },
   { slots:[{x:5,y:5,w:18,h:42,orient:'portrait'},{x:25,y:5,w:18,h:42,orient:'portrait'},{x:5,y:49,w:43,h:44,orient:'landscape'},{x:50,y:49,w:45,h:44,orient:'landscape'},{x:45,y:5,w:50,h:42,orient:'card'}], badge:false },
 
-  // ── HERO ── photo 78% wide, card small ~26x38%, overlaps corner
+  // ── HERO ── landscape hero with card in corner
   { slots:[{x:17,y:5,w:78,h:60,orient:'landscape'},{x:5,y:53,w:26,h:42,orient:'card'}], badge:false },
   { slots:[{x:5,y:5,w:78,h:60,orient:'landscape'},{x:69,y:53,w:26,h:42,orient:'card'}], badge:false },
-  { slots:[{x:5,y:5,w:37,h:88,orient:'portrait'},{x:30,y:62,w:65,h:33,orient:'card'}], badge:false },
-  { slots:[{x:58,y:5,w:37,h:88,orient:'portrait'},{x:5,y:62,w:65,h:33,orient:'card'}], badge:false },
+  // Portrait + landscape side by side (replaces portrait hero with dead space)
+  { slots:[{x:5,y:5,w:51,h:88,orient:'landscape'},{x:58,y:5,w:37,h:88,orient:'portrait'}], badge:false },
+  { slots:[{x:5,y:5,w:37,h:88,orient:'portrait'},{x:44,y:5,w:51,h:88,orient:'landscape'}], badge:false },
 
 ];
 
