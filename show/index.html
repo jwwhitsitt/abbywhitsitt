@@ -370,9 +370,7 @@ function buildCollageSlide(files, si, approvedMessages, themeOverride){
   layout.slots.forEach(slot=>{
     const cell = document.createElement('div');
     cell.className = slot.orient==='card' ? 'cell card-cell' : (useInset ? 'cell frame-inset' : 'cell');
-    const coverFit = slot.orient==='landscape' || slot.orient==='any';
     cell.setAttribute('style',`left:${slot.x}%;top:${slot.y}%;width:${slot.w}%;height:${slot.h}%;`);
-    if(coverFit) cell.dataset.fit='cover';
 
     if(slot.orient==='card'){
       const card = buildCard(approvedMessages);
