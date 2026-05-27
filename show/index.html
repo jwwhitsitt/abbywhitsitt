@@ -85,6 +85,7 @@ body.theme-spring    { --bg:#080f0a; --text:#F0FFF0; --gold:#A0E080; --gold2:#60
   transition:transform 9s ease;
 }
 .slide.active .cell img { transform:scale(1.02); }
+.cell[data-fit="cover"] img { object-fit:cover; object-position:center center; }
 
 /* ── Badge cell ── */
 .badge {
@@ -369,7 +370,9 @@ function buildCollageSlide(files, si, approvedMessages, themeOverride){
   layout.slots.forEach(slot=>{
     const cell = document.createElement('div');
     cell.className = slot.orient==='card' ? 'cell card-cell' : (useInset ? 'cell frame-inset' : 'cell');
+    const coverFit = slot.orient==='landscape' || slot.orient==='any';
     cell.setAttribute('style',`left:${slot.x}%;top:${slot.y}%;width:${slot.w}%;height:${slot.h}%;`);
+    if(coverFit) cell.dataset.fit='cover';
 
     if(slot.orient==='card'){
       const card = buildCard(approvedMessages);
