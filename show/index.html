@@ -449,70 +449,42 @@ function buildThenNowSlide(pair){
 }
 
 // ── Featured photo slide — submitted photo + message ──
-// Portrait submitted photo → photo left 42%, card right in dead space (Option E)
-// Landscape submitted photo → photo top 58%, card bottom 40% framed (Option C)
+// Single layout: photo left (contain, any shape), message card right.
 function buildFeaturedPhotoSlide(sub, subFiles){
   const slide = document.createElement('div');
   slide.className = 'slide featured-photo';
 
-  // Dynamic duration based on word count
   const words = sub.message.split(' ').length;
   slide.dataset.duration = Math.max(10, Math.min(30, Math.ceil(words / 2.2)));
 
-  // Extract Drive file ID from photoUrl
   const match = sub.photoUrl.match(/\/d\/([^\/]+)\//);
   const fileId = match ? match[1] : null;
+  const imgSrc = fileId ? imgUrl(fileId) : sub.photoUrl;
 
-  // Detect orientation from submitted files metadata
-  let orient = 'landscape';
-  if(fileId && subFiles){
-    const found = subFiles.find(f => f.id === fileId);
-    if(found) orient = photoOrient(found);
-  }
-
-  // Font size scales inversely with message length
   const msgFs = words <= 15  ? 'clamp(1.8rem,3.2vw,3rem)'
               : words <= 40  ? 'clamp(1.4rem,2.4vw,2.2rem)'
               : words <= 80  ? 'clamp(1.1rem,2vw,1.8rem)'
               :                'clamp(.95rem,1.6vw,1.5rem)';
 
   const msgHTML = `<div class="feat-divider"></div><div class="feat-message" style="font-size:${msgFs}">"${sub.message}"</div><div class="feat-from">— ${sub.name}${sub.relationship?' · '+sub.relationship:''}</div>`;
-  const imgSrc = fileId ? imgUrl(fileId) : sub.photoUrl;
 
-  if(orient === 'portrait'){
-    // Option E: photo left, card right in dead space, slight overlap
-    const photoCell = document.createElement('div');
-    photoCell.className = 'feat-photo-cell';
-    photoCell.style.cssText = 'left:0;top:1%;width:58%;height:98%;';
-    const img = document.createElement('img');
-    img.src = imgSrc; img.alt=''; img.loading='lazy';
-    img.onerror = ()=>{ slide.style.display='none'; };
-    photoCell.appendChild(img);
-    slide.appendChild(photoCell);
+  // Photo: left 57%, full height, contain — works for any aspect ratio
+  const photoCell = document.createElement('div');
+  photoCell.className = 'cell';
+  photoCell.style.cssText = 'left:3%;top:5%;width:57%;height:88%;';
+  const img = document.createElement('img');
+  img.src = imgSrc; img.alt=''; img.loading='lazy';
+  img.style.objectFit = 'contain';
+  img.onerror = ()=>{ slide.style.display='none'; };
+  photoCell.appendChild(img);
+  slide.appendChild(photoCell);
 
-    const card = document.createElement('div');
-    card.className = 'feat-card';
-    card.style.cssText = 'left:56%;top:8%;width:42%;height:82%;';
-    card.innerHTML = msgHTML;
-    slide.appendChild(card);
-
-  } else {
-    // Option C: photo top, card bottom fully framed
-    const photoCell = document.createElement('div');
-    photoCell.className = 'feat-photo-cell';
-    photoCell.style.cssText = 'left:1%;top:1%;width:98%;height:56%;';
-    const img = document.createElement('img');
-    img.src = imgSrc; img.alt=''; img.loading='lazy';
-    img.onerror = ()=>{ slide.style.display='none'; };
-    photoCell.appendChild(img);
-    slide.appendChild(photoCell);
-
-    const card = document.createElement('div');
-    card.className = 'feat-card';
-    card.style.cssText = 'left:1%;top:59%;width:98%;height:39%;';
-    card.innerHTML = msgHTML;
-    slide.appendChild(card);
-  }
+  // Card: right 35%, full height
+  const card = document.createElement('div');
+  card.className = 'feat-card';
+  card.style.cssText = 'left:62%;top:5%;width:35%;height:88%;';
+  card.innerHTML = msgHTML;
+  slide.appendChild(card);
 
   return slide;
 }
