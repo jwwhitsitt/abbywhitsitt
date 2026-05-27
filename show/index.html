@@ -232,11 +232,13 @@ let defaultThemeIdx = 0;
 //  Formula: portrait w = h * 0.422,  landscape w = h * 0.75
 //  Groups centered horizontally. Dark bg fills margins.
 //
-//  Building blocks (all y:5, h:88 unless noted):
-//    Portrait full:      w=37, h=88  (37.1)
-//    Portrait narrow:    w=25, h=59  (used in 3-up, vertically centered y=19)
+//  Building blocks:
+//    Portrait full:      w=37, h=88  (y=5)
+//    Portrait medium:    w=33, h=78  (y=10, used with card)
+//    Portrait narrow:    w=28, h=66  (y=16, used in 3-up)
 //    Landscape stacked:  w=32, h=42  (two rows: y=5 and y=49)
 //    Landscape mid:      w=42, h=56  (vertically centered y=21)
+//    Landscape hero:     w=42, h=56  (top, card below)
 //  Gaps between cells: 2%
 // ══════════════════════════════════════════════════
 const LAYOUTS = [
@@ -248,23 +250,20 @@ const LAYOUTS = [
   // ── 2 portraits centered ──
   { slots:[{x:12,y:5,w:37,h:88,orient:'portrait'},{x:51,y:5,w:37,h:88,orient:'portrait'}], badge:false },
 
-  // ── 3 portraits centered ──
-  { slots:[{x:5,y:19,w:25,h:59,orient:'portrait'},{x:32,y:19,w:25,h:59,orient:'portrait'},{x:59,y:19,w:25,h:59,orient:'portrait'}], badge:false },
+  // ── 3 portraits centered (bigger than before) ──
+  { slots:[{x:5,y:16,w:28,h:66,orient:'portrait'},{x:35,y:16,w:28,h:66,orient:'portrait'},{x:65,y:16,w:28,h:66,orient:'portrait'}], badge:false },
 
-  // ── 1 portrait + 2 stacked landscapes + card ──
-  { slots:[{x:5,y:5,w:37,h:88,orient:'portrait'},{x:44,y:5,w:32,h:42,orient:'landscape'},{x:44,y:49,w:32,h:42,orient:'landscape'},{x:78,y:5,w:17,h:88,orient:'card'}], badge:false },
-  { slots:[{x:5,y:5,w:17,h:88,orient:'card'},{x:24,y:5,w:32,h:42,orient:'landscape'},{x:24,y:49,w:32,h:42,orient:'landscape'},{x:58,y:5,w:37,h:88,orient:'portrait'}], badge:false },
-
-  // ── 2 portraits + card ──
-  { slots:[{x:5,y:5,w:37,h:88,orient:'portrait'},{x:44,y:5,w:37,h:88,orient:'portrait'},{x:83,y:5,w:12,h:88,orient:'card'}], badge:false },
-  { slots:[{x:5,y:5,w:12,h:88,orient:'card'},{x:19,y:5,w:37,h:88,orient:'portrait'},{x:58,y:5,w:37,h:88,orient:'portrait'}], badge:false },
+  // ── 2 portraits + card (card wide enough to breathe) ──
+  { slots:[{x:5,y:10,w:33,h:78,orient:'portrait'},{x:40,y:10,w:33,h:78,orient:'portrait'},{x:75,y:5,w:20,h:88,orient:'card'}], badge:false },
+  { slots:[{x:5,y:5,w:20,h:88,orient:'card'},{x:27,y:10,w:33,h:78,orient:'portrait'},{x:62,y:10,w:33,h:78,orient:'portrait'}], badge:false },
 
   // ── portrait + landscape mid (vertically centered) ──
   { slots:[{x:12,y:5,w:37,h:88,orient:'portrait'},{x:51,y:21,w:42,h:56,orient:'landscape'}], badge:false },
   { slots:[{x:12,y:21,w:42,h:56,orient:'landscape'},{x:56,y:5,w:37,h:88,orient:'portrait'}], badge:false },
 
-  // ── portrait + landscape mid (right-aligned) ──
-  { slots:[{x:5,y:5,w:37,h:88,orient:'portrait'},{x:56,y:21,w:42,h:56,orient:'landscape'}], badge:false },
+  // ── portrait + 2 stacked landscapes + card ──
+  { slots:[{x:5,y:5,w:37,h:88,orient:'portrait'},{x:44,y:5,w:32,h:42,orient:'landscape'},{x:44,y:49,w:32,h:42,orient:'landscape'},{x:78,y:5,w:20,h:88,orient:'card'}], badge:false },
+  { slots:[{x:5,y:5,w:20,h:88,orient:'card'},{x:27,y:5,w:32,h:42,orient:'landscape'},{x:27,y:49,w:32,h:42,orient:'landscape'},{x:61,y:5,w:37,h:88,orient:'portrait'}], badge:false },
 
   // ── 4 landscapes (2x2) centered ──
   { slots:[{x:14,y:5,w:32,h:42,orient:'landscape'},{x:14,y:49,w:32,h:42,orient:'landscape'},{x:54,y:5,w:32,h:42,orient:'landscape'},{x:54,y:49,w:32,h:42,orient:'landscape'}], badge:false },
@@ -272,8 +271,8 @@ const LAYOUTS = [
   // ── narrow portrait + 4 landscapes ──
   { slots:[{x:5,y:19,w:25,h:59,orient:'portrait'},{x:32,y:5,w:32,h:42,orient:'landscape'},{x:32,y:49,w:32,h:42,orient:'landscape'},{x:66,y:5,w:32,h:42,orient:'landscape'},{x:66,y:49,w:32,h:42,orient:'landscape'}], badge:false },
 
-  // ── landscape mid hero centered + card below ──
-  { slots:[{x:29,y:5,w:42,h:56,orient:'landscape'},{x:29,y:63,w:42,h:32,orient:'card'}], badge:false },
+  // ── landscape hero centered + card below (card h=36 gives enough room) ──
+  { slots:[{x:31,y:5,w:39,h:52,orient:'landscape'},{x:31,y:59,w:39,h:36,orient:'card'}], badge:false },
 
 ];
 
