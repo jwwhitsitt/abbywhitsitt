@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photo Review — Abby's Graduation</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,500&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --gold:  #F0C040;
+  --gold2: #C9973A;
+  --gold3: #8a6420;
+  --black: #0a0a0f;
+  --dark:  #12111a;
+  --cream: #FDF8EE;
+  --muted: rgba(253,248,238,0.55);
+  --card:  rgba(255,255,255,0.03);
+  --api:   'http://100.116.189.37:5000';
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--cream);
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(240,192,64,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(201,151,58,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ── Password gate ── */
+#gate {
+  position: fixed; inset: 0; z-index: 100;
+  background: var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+#gate::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(240,192,64,0.07) 0%, transparent 70%);
+}
+
+.gate-inner {
+  position: relative; z-index: 1;
+  text-align: center;
+  width: 100%;
+  max-width: 360px;
+  padding: 2rem;
+}
+
+.gate-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: .6rem;
+  letter-spacing: .45em;
+  color: var(--gold2);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.gate-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--cream);
+  margin-bottom: 2rem;
+  line-height: 1.2;
+}
+
+.gate-field {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.gate-field input {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(240,192,64,0.2);
+  border-radius: 3px;
+  color: var(--cream);
+  font-family: 'Cinzel', serif;
+  font-size: .85rem;
+  letter-spacing: .2em;
+  padding: .9rem 1rem;
+  outline: none;
+  text-align: center;
+  transition: border-color .3s, background .3s;
+}
+
+.gate-field input:focus {
+  border-color: rgba(240,192,64,0.5);
+  background: rgba(255,255,255,0.07);
+}
+
+.gate-error {
+  font-size: .65rem;
+  color: #ff6b6b;
+  letter-spacing: .1em;
+  margin-top: .5rem;
+  display: none;
+}
+
+.gate-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--gold2);
+  border-radius: 3px;
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  font-size: .65rem;
+  letter-spacing: .35em;
+  text-transform: uppercase;
+  padding: .9rem;
+  cursor: pointer;
+  transition: all .3s;
+  margin-top: .5rem;
+}
+.gate-btn:hover { border-color: var(--gold); box-shadow: 0 0 20px rgba(240,192,64,0.12); }
+
+/* ── Main layout ── */
+#app {
+  display: none;
+  position: relative; z-index: 1;
+}
+
+.page-header {
+  text-align: center;
+  padding: 3rem 1.5rem 2rem;
+  border-bottom: 1px solid rgba(240,192,64,0.08);
+}
+
+.page-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: .58rem;
+  letter-spacing: .45em;
+  color: var(--gold2);
+  text-transform: uppercase;
+  margin-bottom: .7rem;
+}
+
+.page-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-weight: 300;
+  color: var(--cream);
+  line-height: 1.1;
+}
+
+.page-title em { font-style: italic; color: var(--gold); }
+
+/* ── Stats bar ── */
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(240,192,64,0.06);
+  background: rgba(255,255,255,0.015);
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+  display: block;
+}
+
+.stat-num.approved { color: #6fcf97; }
+.stat-num.rejected { color: rgba(253,248,238,0.3); }
+
+.stat-label {
+  font-family: 'Cinzel', serif;
+  font-size: .5rem;
+  letter-spacing: .3em;
+  color: var(--muted);
+  text-transform: uppercase;
+  display: block;
+  margin-top: .25rem;
+}
+
+/* ── Grid ── */
+.grid-wrap {
+  padding: 2rem 1.5rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+/* ── Card ── */
+.card {
+  background: var(--card);
+  border: 1px solid rgba(240,192,64,0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color .3s, transform .3s, opacity .4s;
+  animation: fadeIn .4s ease both;
+}
+
+.card:hover {
+  border-color: rgba(240,192,64,0.25);
+  transform: translateY(-2px);
+}
+
+.card.removing {
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+}
+
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.card-img-wrap {
+  position: relative;
+  width: 100%;
+  padding-top: 75%; /* 4:3 */
+  background: rgba(255,255,255,0.03);
+  overflow: hidden;
+}
+
+.card-img-wrap img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity .3s;
+}
+
+.card-img-wrap img.loading { opacity: 0; }
+.card-img-wrap img.loaded  { opacity: 1; }
+
+.card-img-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(240,192,64,0.15);
+  font-size: 2.5rem;
+}
+
+/* ── Card footer ── */
+.card-footer {
+  padding: .75rem 1rem 1rem;
+}
+
+.card-name {
+  font-size: .7rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: .75rem;
+  letter-spacing: .03em;
+}
+
+.card-actions {
+  display: flex;
+  gap: .5rem;
+}
+
+.btn-approve, .btn-reject {
+  flex: 1;
+  padding: .5rem .25rem;
+  border-radius: 3px;
+  font-family: 'Cinzel', serif;
+  font-size: .55rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .2s;
+  border: 1px solid;
+  background: transparent;
+  white-space: nowrap;
+}
+
+.btn-approve {
+  color: #6fcf97;
+  border-color: rgba(111,207,151,0.35);
+}
+.btn-approve:hover {
+  background: rgba(111,207,151,0.1);
+  border-color: rgba(111,207,151,0.65);
+}
+
+.btn-reject {
+  color: var(--muted);
+  border-color: rgba(253,248,238,0.15);
+}
+.btn-reject:hover {
+  background: rgba(253,248,238,0.05);
+  border-color: rgba(253,248,238,0.3);
+}
+
+.btn-approve:disabled, .btn-reject:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+
+.card-status {
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: .55rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  padding: .35rem 0 0;
+  display: none;
+}
+.card-status.approved { color: #6fcf97; display: block; }
+.card-status.rejected { color: var(--muted); display: block; }
+.card-status.error    { color: #ff6b6b; display: block; }
+
+/* ── Loading / empty states ── */
+.state-msg {
+  text-align: center;
+  padding: 5rem 2rem;
+  color: var(--muted);
+}
+.state-msg .icon { font-size: 2.5rem; display: block; margin-bottom: 1rem; }
+.state-msg h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-style: italic;
+  color: var(--cream);
+  margin-bottom: .5rem;
+}
+.state-msg p { font-size: .85rem; line-height: 1.7; }
+
+.spinner {
+  width: 32px; height: 32px;
+  border: 2px solid rgba(240,192,64,0.15);
+  border-top-color: var(--gold2);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+  margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  .stats-bar { gap: 1.5rem; }
+  .grid-wrap { padding: 1.25rem 1rem 3rem; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Password gate ── -->
+<div id="gate">
+  <div class="gate-inner">
+    <div class="gate-eyebrow">Abby Whitsitt · Graduation 2026</div>
+    <div class="gate-title">Photo<br>Review</div>
+    <div class="gate-field">
+      <input type="password" id="pw-input" placeholder="Password" autocomplete="current-password">
+      <div class="gate-error" id="pw-error">Incorrect password</div>
+    </div>
+    <button class="gate-btn" id="pw-btn">Enter ✦</button>
+  </div>
+</div>
+
+<!-- ── Main app ── -->
+<div id="app">
+
+  <div class="page-header">
+    <div class="page-eyebrow">Graduation · 2026</div>
+    <div class="page-title">Fuzzy Photo <em>Review</em></div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-num" id="stat-pending">—</span>
+      <span class="stat-label">Pending</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num approved" id="stat-approved">—</span>
+      <span class="stat-label">Approved</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num rejected" id="stat-rejected">—</span>
+      <span class="stat-label">Rejected</span>
+    </div>
+  </div>
+
+  <div class="grid-wrap">
+    <div id="loading-state" class="state-msg">
+      <div class="spinner"></div>
+      <p>Loading photos…</p>
+    </div>
+    <div id="empty-state" class="state-msg" style="display:none">
+      <span class="icon">✦</span>
+      <h2>All done</h2>
+      <p>No pending photos left to review.</p>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+</div>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────────
+const API = 'http://100.116.189.37:5000';
+
+// Set this password, then remove this comment.
+const PASSWORD = 'abby2026';
+
+// ── Counters ──────────────────────────────────────────────────────────────
+let counts = { pending: 0, approved: 0, rejected: 0 };
+
+function updateStats() {
+  document.getElementById('stat-pending').textContent  = counts.pending;
+  document.getElementById('stat-approved').textContent = counts.approved;
+  document.getElementById('stat-rejected').textContent = counts.rejected;
+}
+
+// ── Password gate ─────────────────────────────────────────────────────────
+function tryUnlock() {
+  const val = document.getElementById('pw-input').value;
+  if (val === PASSWORD) {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display  = 'block';
+    loadPhotos();
+  } else {
+    const err = document.getElementById('pw-error');
+    err.style.display = 'block';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+
+document.getElementById('pw-btn').addEventListener('click', tryUnlock);
+document.getElementById('pw-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') tryUnlock();
+});
+
+// ── Load photos ───────────────────────────────────────────────────────────
+async function loadPhotos() {
+  try {
+    const res  = await fetch(`${API}/fuzzy`);
+    const data = await res.json();
+
+    document.getElementById('loading-state').style.display = 'none';
+
+    counts.pending = data.length;
+    updateStats();
+
+    if (data.length === 0) {
+      document.getElementById('empty-state').style.display = 'block';
+      return;
+    }
+
+    const grid = document.getElementById('grid');
+    data.forEach((photo, i) => {
+      const card = buildCard(photo, i);
+      grid.appendChild(card);
+    });
+
+  } catch (err) {
+    document.getElementById('loading-state').innerHTML =
+      `<span class="icon">⚠</span><p>Could not reach the API at <code>${API}</code>.<br>${err.message}</p>`;
+  }
+}
+
+// ── Build a card ──────────────────────────────────────────────────────────
+function buildCard(photo, index) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.fileId = photo.file_id;
+  card.style.animationDelay = `${Math.min(index * 30, 400)}ms`;
+
+  const thumbUrl = `${API}/thumbnail/${photo.file_id}`;
+
+  card.innerHTML = `
+    <div class="card-img-wrap">
+      <div class="card-img-placeholder">⬚</div>
+      <img src="${thumbUrl}" loading="lazy" class="loading"
+           alt="${escHtml(photo.name)}"
+           onload="this.classList.remove('loading');this.classList.add('loaded')"
+           onerror="this.style.display='none'">
+    </div>
+    <div class="card-footer">
+      <div class="card-name" title="${escHtml(photo.name)}">${escHtml(photo.name)}</div>
+      <div class="card-actions">
+        <button class="btn-approve" onclick="handleApprove('${esc(photo.file_id)}', this)">
+          ✓ Approve
+        </button>
+        <button class="btn-reject" onclick="handleReject('${esc(photo.file_id)}', this)">
+          ✕ Reject
+        </button>
+      </div>
+      <div class="card-status" id="status-${esc(photo.file_id)}"></div>
+    </div>
+  `;
+
+  return card;
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────
+async function handleApprove(fileId, btn) {
+  await doAction(fileId, btn, 'approve');
+}
+
+async function handleReject(fileId, btn) {
+  await doAction(fileId, btn, 'reject');
+}
+
+async function doAction(fileId, btn, action) {
+  const card    = btn.closest('.card');
+  const actions = card.querySelectorAll('button');
+  const statusEl = document.getElementById(`status-${fileId}`);
+
+  actions.forEach(b => b.disabled = true);
+  btn.textContent = action === 'approve' ? '…' : '…';
+
+  try {
+    const res = await fetch(`${API}/${action}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file_id: fileId }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${res.status}`);
+    }
+
+    // Update counts
+    counts.pending = Math.max(0, counts.pending - 1);
+    if (action === 'approve') counts.approved++;
+    else counts.rejected++;
+    updateStats();
+
+    // Show status then remove card
+    statusEl.textContent = action === 'approve' ? 'Approved ✓' : 'Rejected';
+    statusEl.className   = `card-status ${action}`;
+
+    setTimeout(() => {
+      card.classList.add('removing');
+      setTimeout(() => card.remove(), 400);
+    }, 600);
+
+    if (counts.pending === 0) {
+      setTimeout(() => {
+        document.getElementById('grid').innerHTML = '';
+        document.getElementById('empty-state').style.display = 'block';
+      }, 1200);
+    }
+
+  } catch (err) {
+    statusEl.textContent = `Error: ${err.message}`;
+    statusEl.className   = 'card-status error';
+    actions.forEach(b => b.disabled = false);
+    btn.textContent = action === 'approve' ? '✓ Approve' : '✕ Reject';
+  }
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function esc(s) {
+  return String(s).replace(/'/g, "\\'");
+}
+</script>
+</body>
+</html>
