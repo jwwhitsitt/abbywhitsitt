@@ -357,7 +357,7 @@ function buildCollageSlide(files, si, approvedMessages, themeOverride, preselect
 
   const slide = document.createElement('div');
   slide.className = 'slide';
-  const month = getMonth(files[0]);
+  const month = files.length ? getMonth(files[0]) : null;
   const seasonal = month ? SEASONAL[month] : null;
   slide.dataset.theme = seasonal ? seasonal.theme : (themeOverride||'');
 
@@ -515,7 +515,6 @@ function buildShowFromData(mainFiles, submittedFiles, approvedMessages){
   showEl.innerHTML='';dotsEl.innerHTML='';
   _badgeQueue=[];// reset badge queue each loop
 
-  const shuffled=shuffle(mainFiles);
   const thenNowPairs=buildThenNow(mainFiles);let thenNowIdx=0;
 
   // Build orientation-matched chunks — pick layout first, then pull the right photos
@@ -533,6 +532,7 @@ function buildShowFromData(mainFiles, submittedFiles, approvedMessages){
   while(portraitPool.length + landscapePool.length >= CONFIG.minPhotos){
     const available = LAYOUTS.filter(layout=>{
       const {p,l} = photoSlots(layout);
+      if(p===0 && l===0) return false; // skip card-only layouts
       return portraitPool.length >= p && landscapePool.length >= l;
     });
     if(!available.length) break;
@@ -547,9 +547,9 @@ function buildShowFromData(mainFiles, submittedFiles, approvedMessages){
   const guestWalls=buildGuestWallSlides(approvedMessages);
 
   const allSlides=[];
-  chunks.forEach((chunk,ci)=>{
+  chunks.forEach(({chunk,layout},ci)=>{
     if(ci%5===0&&ci>0) defaultThemeIdx=(defaultThemeIdx+1)%DEFAULT_THEMES.length;
-    allSlides.push({type:'collage',chunk,theme:DEFAULT_THEMES[defaultThemeIdx]});
+    allSlides.push({type:'collage',chunk,layout,theme:DEFAULT_THEMES[defaultThemeIdx]});
     if(ci%CONFIG.thenNowFreq===CONFIG.thenNowFreq-1&&thenNowIdx<thenNowPairs.length)
       allSlides.push({type:'thenNow',pair:thenNowPairs[thenNowIdx++]});
     if(ci%6===5&&featuredSlides.length){const f=featuredSlides.shift();if(f)allSlides.push({type:'featured',el:f});}
@@ -559,7 +559,7 @@ function buildShowFromData(mainFiles, submittedFiles, approvedMessages){
   const rendered=[];
   allSlides.forEach((item,si)=>{
     let slide;
-    if(item.type==='collage') slide=buildCollageSlide(item.chunk,si,messageOnly,item.theme);
+    if(item.type==='collage') slide=buildCollageSlide(item.chunk,si,messageOnly,item.theme,item.layout);
     else if(item.type==='thenNow') slide=buildThenNowSlide(item.pair);
     else slide=item.el;
     if(si===0)slide.classList.add('active');
