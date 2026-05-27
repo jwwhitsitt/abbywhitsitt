@@ -227,37 +227,53 @@ const DEFAULT_THEMES = ['','rose','navy','editorial','summer'];
 let defaultThemeIdx = 0;
 
 // ══════════════════════════════════════════════════
-//  LAYOUT TEMPLATES — v4
-//  5% breathing room: usable x=5–95, y=5–95
-//  Portrait 3:4 on 16:9: w = h*0.422  h=88→w=37
-//  Landscape 4:3 on 16:9: w = h*0.75  h=88→w=66, h=42→w=32
-//  orient:'card' → badge card slot, no frame
-//  Hero: photo ~80%, card ~25% wide overlapping corner
+//  LAYOUT TEMPLATES — v5  (exact-ratio cells)
+//  All cells sized to exact 3:4 or 4:3 on 16:9 viewport.
+//  Formula: portrait w = h * 0.422,  landscape w = h * 0.75
+//  Groups centered horizontally. Dark bg fills margins.
+//
+//  Building blocks (all y:5, h:88 unless noted):
+//    Portrait full:      w=37, h=88  (37.1)
+//    Portrait narrow:    w=25, h=59  (used in 3-up, vertically centered y=19)
+//    Landscape stacked:  w=32, h=42  (two rows: y=5 and y=49)
+//    Landscape mid:      w=42, h=56  (vertically centered y=21)
+//  Gaps between cells: 2%
 // ══════════════════════════════════════════════════
 const LAYOUTS = [
 
-  // ── CLEAN ──
-  { slots:[{x:5,y:5,w:37,h:88,orient:'portrait'},{x:44,y:5,w:51,h:88,orient:'landscape'}], badge:false },
-  { slots:[{x:5,y:5,w:51,h:88,orient:'landscape'},{x:58,y:5,w:37,h:88,orient:'portrait'}], badge:false },
-  { slots:[{x:5,y:5,w:27,h:88,orient:'portrait'},{x:34,y:5,w:27,h:88,orient:'portrait'},{x:63,y:5,w:27,h:88,orient:'portrait'}], badge:false },
-  { slots:[{x:31,y:5,w:37,h:88,orient:'portrait'},{x:5,y:5,w:24,h:42,orient:'landscape'},{x:5,y:49,w:24,h:42,orient:'landscape'},{x:71,y:5,w:24,h:42,orient:'landscape'},{x:71,y:49,w:24,h:42,orient:'landscape'}], badge:false },
-  { slots:[{x:5,y:5,w:18,h:88,orient:'portrait'},{x:25,y:5,w:18,h:88,orient:'portrait'},{x:45,y:5,w:50,h:42,orient:'landscape'},{x:45,y:49,w:50,h:42,orient:'landscape'}], badge:false },
+  // ── 1 portrait + 2 stacked landscapes (centered group) ──
+  { slots:[{x:14,y:5,w:37,h:88,orient:'portrait'},{x:53,y:5,w:32,h:42,orient:'landscape'},{x:53,y:49,w:32,h:42,orient:'landscape'}], badge:false },
+  { slots:[{x:14,y:5,w:32,h:42,orient:'landscape'},{x:14,y:49,w:32,h:42,orient:'landscape'},{x:49,y:5,w:37,h:88,orient:'portrait'}], badge:false },
 
-  // ── WITH CARD ──
-  { slots:[{x:5,y:5,w:35,h:88,orient:'portrait'},{x:42,y:5,w:35,h:88,orient:'portrait'},{x:79,y:5,w:16,h:88,orient:'card'}], badge:false },
-  { slots:[{x:5,y:5,w:16,h:88,orient:'card'},{x:23,y:5,w:35,h:88,orient:'portrait'},{x:60,y:5,w:35,h:88,orient:'portrait'}], badge:false },
-  { slots:[{x:5,y:5,w:37,h:88,orient:'portrait'},{x:44,y:5,w:51,h:42,orient:'landscape'},{x:44,y:49,w:51,h:44,orient:'card'}], badge:false },
-  { slots:[{x:5,y:5,w:51,h:42,orient:'landscape'},{x:58,y:5,w:37,h:88,orient:'portrait'},{x:5,y:49,w:51,h:44,orient:'card'}], badge:false },
-  { slots:[{x:5,y:5,w:37,h:42,orient:'card'},{x:5,y:49,w:37,h:44,orient:'portrait'},{x:44,y:5,w:51,h:42,orient:'landscape'},{x:44,y:49,w:51,h:44,orient:'landscape'}], badge:false },
-  { slots:[{x:5,y:5,w:37,h:42,orient:'portrait'},{x:5,y:49,w:37,h:44,orient:'card'},{x:44,y:5,w:51,h:42,orient:'landscape'},{x:44,y:49,w:51,h:44,orient:'landscape'}], badge:false },
-  { slots:[{x:5,y:5,w:18,h:42,orient:'portrait'},{x:25,y:5,w:18,h:42,orient:'portrait'},{x:5,y:49,w:43,h:44,orient:'landscape'},{x:50,y:49,w:45,h:44,orient:'landscape'},{x:45,y:5,w:50,h:42,orient:'card'}], badge:false },
+  // ── 2 portraits centered ──
+  { slots:[{x:12,y:5,w:37,h:88,orient:'portrait'},{x:51,y:5,w:37,h:88,orient:'portrait'}], badge:false },
 
-  // ── HERO ── landscape hero with card in corner
-  { slots:[{x:17,y:5,w:78,h:60,orient:'landscape'},{x:5,y:53,w:26,h:42,orient:'card'}], badge:false },
-  { slots:[{x:5,y:5,w:78,h:60,orient:'landscape'},{x:69,y:53,w:26,h:42,orient:'card'}], badge:false },
-  // Portrait + landscape side by side (replaces portrait hero with dead space)
-  { slots:[{x:5,y:5,w:51,h:88,orient:'landscape'},{x:58,y:5,w:37,h:88,orient:'portrait'}], badge:false },
-  { slots:[{x:5,y:5,w:37,h:88,orient:'portrait'},{x:44,y:5,w:51,h:88,orient:'landscape'}], badge:false },
+  // ── 3 portraits centered ──
+  { slots:[{x:5,y:19,w:25,h:59,orient:'portrait'},{x:32,y:19,w:25,h:59,orient:'portrait'},{x:59,y:19,w:25,h:59,orient:'portrait'}], badge:false },
+
+  // ── 1 portrait + 2 stacked landscapes + card ──
+  { slots:[{x:5,y:5,w:37,h:88,orient:'portrait'},{x:44,y:5,w:32,h:42,orient:'landscape'},{x:44,y:49,w:32,h:42,orient:'landscape'},{x:78,y:5,w:17,h:88,orient:'card'}], badge:false },
+  { slots:[{x:5,y:5,w:17,h:88,orient:'card'},{x:24,y:5,w:32,h:42,orient:'landscape'},{x:24,y:49,w:32,h:42,orient:'landscape'},{x:58,y:5,w:37,h:88,orient:'portrait'}], badge:false },
+
+  // ── 2 portraits + card ──
+  { slots:[{x:5,y:5,w:37,h:88,orient:'portrait'},{x:44,y:5,w:37,h:88,orient:'portrait'},{x:83,y:5,w:12,h:88,orient:'card'}], badge:false },
+  { slots:[{x:5,y:5,w:12,h:88,orient:'card'},{x:19,y:5,w:37,h:88,orient:'portrait'},{x:58,y:5,w:37,h:88,orient:'portrait'}], badge:false },
+
+  // ── portrait + landscape mid (vertically centered) ──
+  { slots:[{x:12,y:5,w:37,h:88,orient:'portrait'},{x:51,y:21,w:42,h:56,orient:'landscape'}], badge:false },
+  { slots:[{x:12,y:21,w:42,h:56,orient:'landscape'},{x:56,y:5,w:37,h:88,orient:'portrait'}], badge:false },
+
+  // ── portrait + landscape mid (right-aligned) ──
+  { slots:[{x:5,y:5,w:37,h:88,orient:'portrait'},{x:56,y:21,w:42,h:56,orient:'landscape'}], badge:false },
+
+  // ── 4 landscapes (2x2) centered ──
+  { slots:[{x:14,y:5,w:32,h:42,orient:'landscape'},{x:14,y:49,w:32,h:42,orient:'landscape'},{x:54,y:5,w:32,h:42,orient:'landscape'},{x:54,y:49,w:32,h:42,orient:'landscape'}], badge:false },
+
+  // ── narrow portrait + 4 landscapes ──
+  { slots:[{x:5,y:19,w:25,h:59,orient:'portrait'},{x:32,y:5,w:32,h:42,orient:'landscape'},{x:32,y:49,w:32,h:42,orient:'landscape'},{x:66,y:5,w:32,h:42,orient:'landscape'},{x:66,y:49,w:32,h:42,orient:'landscape'}], badge:false },
+
+  // ── landscape mid hero centered + card below ──
+  { slots:[{x:29,y:5,w:42,h:56,orient:'landscape'},{x:29,y:63,w:42,h:32,orient:'card'}], badge:false },
 
 ];
 
