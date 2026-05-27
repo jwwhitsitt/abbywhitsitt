@@ -349,28 +349,11 @@ function buildCard(approvedMessages){
   return card;
 }
 
-// ── Build collage slide — card slots fill with badge content, photo slots fill with photos ──
-function buildCollageSlide(files, si, approvedMessages, themeOverride){
-  const portraits  = shuffle(files.filter(f=>photoOrient(f)==='portrait'));
-  const landscapes = shuffle(files.filter(f=>photoOrient(f)==='landscape'));
-
-  // Count how many photo slots of each type a layout needs
-  function photoSlots(layout){
-    const p = layout.slots.filter(s=>s.orient==='portrait').length;
-    const l = layout.slots.filter(s=>s.orient==='landscape').length;
-    return {p, l};
-  }
-
-  // A layout fits if we have enough photos for its photo slots
-  // Card slots are always fillable
-  function canFit(layout){
-    const {p, l} = photoSlots(layout);
-    return portraits.length >= p && landscapes.length >= l;
-  }
-
-  const available = LAYOUTS.filter(canFit);
-  const fallbacks = LAYOUTS.filter(l=>photoSlots(l).p<=1 && photoSlots(l).l<=1);
-  const layout = pick(available.length ? available : fallbacks);
+// ── Build collage slide — layout and photos pre-matched by buildShowFromData ──
+function buildCollageSlide(files, si, approvedMessages, themeOverride, preselectedLayout){
+  const portraits  = files.filter(f=>photoOrient(f)==='portrait');
+  const landscapes = files.filter(f=>photoOrient(f)==='landscape');
+  const layout = preselectedLayout;
 
   const slide = document.createElement('div');
   slide.className = 'slide';
@@ -535,16 +518,28 @@ function buildShowFromData(mainFiles, submittedFiles, approvedMessages){
   const shuffled=shuffle(mainFiles);
   const thenNowPairs=buildThenNow(mainFiles);let thenNowIdx=0;
 
-  // Chunk photos matching layout slot counts
+  // Build orientation-matched chunks — pick layout first, then pull the right photos
+  function photoSlots(layout){
+    return {
+      p: layout.slots.filter(s=>s.orient==='portrait').length,
+      l: layout.slots.filter(s=>s.orient==='landscape').length
+    };
+  }
+
+  const portraitPool  = shuffle(mainFiles.filter(f=>photoOrient(f)==='portrait'));
+  const landscapePool = shuffle(mainFiles.filter(f=>photoOrient(f)==='landscape'));
+
   const chunks=[];
-  let i=0;
-  while(i<shuffled.length){
-    const layout=pick(LAYOUTS);
-    const n=layout.slots.length;
-    const chunk=shuffled.slice(i,i+n);
-    if(chunk.length>=CONFIG.minPhotos) chunks.push(chunk);
-    else if(chunks.length) chunks[chunks.length-1].push(...chunk);
-    i+=n;
+  while(portraitPool.length + landscapePool.length >= CONFIG.minPhotos){
+    const available = LAYOUTS.filter(layout=>{
+      const {p,l} = photoSlots(layout);
+      return portraitPool.length >= p && landscapePool.length >= l;
+    });
+    if(!available.length) break;
+    const layout = pick(available);
+    const {p,l} = photoSlots(layout);
+    const chunk = [...portraitPool.splice(0,p), ...landscapePool.splice(0,l)];
+    chunks.push({chunk, layout});
   }
 
   const featuredSlides=approvedMessages.filter(m=>m.photoUrl).map(sub=>buildFeaturedPhotoSlide(sub,submittedFiles));
