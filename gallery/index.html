@@ -378,6 +378,63 @@ body::after {
   .grid-wrap { padding: 1.25rem 1rem 3rem; }
   .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
 }
+
+/* ── Photo Tagger ── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(240,192,64,0.15), transparent);
+}
+
+.tagger-controls {
+  display: flex;
+  gap: .5rem;
+  align-items: stretch;
+}
+
+.tag-select {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(240,192,64,0.2);
+  border-radius: 3px;
+  color: var(--cream);
+  font-family: 'Cinzel', serif;
+  font-size: .5rem;
+  letter-spacing: .1em;
+  padding: .45rem .5rem;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color .2s, background .2s;
+}
+.tag-select:focus {
+  border-color: rgba(240,192,64,0.45);
+  background: rgba(255,255,255,0.07);
+}
+.tag-select.saved { border-color: rgba(111,207,151,0.5); }
+.tag-select option { background: #12111a; }
+
+.btn-reject-tag {
+  flex-shrink: 0;
+  padding: .45rem .6rem;
+  border-radius: 3px;
+  font-family: 'Cinzel', serif;
+  font-size: .5rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .2s;
+  border: 1px solid rgba(253,248,238,0.15);
+  background: transparent;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.btn-reject-tag:hover {
+  background: rgba(253,248,238,0.05);
+  border-color: rgba(253,248,238,0.3);
+}
+.btn-reject-tag:disabled { opacity: .35; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -431,6 +488,42 @@ body::after {
     <div class="grid" id="grid"></div>
   </div>
 
+  <!-- ── Photo Tagger ── -->
+  <div class="section-divider"></div>
+
+  <div class="page-header">
+    <div class="page-eyebrow">Robo-Shop · 2026</div>
+    <div class="page-title">Photo <em>Tagger</em></div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-num" id="tagger-stat-untagged">—</span>
+      <span class="stat-label">Untagged</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num approved" id="tagger-stat-tagged">—</span>
+      <span class="stat-label">Tagged</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num rejected" id="tagger-stat-rejected">—</span>
+      <span class="stat-label">Rejected</span>
+    </div>
+  </div>
+
+  <div class="grid-wrap">
+    <div id="tagger-loading-state" class="state-msg">
+      <div class="spinner"></div>
+      <p>Loading photos…</p>
+    </div>
+    <div id="tagger-empty-state" class="state-msg" style="display:none">
+      <span class="icon">✦</span>
+      <h2>All done</h2>
+      <p>Every photo has been tagged or rejected.</p>
+    </div>
+    <div class="grid" id="tagger-grid"></div>
+  </div>
+
 </div>
 
 <script>
@@ -456,6 +549,7 @@ function tryUnlock() {
     document.getElementById('gate').style.display = 'none';
     document.getElementById('app').style.display  = 'block';
     loadPhotos();
+    loadTaggerPhotos();
   } else {
     const err = document.getElementById('pw-error');
     err.style.display = 'block';
@@ -587,6 +681,163 @@ async function doAction(fileId, btn, action) {
     statusEl.className   = 'card-status error';
     actions.forEach(b => b.disabled = false);
     btn.textContent = action === 'approve' ? '✓ Approve' : '✕ Reject';
+  }
+}
+
+// ── Photo Tagger ──────────────────────────────────────────────────────────
+const TAG_OPTIONS = ['Baby','Toddler','Adolescent','Teen','Christmas','Vacation','Cheer','Gymnastics','Karate','Family'];
+
+let taggerCounts = { untagged: 0, tagged: 0, rejected: 0 };
+
+function updateTaggerStats() {
+  document.getElementById('tagger-stat-untagged').textContent = taggerCounts.untagged;
+  document.getElementById('tagger-stat-tagged').textContent   = taggerCounts.tagged;
+  document.getElementById('tagger-stat-rejected').textContent = taggerCounts.rejected;
+}
+
+async function loadTaggerPhotos() {
+  try {
+    const res  = await fetch(`${API}/photos`);
+    const data = await res.json();
+
+    document.getElementById('tagger-loading-state').style.display = 'none';
+
+    const visible = data.filter(p => p.rejected !== 'rejected');
+    taggerCounts.rejected = data.length - visible.length;
+    taggerCounts.tagged   = visible.filter(p => p.tag).length;
+    taggerCounts.untagged = visible.filter(p => !p.tag).length;
+    updateTaggerStats();
+
+    if (visible.length === 0) {
+      document.getElementById('tagger-empty-state').style.display = 'block';
+      return;
+    }
+
+    const grid = document.getElementById('tagger-grid');
+    visible.forEach((photo, i) => grid.appendChild(buildTaggerCard(photo, i)));
+
+  } catch (err) {
+    document.getElementById('tagger-loading-state').innerHTML =
+      `<span class="icon">⚠</span><p>Could not reach the API.<br>${err.message}</p>`;
+  }
+}
+
+function buildTaggerCard(photo, index) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.fileId = photo.file_id;
+  card.style.animationDelay = `${Math.min(index * 10, 400)}ms`;
+
+  const optionsHtml = TAG_OPTIONS.map(t =>
+    `<option value="${t}"${photo.tag === t ? ' selected' : ''}>${t}</option>`
+  ).join('');
+
+  card.innerHTML = `
+    <div class="card-img-wrap">
+      <div class="card-img-placeholder">⬚</div>
+      <img src="${API}/thumbnail/${photo.file_id}" loading="lazy" class="loading"
+           alt="${escHtml(photo.name)}"
+           onload="this.classList.remove('loading');this.classList.add('loaded')"
+           onerror="this.style.display='none'">
+    </div>
+    <div class="card-footer">
+      <div class="card-name" title="${escHtml(photo.name)}">${escHtml(photo.name)}</div>
+      <div class="tagger-controls">
+        <select class="tag-select" id="tag-sel-${esc(photo.file_id)}"
+                data-prev-tag="${escHtml(photo.tag || '')}"
+                onchange="handleTagChange('${esc(photo.file_id)}', this)">
+          <option value="">— Tag —</option>
+          ${optionsHtml}
+        </select>
+        <button class="btn-reject-tag" onclick="handleRejectTag('${esc(photo.file_id)}', this)">✕ Reject</button>
+      </div>
+      <div class="card-status" id="tagger-status-${esc(photo.file_id)}"></div>
+    </div>
+  `;
+
+  return card;
+}
+
+async function handleTagChange(fileId, sel) {
+  const tag = sel.value;
+  if (!tag) return;
+
+  const prevTag = sel.dataset.prevTag || '';
+  sel.disabled = true;
+  const statusEl = document.getElementById(`tagger-status-${fileId}`);
+
+  try {
+    const res = await fetch(`${API}/tag`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file_id: fileId, tag }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${res.status}`);
+    }
+
+    if (!prevTag) {
+      taggerCounts.untagged = Math.max(0, taggerCounts.untagged - 1);
+      taggerCounts.tagged++;
+      updateTaggerStats();
+    }
+    sel.dataset.prevTag = tag;
+
+    sel.classList.add('saved');
+    statusEl.textContent = 'Saved ✓';
+    statusEl.className   = 'card-status approved';
+    setTimeout(() => {
+      sel.classList.remove('saved');
+      statusEl.className   = 'card-status';
+      statusEl.textContent = '';
+    }, 1500);
+
+  } catch (err) {
+    statusEl.textContent = `Error: ${err.message}`;
+    statusEl.className   = 'card-status error';
+  } finally {
+    sel.disabled = false;
+  }
+}
+
+async function handleRejectTag(fileId, btn) {
+  const card     = btn.closest('.card');
+  const sel      = document.getElementById(`tag-sel-${fileId}`);
+  const statusEl = document.getElementById(`tagger-status-${fileId}`);
+
+  btn.disabled = true;
+  if (sel) sel.disabled = true;
+
+  try {
+    const res = await fetch(`${API}/reject-tag`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file_id: fileId }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${res.status}`);
+    }
+
+    const hadTag = sel && sel.dataset.prevTag;
+    if (hadTag) taggerCounts.tagged   = Math.max(0, taggerCounts.tagged - 1);
+    else        taggerCounts.untagged = Math.max(0, taggerCounts.untagged - 1);
+    taggerCounts.rejected++;
+    updateTaggerStats();
+
+    statusEl.textContent = 'Rejected';
+    statusEl.className   = 'card-status rejected';
+    setTimeout(() => {
+      card.classList.add('removing');
+      setTimeout(() => card.remove(), 400);
+    }, 600);
+
+  } catch (err) {
+    statusEl.textContent = `Error: ${err.message}`;
+    statusEl.className   = 'card-status error';
+    btn.disabled = false;
+    if (sel) sel.disabled = false;
   }
 }
 
