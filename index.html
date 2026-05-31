@@ -28,7 +28,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Background atmosphere ── */
 body::before {
   content: '';
   position: fixed; inset: 0; z-index: 0;
@@ -38,7 +37,6 @@ body::before {
   pointer-events: none;
 }
 
-/* ── Grain overlay ── */
 body::after {
   content: '';
   position: fixed; inset: 0; z-index: 0;
@@ -54,7 +52,6 @@ body::after {
   padding: 0 1.5rem 4rem;
 }
 
-/* ── Hero ── */
 .hero {
   text-align: center;
   padding: 4rem 0 2rem;
@@ -155,7 +152,6 @@ body::after {
 }
 .divider-star { color: var(--gold2); font-size: .7rem; opacity: .7; }
 
-/* ── Counter ── */
 .counter-wrap {
   text-align: center;
   margin-bottom: 2.5rem;
@@ -179,7 +175,6 @@ body::after {
   display: block;
 }
 
-/* ── Intro text ── */
 .intro {
   text-align: center;
   font-family: 'Cormorant Garamond', serif;
@@ -192,7 +187,6 @@ body::after {
   animation: fadeUp .8s ease .8s forwards;
 }
 
-/* ── Form ── */
 .form-wrap {
   background: rgba(255,255,255,0.025);
   border: 1px solid rgba(240,192,64,0.12);
@@ -203,9 +197,7 @@ body::after {
   animation: fadeUp .8s ease .9s forwards;
 }
 
-.field {
-  margin-bottom: 1.5rem;
-}
+.field { margin-bottom: 1.5rem; }
 
 label {
   display: block;
@@ -253,7 +245,6 @@ textarea {
   line-height: 1.6;
 }
 
-/* Character counter */
 .char-count {
   text-align: right;
   font-size: .6rem;
@@ -262,7 +253,6 @@ textarea {
   letter-spacing: .1em;
 }
 
-/* File upload */
 .file-area {
   border: 1px dashed rgba(240,192,64,0.2);
   border-radius: 3px;
@@ -284,20 +274,12 @@ textarea {
 .file-label strong { color: var(--gold2); }
 #file-name { margin-top: .5rem; font-size: .7rem; color: var(--gold); display: none; }
 
-/* Preview */
-#photo-preview {
-  margin-top: .8rem;
-  display: none;
-  text-align: center;
-}
+#photo-preview { margin-top: .8rem; display: none; text-align: center; }
 #photo-preview img {
-  max-height: 120px;
-  max-width: 100%;
-  border-radius: 3px;
-  border: 1px solid rgba(240,192,64,0.2);
+  max-height: 120px; max-width: 100%;
+  border-radius: 3px; border: 1px solid rgba(240,192,64,0.2);
 }
 
-/* Submit */
 .submit-btn {
   width: 100%;
   background: transparent;
@@ -326,7 +308,22 @@ textarea {
 .submit-btn:hover::before { opacity: 1; }
 .submit-btn:disabled { opacity: .5; cursor: not-allowed; }
 
-/* ── Success state ── */
+/* ── View messages link ── */
+.view-messages {
+  display: block;
+  text-align: center;
+  margin-top: 1.2rem;
+  font-family: 'Cinzel', serif;
+  font-size: .58rem;
+  letter-spacing: .3em;
+  color: var(--muted);
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color .3s;
+}
+.view-messages:hover { color: var(--gold2); }
+.view-messages span { opacity: .5; margin-right: .4em; }
+
 #success {
   display: none;
   text-align: center;
@@ -335,11 +332,24 @@ textarea {
 #success .success-icon { font-size: 3rem; display: block; margin-bottom: 1rem; animation: pop .5s cubic-bezier(.36,.07,.19,.97); }
 #success h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-style: italic; color: var(--gold); margin-bottom: .8rem; }
 #success p { color: var(--muted); font-size: .9rem; line-height: 1.7; }
+#success .view-messages-success {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-family: 'Cinzel', serif;
+  font-size: .62rem;
+  letter-spacing: .3em;
+  color: var(--gold2);
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid rgba(240,192,64,0.25);
+  border-radius: 3px;
+  padding: .7rem 1.4rem;
+  transition: all .3s;
+}
+#success .view-messages-success:hover { border-color: var(--gold2); color: var(--gold); }
 
-/* ── Error msg ── */
 .error-msg { color: #ff6b6b; font-size: .72rem; margin-top: .4rem; display: none; }
 
-/* ── Footer ── */
 footer {
   text-align: center;
   margin-top: 3rem;
@@ -351,7 +361,6 @@ footer {
   text-transform: uppercase;
 }
 
-/* ── Animations ── */
 @keyframes fadeUp {
   from { opacity:0; transform:translateY(16px); }
   to   { opacity:1; transform:translateY(0); }
@@ -361,7 +370,6 @@ footer {
   50% { transform: scale(1.2); }
 }
 
-/* ── Mobile ── */
 @media (max-width: 480px) {
   .form-wrap { padding: 1.8rem 1.2rem; }
   .hero { padding: 3rem 0 1.5rem; }
@@ -372,7 +380,6 @@ footer {
 
 <div class="wrap">
 
-  <!-- Hero -->
   <div class="hero">
     <div class="hero-photo-wrap">
       <img
@@ -394,20 +401,17 @@ footer {
     <div class="divider-line"></div>
   </div>
 
-  <!-- Counter -->
   <div class="counter-wrap">
     <span class="counter-number" id="counter">—</span>
     <span class="counter-label">people have left a message for Abby</span>
   </div>
 
-  <!-- Intro -->
   <p class="intro">
     Abby is heading into her next chapter and we'd love to fill it with your words.
     Leave her a message, a memory, or a little wisdom for the road ahead.
     Your note will appear on the slideshow at her graduation party.
   </p>
 
-  <!-- Form -->
   <div class="form-wrap" id="form-wrap">
     <form id="wish-form" novalidate>
 
@@ -463,11 +467,13 @@ footer {
 
     </form>
 
-    <!-- Success -->
+    <a href="/messages/" class="view-messages"><span>✦</span> View all messages for Abby</a>
+
     <div id="success">
       <span class="success-icon">🎉</span>
       <h2>Message Sent!</h2>
       <p>Thank you — your words are on their way to Abby.<br>Keep an eye on the slideshow at the party!</p>
+      <a href="/messages/" class="view-messages-success">✦ &nbsp; See all messages for Abby &nbsp; ✦</a>
     </div>
   </div>
 
@@ -481,15 +487,13 @@ footer {
 const WEBHOOK = 'https://n8n.jeffwhitsitt.com/webhook/abby-wishes';
 const SHEET_ID = '15pgn1jsxKvOPlDtADafS4rBXuRvlGumfykjb3QiSoFk';
 const API_KEY  = 'AIzaSyD1dmwLLb63ePWsWUz_FRRK4n89wxPod6Q';
-const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_BYTES = 10 * 1024 * 1024;
 
-// ── Counter ──────────────────────────────────────
 async function loadCounter() {
   try {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/B:B?key=${API_KEY}`;
     const res = await fetch(url);
     const data = await res.json();
-    // Count non-empty name cells, minus header row
     const count = Math.max(0, (data.values?.filter(r => r[0] && r[0].trim()).length || 1) - 1);
     document.getElementById('counter').textContent = count;
   } catch(e) {
@@ -498,12 +502,10 @@ async function loadCounter() {
 }
 loadCounter();
 
-// ── Char counter ──────────────────────────────────
 const msgEl = document.getElementById('message');
 const charEl = document.getElementById('char-num');
 msgEl.addEventListener('input', () => charEl.textContent = msgEl.value.length);
 
-// ── File picker ───────────────────────────────────
 const photoInput = document.getElementById('photo');
 const fileNameEl = document.getElementById('file-name');
 const previewWrap = document.getElementById('photo-preview');
@@ -531,21 +533,17 @@ photoInput.addEventListener('change', () => {
   reader.readAsDataURL(file);
 });
 
-// ── Form submit ───────────────────────────────────
 document.getElementById('wish-form').addEventListener('submit', async e => {
   e.preventDefault();
-
-  // Clear errors
   ['name-err','rel-err','msg-err','submit-err'].forEach(id => {
     document.getElementById(id).style.display = 'none';
   });
 
-  const name     = document.getElementById('name').value.trim();
-  const rel      = document.getElementById('relationship').value;
-  const message  = msgEl.value.trim();
-  const file     = photoInput.files[0];
+  const name    = document.getElementById('name').value.trim();
+  const rel     = document.getElementById('relationship').value;
+  const message = msgEl.value.trim();
+  const file    = photoInput.files[0];
 
-  // Validate
   let valid = true;
   if (!name)    { document.getElementById('name-err').style.display='block'; valid=false; }
   if (!rel)     { document.getElementById('rel-err').style.display='block';  valid=false; }
@@ -558,7 +556,6 @@ document.getElementById('wish-form').addEventListener('submit', async e => {
 
   try {
     let photo_base64 = '', photo_name = '', photo_mime = '';
-
     if (file) {
       const b64 = await new Promise((res, rej) => {
         const r = new FileReader();
@@ -572,7 +569,6 @@ document.getElementById('wish-form').addEventListener('submit', async e => {
     }
 
     const payload = { name, relationship: rel, message, photo_base64, photo_name, photo_mime };
-
     const res = await fetch(WEBHOOK, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -581,10 +577,9 @@ document.getElementById('wish-form').addEventListener('submit', async e => {
 
     if (!res.ok) throw new Error('Server error ' + res.status);
 
-    // Success
     document.getElementById('wish-form').style.display = 'none';
     document.getElementById('success').style.display = 'block';
-    loadCounter(); // refresh count
+    loadCounter();
 
   } catch(err) {
     console.error(err);
