@@ -46,7 +46,7 @@ export default async function handler(req,res){
     const token=await getAccessToken(sa);
     let photoUrl='';
     if(photoData&&photoMime){const fname=photoName||`photo_${Date.now()}.jpg`;photoUrl=await uploadPhoto(token,folderId,fname,photoMime,photoData);}
-    const row=[new Date().toISOString(),name,relationship||'',message,photoUrl,'FALSE',''];
+    const row=[new Date().toISOString(),name,relationship||'',message,photoUrl,'TRUE',''];
     await appendRow(token,sheetId,row);
     return res.status(200).json({ok:true});
   }catch(err){
