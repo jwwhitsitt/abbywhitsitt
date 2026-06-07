@@ -155,11 +155,20 @@ body.theme-spring    { --bg:#080f0a; --text:#F0FFF0; --gold:#A0E080; --gold2:#60
 #error-screen { position:fixed; inset:0; z-index:90; background:var(--bg); display:none; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:2rem; text-align:center; }
 #error-screen h2 { font-family:var(--font-t); color:var(--gold); font-size:1.2rem; letter-spacing:.2em; }
 #error-screen p { color:var(--text2); font-size:.8rem; line-height:1.8; max-width:500px; }
+#qr-block { position:fixed; bottom:1.2rem; left:1.2rem; z-index:20; display:flex; flex-direction:column; align-items:center; gap:.3rem; opacity:.28; transition:opacity .3s; }
+#qr-block:hover { opacity:.6; }
+#qr-block img { width:52px; height:52px; display:block; }
+#qr-block span { font-size:.42rem; letter-spacing:.18em; color:var(--gold2); text-transform:uppercase; font-family:var(--font-t); }
 </style>
 </head>
 <body>
 
 <canvas id="particle-canvas"></canvas>
+
+<div id="qr-block">
+  <img src="frame.png" alt="abbywhitsitt.com">
+  <span>abbywhitsitt.com</span>
+</div>
 
 <div id="loading">
   <h2>Loading Abby's Story</h2>
