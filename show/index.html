@@ -148,7 +148,7 @@ body.theme-spring    { --bg:#080f0a; --text:#F0FFF0; --gold:#A0E080; --gold2:#60
 /* ── UI Chrome ── */
 #counter { position:fixed; bottom:1rem; right:1.5rem; z-index:20; font-size:.55rem; letter-spacing:.3em; color:rgba(255,255,255,.25); text-transform:uppercase; }
 #progress { position:fixed; bottom:0; left:0; height:2px; z-index:20; background:linear-gradient(to right,var(--gold2),var(--gold)); width:0%; }
-#theme-indicator { position:fixed; top:1rem; left:1rem; z-index:20; font-size:.48rem; letter-spacing:.2em; color:rgba(255,255,255,.18); text-transform:uppercase; }
+#theme-indicator { display:none; }
 #dots { position:fixed; top:50%; right:1rem; transform:translateY(-50%); z-index:20; display:flex; flex-direction:column; gap:5px; max-height:70vh; overflow:hidden; }
 .dot { width:4px; height:4px; border-radius:50%; background:rgba(255,255,255,.15); cursor:pointer; transition:all .3s; flex-shrink:0; }
 .dot.active { background:var(--gold); transform:scale(1.8); }
@@ -217,11 +217,7 @@ const DEFAULT_MESSAGES = [
   {icon:'🏆',co:'Class of 2026',grad:'Abby',name:'Whitsitt',tag:'Go conquer the world'},
 ];
 
-const SEASONAL = {
-  12:{theme:'christmas'}, 11:{theme:'halloween'}, 10:{theme:'halloween'},
-   7:{theme:'july4'}, 6:{theme:'summer'}, 8:{theme:'summer'},
-   2:{theme:'valentine'}, 3:{theme:'spring'}, 4:{theme:'spring'},
-};
+const SEASONAL = {};
 
 const DEFAULT_THEMES = [''];
 let defaultThemeIdx = 0;
