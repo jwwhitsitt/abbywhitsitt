@@ -3,677 +3,598 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Abby Whitsitt — Class of 2026</title>
+<title>Leave a Message for Abby Whitsitt</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,500&family=Cinzel:wght@400;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-html, body { width:100vw; height:100vh; overflow:hidden; }
+:root {
+  --gold: #F0C040;
+  --gold2: #C9973A;
+  --gold3: #8a6420;
+  --black: #0a0a0f;
+  --dark: #12111a;
+  --cream: #FDF8EE;
+  --muted: rgba(253,248,238,0.55);
+}
+
+html { scroll-behavior: smooth; }
 
 body {
-  --gold:#F0C040; --gold2:#C9973A; --bg:#0a0a0f; --text:#FDF8EE; --text2:rgba(253,248,238,0.6);
-  --badge-bg:rgba(10,10,15,0.92); --badge-border:#C9973A;
-  --p1:#F0C040; --p2:#E8407A; --p3:#7B61FF; --p4:#42D9C8;
-  --font-d:'Cormorant Garamond',serif; --font-t:'Cinzel',serif; --font-b:'Lato',sans-serif;
-  background:var(--bg); font-family:var(--font-b); font-weight:300; cursor:none;
+  background: var(--black);
+  color: var(--cream);
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
-body.theme-rose      { --bg:#1a0a0d; --text:#FDF0F2; --gold:#E8A0B0; --gold2:#C97080; --badge-bg:rgba(26,10,13,0.92); --badge-border:#C97080; --p1:#E8A0B0; --p2:#F5C5CF; --p3:#C97080; --p4:#FFE4E8; }
-body.theme-navy      { --bg:#050a1a; --text:#E8EFF8; --gold:#C0D0E8; --gold2:#8098B8; --badge-bg:rgba(5,10,26,0.92); --badge-border:#8098B8; --p1:#C0D0E8; --p2:#E8EFF8; --p3:#8098B8; --p4:#4060A0; }
-body.theme-editorial { --bg:#0f0f0f; --text:#F0F0F0; --gold:#F0F0F0; --gold2:#A0A0A0; --badge-bg:rgba(0,0,0,0.95); --badge-border:#505050; --p1:#F0F0F0; --p2:#A0A0A0; --p3:#606060; --p4:#D0D0D0; }
-body.theme-summer    { --bg:#0a1510; --text:#F0FFF4; --gold:#60D890; --gold2:#40A860; --badge-bg:rgba(10,21,16,0.92); --badge-border:#40A860; --p1:#60D890; --p2:#40C8C0; --p3:#F0C040; --p4:#E87040; }
-body.theme-christmas { --bg:#0a1a08; --text:#FFF8F0; --gold:#F0C040; --gold2:#C83020; --badge-bg:rgba(10,26,8,0.92); --badge-border:#C83020; --p1:#E83020; --p2:#F0C040; --p3:#FFFFFF; --p4:#40A830; }
-body.theme-july4     { --bg:#08081a; --text:#F8F8FF; --gold:#E8E8F0; --gold2:#A0A0D0; --badge-bg:rgba(8,8,26,0.92); --badge-border:#E83020; --p1:#E83020; --p2:#F8F8FF; --p3:#2040C8; --p4:#F0C040; }
-body.theme-halloween { --bg:#0a0500; --text:#FFF0E0; --gold:#F0A030; --gold2:#C06010; --badge-bg:rgba(10,5,0,0.92); --badge-border:#C06010; --p1:#F0A030; --p2:#E87020; --p3:#800080; --p4:#FFFFFF; }
-body.theme-valentine { --bg:#1a0810; --text:#FFF0F4; --gold:#F090A8; --gold2:#C84060; --badge-bg:rgba(26,8,16,0.92); --badge-border:#C84060; --p1:#E84060; --p2:#F090A8; --p3:#FF6688; --p4:#FFB0C0; }
-body.theme-spring    { --bg:#080f0a; --text:#F0FFF0; --gold:#A0E080; --gold2:#60A840; --badge-bg:rgba(8,15,10,0.92); --badge-border:#60A840; --p1:#A0E080; --p2:#E0A0C0; --p3:#80C860; --p4:#F0E060; }
 
-/* ── Canvas & Chrome ── */
-#particle-canvas { position:fixed; inset:0; pointer-events:none; z-index:50; }
-
-#loading { position:fixed; inset:0; z-index:80; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem; transition:opacity 1s ease; }
-#loading.gone { opacity:0; pointer-events:none; }
-#loading h2 { font-family:var(--font-t); font-size:1rem; letter-spacing:.4em; color:var(--gold2); text-transform:uppercase; }
-#loading-bar-wrap { width:260px; height:2px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden; }
-#loading-bar { height:100%; width:0%; background:linear-gradient(to right,var(--gold2),var(--gold)); transition:width .3s ease; }
-#loading-status { font-size:.6rem; letter-spacing:.25em; color:var(--text2); text-transform:uppercase; }
-
-#splash { position:fixed; inset:0; z-index:70; background:var(--bg); display:none; flex-direction:column; align-items:center; justify-content:center; gap:.8rem; transition:opacity 1.5s ease; }
-#splash.gone { opacity:0; pointer-events:none; }
-#splash .s-eye { font-family:var(--font-t); font-size:clamp(.55rem,1.5vw,.7rem); letter-spacing:.5em; color:var(--gold2); text-transform:uppercase; margin-bottom:.5rem; }
-#splash h1 { font-family:var(--font-d); font-size:clamp(4rem,10vw,9rem); font-weight:300; color:var(--text); line-height:1; text-align:center; }
-#splash h1 em { font-style:italic; color:var(--gold); display:block; }
-#splash .s-sub { font-family:var(--font-t); font-size:clamp(.55rem,1.5vw,.75rem); letter-spacing:.4em; color:var(--text2); text-transform:uppercase; margin-top:.5rem; }
-.s-star { position:absolute; color:var(--gold); opacity:0; animation:sp 3s ease-in-out infinite; }
-@keyframes sp { 0%,100%{opacity:0;transform:scale(.5)} 50%{opacity:.7;transform:scale(1)} }
-
-#outro { position:fixed; inset:0; z-index:70; background:var(--bg); display:none; flex-direction:column; align-items:center; justify-content:center; gap:.8rem; opacity:0; transition:opacity 1.5s ease; }
-#outro.visible { opacity:1; }
-#outro h1 { font-family:var(--font-d); font-style:italic; font-size:clamp(3rem,8vw,7rem); color:var(--gold); line-height:1; text-align:center; }
-#outro p { font-family:var(--font-t); font-size:clamp(.55rem,1.5vw,.75rem); letter-spacing:.4em; color:var(--text2); text-transform:uppercase; }
-
-/* ── Slideshow ── */
-#show { position:relative; width:100%; height:100%; }
-
-.slide {
-  position:absolute; inset:0; opacity:0;
-  transition:opacity 1.4s ease;
-  background:var(--bg);
+/* ── Background atmosphere ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(240,192,64,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(201,151,58,0.06) 0%, transparent 60%);
+  pointer-events: none;
 }
-.slide.active { opacity:1; z-index:1; }
 
-/* ── Photo cell — absolute positioned ── */
-.cell {
-  position:absolute;
-  overflow:hidden;
-  border-radius:2px;
-  background:var(--bg);
-  outline: 1px solid var(--gold2);
-  outline-offset: 4px;
-  box-shadow: 0 0 0 6px var(--bg), 0 0 0 7px var(--gold2);
+/* ── Grain overlay ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  pointer-events: none;
 }
-.cell.frame-inset {
-  /* same as double border — inset shadow removed */
-  outline: 1px solid var(--gold2);
-  outline-offset: 4px;
-  box-shadow: 0 0 0 6px var(--bg), 0 0 0 7px var(--gold2);
+
+.wrap {
+  position: relative; z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem;
 }
-.cell.card-cell { outline:none; box-shadow:none !important; overflow:visible; background:transparent; }
-.cell img {
-  position:absolute; inset:0;
-  width:100%; height:100%;
-  object-fit:contain;
-  display:block;
-  transition:transform 9s ease;
+
+/* ── Hero ── */
+.hero {
+  text-align: center;
+  padding: 4rem 0 2rem;
+  position: relative;
 }
-.slide.active .cell img { transform:scale(1.02); }
-.cell[data-fit="cover"] img { object-fit:cover; object-position:center center; }
 
-/* ── Badge cell ── */
-.badge {
-  position:absolute;
-  background:var(--badge-bg);
-  border:1px solid var(--badge-border);
-  border-radius:4px;
-  padding:clamp(1rem,2vw,2.5rem) clamp(1.2rem,2.5vw,3rem);
-  text-align:center;
-  backdrop-filter:blur(12px);
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  overflow:hidden;
-  box-sizing:border-box;
-  z-index:2;
+.hero-photo-wrap {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 2rem;
 }
-.badge::before { content:'✦'; position:absolute; top:6px; left:8px; color:var(--gold); font-size:.5rem; opacity:.6; }
-.badge::after  { content:'✦'; position:absolute; bottom:6px; right:8px; color:var(--gold); font-size:.5rem; opacity:.6; }
-.b-cap  { font-size:clamp(2rem,3vw,3.5rem); display:block; margin-bottom:.3rem; }
-.b-co   { font-family:var(--font-t); font-size:clamp(.8rem,1.1vw,1.3rem); letter-spacing:.35em; color:var(--gold); text-transform:uppercase; display:block; margin-bottom:.3rem; }
-.b-grad { font-family:var(--font-d); font-style:italic; font-size:clamp(2.4rem,4.5vw,6rem); color:var(--gold); line-height:1; display:block; text-shadow:0 0 20px rgba(255,255,255,.15); }
-.b-name { font-family:var(--font-t); font-size:clamp(.9rem,1.3vw,1.6rem); letter-spacing:.18em; color:var(--text); display:block; margin-top:.4rem; text-transform:uppercase; }
-.b-tag  { font-size:clamp(.75rem,1vw,1.2rem); letter-spacing:.2em; color:var(--gold2); text-transform:uppercase; display:block; margin-top:.5rem; padding-top:.5rem; border-top:1px solid rgba(255,255,255,.2); }
-.b-msg  { font-family:var(--font-d); font-style:italic; font-size:clamp(1.2rem,2vw,2.2rem); color:var(--text); line-height:1.45; display:block; margin-top:.4rem; }
-.b-from { font-size:clamp(.75rem,1vw,1.2rem); letter-spacing:.2em; color:var(--gold2); text-transform:uppercase; display:block; margin-top:.4rem; }
 
-/* ── Then & Now ── */
-.slide.then-now .cell-old { position:absolute; left:1%; top:1%; width:48.5%; height:85%; overflow:hidden; border-radius:3px; }
-.slide.then-now .cell-new { position:absolute; left:50.5%; top:1%; width:48.5%; height:85%; overflow:hidden; border-radius:3px; }
-.slide.then-now .cell-old img,
-.slide.then-now .cell-new img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; display:block; transition:transform 9s ease; }
-.slide.then-now.active .cell-old img,
-.slide.then-now.active .cell-new img { transform:scale(1.04); }
-.slide.then-now .tn-label { position:absolute; bottom:1%; left:0; right:0; text-align:center; display:flex; align-items:center; justify-content:center; gap:1.5rem; padding:.8rem; }
-.tn-word { font-family:var(--font-t); font-size:.65rem; letter-spacing:.35em; color:var(--gold); text-transform:uppercase; }
-.tn-line { flex:1; height:1px; background:linear-gradient(to right,transparent,var(--gold2),transparent); opacity:.4; max-width:200px; }
-.tn-arrow { color:var(--gold2); font-size:1.4rem; }
+.hero-photo {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+  border: 1px solid rgba(240,192,64,0.3);
+  box-shadow:
+    0 0 0 6px rgba(240,192,64,0.06),
+    0 0 0 12px rgba(240,192,64,0.03),
+    0 20px 60px rgba(0,0,0,0.6);
+  display: block;
+}
 
-/* ── Featured photo (submitted photo + message) ── */
-.feat-photo-cell { position:absolute; overflow:hidden; border-radius:3px; }
-.feat-photo-cell img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; display:block; transition:transform 12s ease; }
-.slide.featured-photo.active .feat-photo-cell img { transform:scale(1.03); }
-.feat-card { position:absolute; background:var(--badge-bg); border:1px solid var(--badge-border); border-radius:4px; backdrop-filter:blur(12px); display:flex; flex-direction:column; justify-content:center; padding:clamp(1.2rem,2.5vw,3rem); overflow:hidden; box-sizing:border-box; z-index:2; }
-.feat-card::before { content:'✦'; position:absolute; top:8px; left:10px; color:var(--gold); font-size:.6rem; opacity:.6; }
-.feat-card::after  { content:'✦'; position:absolute; bottom:8px; right:10px; color:var(--gold); font-size:.6rem; opacity:.6; }
-.feat-message { font-family:var(--font-d); font-style:italic; color:var(--text); line-height:1.5; margin-bottom:.8rem; }
-.feat-divider { width:40px; height:1px; background:var(--gold2); margin-bottom:.8rem; opacity:.6; }
-.feat-from { font-family:var(--font-t); font-size:clamp(.7rem,1vw,1.1rem); letter-spacing:.25em; color:var(--gold2); text-transform:uppercase; }
+.hero-photo-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1px solid rgba(240,192,64,0.15);
+}
 
-/* ── Guest wall ── */
-.slide.guest-wall { display:flex; flex-direction:column; padding:2rem 3rem; gap:0; }
-.guest-wall-header { text-align:center; padding:1rem 0 1.5rem; flex-shrink:0; }
-.guest-wall-header h2 { font-family:var(--font-d); font-style:italic; font-size:clamp(1.8rem,4vw,3rem); color:var(--gold); }
-.guest-wall-header p { font-family:var(--font-t); font-size:.55rem; letter-spacing:.3em; color:var(--text2); text-transform:uppercase; margin-top:.3rem; }
-.guest-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; flex:1; }
-.guest-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:4px; padding:1rem 1.2rem; display:flex; flex-direction:column; gap:.5rem; overflow:hidden; }
-.gc-message { font-family:var(--font-d); font-style:italic; font-size:clamp(1.2rem,2.2vw,2rem); color:var(--text); line-height:1.5; flex:1; }
-.gc-from { font-family:var(--font-t); font-size:clamp(.75rem,1vw,1.1rem); letter-spacing:.2em; color:var(--gold2); text-transform:uppercase; }
-.gc-rel { font-size:clamp(.65rem,.9vw,1rem); color:var(--text2); letter-spacing:.1em; }
+.cap-icon {
+  position: absolute;
+  bottom: 4px; right: 4px;
+  background: var(--black);
+  border: 1px solid var(--gold2);
+  border-radius: 50%;
+  width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
 
-/* ── UI Chrome ── */
-#counter { position:fixed; bottom:1rem; right:1.5rem; z-index:20; font-size:.55rem; letter-spacing:.3em; color:rgba(255,255,255,.25); text-transform:uppercase; }
-#progress { position:fixed; bottom:0; left:0; height:2px; z-index:20; background:linear-gradient(to right,var(--gold2),var(--gold)); width:0%; }
-#theme-indicator { position:fixed; top:1rem; left:1rem; z-index:20; font-size:.48rem; letter-spacing:.2em; color:rgba(255,255,255,.18); text-transform:uppercase; }
-#dots { position:fixed; top:50%; right:1rem; transform:translateY(-50%); z-index:20; display:flex; flex-direction:column; gap:5px; max-height:70vh; overflow:hidden; }
-.dot { width:4px; height:4px; border-radius:50%; background:rgba(255,255,255,.15); cursor:pointer; transition:all .3s; flex-shrink:0; }
-.dot.active { background:var(--gold); transform:scale(1.8); }
-#error-screen { position:fixed; inset:0; z-index:90; background:var(--bg); display:none; flex-direction:column; align-items:center; justify-content:center; gap:1rem; padding:2rem; text-align:center; }
-#error-screen h2 { font-family:var(--font-t); color:var(--gold); font-size:1.2rem; letter-spacing:.2em; }
-#error-screen p { color:var(--text2); font-size:.8rem; line-height:1.8; max-width:500px; }
+.hero-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(.55rem, 1.5vw, .7rem);
+  letter-spacing: .45em;
+  color: var(--gold2);
+  text-transform: uppercase;
+  margin-bottom: .8rem;
+  opacity: 0;
+  animation: fadeUp .8s ease .2s forwards;
+}
+
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.8rem, 8vw, 5rem);
+  font-weight: 300;
+  line-height: 1;
+  color: var(--cream);
+  margin-bottom: .4rem;
+  opacity: 0;
+  animation: fadeUp .8s ease .35s forwards;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold);
+  display: block;
+}
+
+.hero-sub {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(.6rem, 1.8vw, .75rem);
+  letter-spacing: .3em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: .8rem;
+  opacity: 0;
+  animation: fadeUp .8s ease .5s forwards;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 2.5rem 0;
+  opacity: 0;
+  animation: fadeUp .8s ease .6s forwards;
+}
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(240,192,64,.3), transparent);
+}
+.divider-star { color: var(--gold2); font-size: .7rem; opacity: .7; }
+
+/* ── Counter ── */
+.counter-wrap {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: fadeUp .8s ease .7s forwards;
+}
+.counter-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem;
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+  display: block;
+}
+.counter-label {
+  font-size: .65rem;
+  letter-spacing: .35em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: .3rem;
+  display: block;
+}
+
+/* ── Intro text ── */
+.intro {
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 3vw, 1.35rem);
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: fadeUp .8s ease .8s forwards;
+}
+
+/* ── Form ── */
+.form-wrap {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(240,192,64,0.12);
+  border-radius: 6px;
+  padding: 2.5rem 2rem;
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  animation: fadeUp .8s ease .9s forwards;
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: .58rem;
+  letter-spacing: .35em;
+  color: var(--gold2);
+  text-transform: uppercase;
+  margin-bottom: .6rem;
+}
+
+input, select, textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(240,192,64,0.18);
+  border-radius: 3px;
+  color: var(--cream);
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  font-size: .95rem;
+  padding: .8rem 1rem;
+  outline: none;
+  transition: border-color .3s, background .3s;
+  -webkit-appearance: none;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: rgba(240,192,64,0.5);
+  background: rgba(255,255,255,0.07);
+}
+
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C9973A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+select option { background: #1a1828; color: var(--cream); }
+
+textarea {
+  resize: vertical;
+  min-height: 130px;
+  line-height: 1.6;
+}
+
+/* Character counter */
+.char-count {
+  text-align: right;
+  font-size: .6rem;
+  color: rgba(240,192,64,.35);
+  margin-top: .3rem;
+  letter-spacing: .1em;
+}
+
+/* File upload */
+.file-area {
+  border: 1px dashed rgba(240,192,64,0.2);
+  border-radius: 3px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all .3s;
+  position: relative;
+}
+.file-area:hover { border-color: rgba(240,192,64,0.4); background: rgba(240,192,64,0.03); }
+.file-area input[type=file] {
+  position: absolute; inset: 0;
+  opacity: 0; cursor: pointer;
+  width: 100%; height: 100%;
+  padding: 0; border: none; background: none;
+}
+.file-icon { font-size: 1.5rem; display: block; margin-bottom: .4rem; }
+.file-label { font-size: .75rem; color: var(--muted); line-height: 1.5; }
+.file-label strong { color: var(--gold2); }
+#file-name { margin-top: .5rem; font-size: .7rem; color: var(--gold); display: none; }
+
+/* Preview */
+#photo-preview {
+  margin-top: .8rem;
+  display: none;
+  text-align: center;
+}
+#photo-preview img {
+  max-height: 120px;
+  max-width: 100%;
+  border-radius: 3px;
+  border: 1px solid rgba(240,192,64,0.2);
+}
+
+/* Submit */
+.submit-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--gold2);
+  border-radius: 3px;
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  font-size: .7rem;
+  letter-spacing: .35em;
+  text-transform: uppercase;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all .3s;
+  margin-top: .5rem;
+  position: relative;
+  overflow: hidden;
+}
+.submit-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(240,192,64,0.1), transparent);
+  opacity: 0;
+  transition: opacity .3s;
+}
+.submit-btn:hover { border-color: var(--gold); box-shadow: 0 0 20px rgba(240,192,64,0.15); }
+.submit-btn:hover::before { opacity: 1; }
+.submit-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── Success state ── */
+#success {
+  display: none;
+  text-align: center;
+  padding: 3rem 1rem;
+}
+#success .success-icon { font-size: 3rem; display: block; margin-bottom: 1rem; animation: pop .5s cubic-bezier(.36,.07,.19,.97); }
+#success h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-style: italic; color: var(--gold); margin-bottom: .8rem; }
+#success p { color: var(--muted); font-size: .9rem; line-height: 1.7; }
+
+/* ── Error msg ── */
+.error-msg { color: #ff6b6b; font-size: .72rem; margin-top: .4rem; display: none; }
+
+/* ── Footer ── */
+footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(240,192,64,0.08);
+  font-size: .6rem;
+  letter-spacing: .2em;
+  color: rgba(253,248,238,0.2);
+  text-transform: uppercase;
+}
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes pop {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .form-wrap { padding: 1.8rem 1.2rem; }
+  .hero { padding: 3rem 0 1.5rem; }
+}
 </style>
 </head>
 <body>
 
-<canvas id="particle-canvas"></canvas>
+<div class="wrap">
 
-<div id="loading">
-  <h2>Loading Abby's Story</h2>
-  <div id="loading-bar-wrap"><div id="loading-bar"></div></div>
-  <div id="loading-status">Connecting...</div>
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-photo-wrap">
+      <img
+        class="hero-photo"
+        src="https://drive.google.com/uc?export=view&id=ABBYROSETEST_FILE_ID"
+        alt="Abby Whitsitt"
+        onerror="this.style.display='none'"
+      >
+      <div class="cap-icon">🎓</div>
+    </div>
+    <div class="hero-eyebrow">Celebrating</div>
+    <h1>Abby<em>Whitsitt</em></h1>
+    <div class="hero-sub">Class of 2026 &nbsp;·&nbsp; Graduation Party</div>
+  </div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <span class="divider-star">✦</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- Counter -->
+  <div class="counter-wrap">
+    <span class="counter-number" id="counter">—</span>
+    <span class="counter-label">people have left a message for Abby</span>
+  </div>
+
+  <!-- Intro -->
+  <p class="intro">
+    Abby is heading into her next chapter and we'd love to fill it with your words.
+    Leave her a message, a memory, or a little wisdom for the road ahead.
+    Your note will appear on the slideshow at her graduation party.
+  </p>
+
+  <!-- Form -->
+  <div class="form-wrap" id="form-wrap">
+    <form id="wish-form" novalidate>
+
+      <div class="field">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" placeholder="First and last name" maxlength="80" autocomplete="name">
+        <div class="error-msg" id="name-err">Please enter your name.</div>
+      </div>
+
+      <div class="field">
+        <label for="relationship">Your Relationship to Abby</label>
+        <select id="relationship">
+          <option value="" disabled selected>Select one...</option>
+          <option value="Family">Family</option>
+          <option value="Friend">Friend</option>
+          <option value="Friend of the Family">Friend of the Family</option>
+          <option value="Teacher">Teacher</option>
+          <option value="Coach">Coach</option>
+          <option value="Classmate">Classmate</option>
+          <option value="Coworker">Coworker</option>
+          <option value="Other">Other</option>
+        </select>
+        <div class="error-msg" id="rel-err">Please select your relationship.</div>
+      </div>
+
+      <div class="field">
+        <label for="message">Your Message</label>
+        <textarea id="message" placeholder="Share a memory, a wish, some advice, or just some love..." maxlength="500"></textarea>
+        <div class="char-count"><span id="char-num">0</span> / 500</div>
+        <div class="error-msg" id="msg-err">Please write a message.</div>
+      </div>
+
+      <div class="field">
+        <label>Share a Photo <span style="color:var(--muted);font-size:.85em;letter-spacing:.1em;text-transform:none;font-family:'Lato',sans-serif">(optional)</span></label>
+        <div class="file-area" id="file-area">
+          <input type="file" id="photo" accept="image/*">
+          <span class="file-icon">📷</span>
+          <div class="file-label">
+            <strong>Tap to choose a photo</strong><br>
+            JPG, PNG or HEIC · max 10MB
+          </div>
+          <div id="file-name"></div>
+        </div>
+        <div id="photo-preview"><img id="preview-img" src="" alt="preview"></div>
+        <div class="error-msg" id="photo-err">File too large. Please choose an image under 10MB.</div>
+      </div>
+
+      <div class="error-msg" id="submit-err" style="text-align:center;margin-bottom:.8rem;font-size:.75rem"></div>
+
+      <button type="submit" class="submit-btn" id="submit-btn">
+        ✦ &nbsp; Send My Message to Abby &nbsp; ✦
+      </button>
+
+    </form>
+
+    <!-- Success -->
+    <div id="success">
+      <span class="success-icon">🎉</span>
+      <h2>Message Sent!</h2>
+      <p>Thank you — your words are on their way to Abby.<br>Keep an eye on the slideshow at the party!</p>
+    </div>
+  </div>
+
+  <footer>
+    abbywhitsitt.com &nbsp;·&nbsp; Class of 2026
+  </footer>
+
 </div>
-
-<div id="error-screen">
-  <h2>⚠ Could Not Load</h2>
-  <p id="error-detail">Check Drive folder sharing and API key.</p>
-</div>
-
-<div id="splash">
-  <div class="s-star" style="top:12%;left:8%;animation-delay:0s;font-size:.9rem">✦</div>
-  <div class="s-star" style="top:15%;right:10%;animation-delay:.4s;font-size:.7rem">★</div>
-  <div class="s-star" style="bottom:20%;left:6%;animation-delay:.8s;font-size:.8rem">✦</div>
-  <div class="s-star" style="bottom:18%;right:8%;animation-delay:1.2s;font-size:.6rem">★</div>
-  <div class="s-star" style="top:45%;left:4%;animation-delay:.6s;font-size:.7rem">✦</div>
-  <div class="s-star" style="top:40%;right:5%;animation-delay:.2s;font-size:.9rem">★</div>
-  <div class="s-eye">Celebrating</div>
-  <h1>Abby<em>Whitsitt</em></h1>
-  <div class="s-sub">Class of 2026 · Graduation Party</div>
-</div>
-
-<div id="outro">
-  <h1>Abby Whitsitt</h1>
-  <p>Class of 2026</p>
-</div>
-
-<div id="show"></div>
-<div id="dots"></div>
-<div id="counter"></div>
-<div id="progress"></div>
-<div id="theme-indicator"></div>
 
 <script>
-// ══════════════════════════════════════════════════
-//  CONFIG
-// ══════════════════════════════════════════════════
-const CONFIG = {
-  name:'Abby Whitsitt', year:'Class of 2026',
-  apiKey:'AIzaSyD1dmwLLb63ePWsWUz_FRRK4n89wxPod6Q',
-  mainFolderId:'1lYKIcRSlxCYxfeFQfDfGCmdVdipna1p0',
-  subFolderId:'19LSqhBeSDiMJGGIkuQaLnuFCVFdFrMvO',
-  sheetId:'15pgn1jsxKvOPlDtADafS4rBXuRvlGumfykjb3QiSoFk',
-  defaultInterval:8, minPhotos:2, thenNowFreq:8, guestWallSize:4,
-};
+const WEBHOOK = 'https://n8n.jeffwhitsitt.com/webhook/abby-wishes';
+const SHEET_ID = '15pgn1jsxKvOPlDtADafS4rBXuRvlGumfykjb3QiSoFk';
+const API_KEY  = 'AIzaSyD1dmwLLb63ePWsWUz_FRRK4n89wxPod6Q';
+const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10MB
 
-const DEFAULT_MESSAGES = [
-  {icon:'🎓',co:CONFIG.year,grad:'Graduate',name:CONFIG.name,tag:'The Adventure Continues!'},
-  {icon:'✨',co:'Congratulations',grad:'Abby',name:'Class of 2026',tag:'Your future is bright'},
-  {icon:'🌟',co:'With love',grad:'& pride',name:CONFIG.name,tag:'We are so proud of you'},
-  {icon:'🎉',co:CONFIG.year,grad:'Graduate',name:'Abby Whitsitt',tag:'Let the adventure begin'},
-  {icon:'💛',co:'Always remember',grad:'how far',name:"you've come",tag:'The best is yet to come'},
-  {icon:'🏆',co:'Class of 2026',grad:'Abby',name:'Whitsitt',tag:'Go conquer the world'},
-];
-
-const SEASONAL = {};
-
-const DEFAULT_THEMES = ['','','','',''];
-let defaultThemeIdx = 0;
-
-// ══════════════════════════════════════════════════
-//  LAYOUT TEMPLATES — v4
-//  5% breathing room: usable x=5–95, y=5–95
-//  Portrait 3:4 on 16:9: w = h*0.422  h=88→w=37
-//  Landscape 4:3 on 16:9: w = h*0.75  h=88→w=66, h=42→w=32
-//  orient:'card' → badge card slot, no frame
-//  Hero: photo ~80%, card ~25% wide overlapping corner
-// ══════════════════════════════════════════════════
-const LAYOUTS = [
-
-  // ── CLEAN ──
-  { slots:[{x:5,y:5,w:37,h:88,orient:'portrait'},{x:44,y:5,w:51,h:88,orient:'landscape'}], badge:false },
-  { slots:[{x:5,y:5,w:51,h:88,orient:'landscape'},{x:58,y:5,w:37,h:88,orient:'portrait'}], badge:false },
-  { slots:[{x:5,y:5,w:27,h:88,orient:'portrait'},{x:34,y:5,w:27,h:88,orient:'portrait'},{x:63,y:5,w:27,h:88,orient:'portrait'}], badge:false },
-  { slots:[{x:31,y:5,w:37,h:88,orient:'portrait'},{x:5,y:5,w:24,h:42,orient:'landscape'},{x:5,y:49,w:24,h:42,orient:'landscape'},{x:71,y:5,w:24,h:42,orient:'landscape'},{x:71,y:49,w:24,h:42,orient:'landscape'}], badge:false },
-  { slots:[{x:5,y:5,w:18,h:88,orient:'portrait'},{x:25,y:5,w:18,h:88,orient:'portrait'},{x:45,y:5,w:50,h:42,orient:'landscape'},{x:45,y:49,w:50,h:42,orient:'landscape'}], badge:false },
-
-  // ── WITH CARD ──
-  { slots:[{x:5,y:5,w:35,h:88,orient:'portrait'},{x:42,y:5,w:35,h:88,orient:'portrait'},{x:79,y:5,w:16,h:88,orient:'card'}], badge:false },
-  { slots:[{x:5,y:5,w:16,h:88,orient:'card'},{x:23,y:5,w:35,h:88,orient:'portrait'},{x:60,y:5,w:35,h:88,orient:'portrait'}], badge:false },
-  { slots:[{x:5,y:5,w:37,h:88,orient:'portrait'},{x:44,y:5,w:51,h:42,orient:'landscape'},{x:44,y:49,w:51,h:44,orient:'card'}], badge:false },
-  { slots:[{x:5,y:5,w:51,h:42,orient:'landscape'},{x:58,y:5,w:37,h:88,orient:'portrait'},{x:5,y:49,w:51,h:44,orient:'card'}], badge:false },
-  { slots:[{x:5,y:5,w:37,h:42,orient:'card'},{x:5,y:49,w:37,h:44,orient:'portrait'},{x:44,y:5,w:51,h:42,orient:'landscape'},{x:44,y:49,w:51,h:44,orient:'landscape'}], badge:false },
-  { slots:[{x:5,y:5,w:37,h:42,orient:'portrait'},{x:5,y:49,w:37,h:44,orient:'card'},{x:44,y:5,w:51,h:42,orient:'landscape'},{x:44,y:49,w:51,h:44,orient:'landscape'}], badge:false },
-  { slots:[{x:5,y:5,w:18,h:42,orient:'portrait'},{x:25,y:5,w:18,h:42,orient:'portrait'},{x:5,y:49,w:43,h:44,orient:'landscape'},{x:50,y:49,w:45,h:44,orient:'landscape'},{x:45,y:5,w:50,h:42,orient:'card'}], badge:false },
-
-  // ── HERO ── landscape hero with card in corner
-  { slots:[{x:17,y:5,w:78,h:60,orient:'landscape'},{x:5,y:53,w:26,h:42,orient:'card'}], badge:false },
-  { slots:[{x:5,y:5,w:78,h:60,orient:'landscape'},{x:69,y:53,w:26,h:42,orient:'card'}], badge:false },
-  // Portrait + landscape side by side (replaces portrait hero with dead space)
-  { slots:[{x:5,y:5,w:51,h:88,orient:'landscape'},{x:58,y:5,w:37,h:88,orient:'portrait'}], badge:false },
-  { slots:[{x:5,y:5,w:37,h:88,orient:'portrait'},{x:44,y:5,w:51,h:88,orient:'landscape'}], badge:false },
-
-];
-
-
-// ── Utilities ──
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
-function imgUrl(id){return `https://drive.google.com/thumbnail?id=${id}&sz=w1600`;}
-function getMonth(f){try{const d=f.imageMediaMetadata?.time||f.createdTime;if(d)return new Date(d).getMonth()+1;}catch(e){}return null;}
-function getYear(f){try{const d=f.imageMediaMetadata?.time||f.createdTime;if(d)return new Date(d).getFullYear();}catch(e){}return null;}
-function applyTheme(t){document.body.className='';const el=document.getElementById('theme-indicator');if(el)el.textContent='';}
-function readTime(msg){return Math.max(8,Math.min(20,Math.ceil(msg.split(' ').length/2.5)));}
-const setStatus=m=>document.getElementById('loading-status').textContent=m;
-const setProgress=p=>document.getElementById('loading-bar').style.width=p+'%';
-
-// ── Drive fetch ──
-const IMAGE_TYPES=['image/jpeg','image/jpg','image/png','image/webp','image/heic','image/heif'];
-async function fetchFiles(folderId){
-  let files=[],pageToken=null;
-  do {
-    let url=`https://www.googleapis.com/drive/v3/files?q=%27${folderId}%27+in+parents+and+trashed%3Dfalse&fields=nextPageToken,files(id,name,mimeType,createdTime,imageMediaMetadata)&pageSize=1000&key=${CONFIG.apiKey}`;
-    if(pageToken)url+=`&pageToken=${encodeURIComponent(pageToken)}`;
-    const res=await fetch(url);
-    if(!res.ok){const e=await res.json();throw new Error(e.error?.message||`Drive API ${res.status}`);}
-    const data=await res.json();
-    files=files.concat((data.files||[]).filter(f=>IMAGE_TYPES.includes(f.mimeType)));
-    pageToken=data.nextPageToken||null;
-  }while(pageToken);
-  return files;
-}
-
-// ── Sheet fetch ──
-async function fetchApprovedMessages(){
+// ── Counter ──────────────────────────────────────
+async function loadCounter() {
   try {
-    const url=`https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/A:G?key=${CONFIG.apiKey}`;
-    const res=await fetch(url);const data=await res.json();
-    const rows=data.values||[];if(rows.length<2)return[];
-    const h=rows[0].map(x=>x.toLowerCase().trim());
-    const ni=h.indexOf('name'),ri=h.indexOf('relationship'),mi=h.indexOf('message'),pi=h.indexOf('photo_url'),ai=h.indexOf('approved');
-    return rows.slice(1).filter(r=>r[ai]==='TRUE').map(r=>({name:r[ni]||'',relationship:r[ri]||'',message:r[mi]||'',photoUrl:r[pi]||''})).filter(r=>r.message);
-  }catch(e){console.warn('Sheet fetch failed',e);return[];}
-}
-
-// ── Slide counter for frame alternation
-let _slideCount = 0;
-
-// ── Badge message rotation — shuffle queue so no repeats ──
-let _badgeQueue=[];
-function nextBadgeMsg(approvedMessages){
-  const shortApproved=approvedMessages.filter(m=>m.message.length<100);
-  const pool=[...DEFAULT_MESSAGES,...shortApproved.map(m=>({_approved:true,name:m.name,relationship:m.relationship,message:m.message}))];
-  if(!_badgeQueue.length)_badgeQueue=shuffle([...pool]);
-  return _badgeQueue.pop()||pick(DEFAULT_MESSAGES);
-}
-function badgeHTML(approvedMessages){
-  const m=nextBadgeMsg(approvedMessages);
-  if(m._approved) return `<span class="b-msg">"${m.message}"</span><span class="b-from">— ${m.name}${m.relationship?' · '+m.relationship:''}</span>`;
-  return `<span class="b-cap">${m.icon}</span><span class="b-co">${m.co}</span><span class="b-grad">${m.grad}</span><span class="b-name">${m.name}</span><span class="b-tag">${m.tag}</span>`;
-}
-
-// ── Classify photo orientation ──
-function photoOrient(f){
-  const w=f.imageMediaMetadata?.width||1;
-  const h=f.imageMediaMetadata?.height||1;
-  return w>=h ? 'landscape' : 'portrait';
-}
-
-// ── Build a card element (badge-style, fills its slot) ──
-function buildCard(approvedMessages){
-  const card = document.createElement('div');
-  card.className = 'badge';
-  card.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border-radius:3px;';
-  card.innerHTML = badgeHTML(approvedMessages);
-  return card;
-}
-
-// ── Build collage slide — card slots fill with badge content, photo slots fill with photos ──
-function buildCollageSlide(files, si, approvedMessages, themeOverride){
-  const portraits  = shuffle(files.filter(f=>photoOrient(f)==='portrait'));
-  const landscapes = shuffle(files.filter(f=>photoOrient(f)==='landscape'));
-
-  // Count how many photo slots of each type a layout needs
-  function photoSlots(layout){
-    const p = layout.slots.filter(s=>s.orient==='portrait').length;
-    const l = layout.slots.filter(s=>s.orient==='landscape').length;
-    return {p, l};
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/B:B?key=${API_KEY}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    // Count non-empty name cells, minus header row
+    const count = Math.max(0, (data.values?.filter(r => r[0] && r[0].trim()).length || 1) - 1);
+    document.getElementById('counter').textContent = count;
+  } catch(e) {
+    document.getElementById('counter').textContent = '—';
   }
+}
+loadCounter();
 
-  // A layout fits if we have enough photos for its photo slots
-  // Card slots are always fillable
-  function canFit(layout){
-    const {p, l} = photoSlots(layout);
-    return portraits.length >= p && landscapes.length >= l;
+// ── Char counter ──────────────────────────────────
+const msgEl = document.getElementById('message');
+const charEl = document.getElementById('char-num');
+msgEl.addEventListener('input', () => charEl.textContent = msgEl.value.length);
+
+// ── File picker ───────────────────────────────────
+const photoInput = document.getElementById('photo');
+const fileNameEl = document.getElementById('file-name');
+const previewWrap = document.getElementById('photo-preview');
+const previewImg  = document.getElementById('preview-img');
+const photoErr    = document.getElementById('photo-err');
+
+photoInput.addEventListener('change', () => {
+  photoErr.style.display = 'none';
+  const file = photoInput.files[0];
+  if (!file) return;
+  if (file.size > MAX_FILE_BYTES) {
+    photoErr.style.display = 'block';
+    photoInput.value = '';
+    fileNameEl.style.display = 'none';
+    previewWrap.style.display = 'none';
+    return;
   }
-
-  const available = LAYOUTS.filter(canFit);
-  const fallbacks = LAYOUTS.filter(l=>photoSlots(l).p<=1 && photoSlots(l).l<=1);
-  const layout = pick(available.length ? available : fallbacks);
-
-  const slide = document.createElement('div');
-  slide.className = 'slide';
-  const month = getMonth(files[0]);
-  const seasonal = month ? SEASONAL[month] : null;
-  slide.dataset.theme = seasonal ? seasonal.theme : (themeOverride||'');
-
-  // Alternate frame style per slide: double-border vs inset-shadow
-  const useInset = (_slideCount++ % 2 === 0);
-
-  let pi=0, li=0;
-  layout.slots.forEach(slot=>{
-    const cell = document.createElement('div');
-    cell.className = slot.orient==='card' ? 'cell card-cell' : (useInset ? 'cell frame-inset' : 'cell');
-    const coverFit = slot.orient==='landscape' || slot.orient==='any';
-    cell.setAttribute('style',`left:${slot.x}%;top:${slot.y}%;width:${slot.w}%;height:${slot.h}%;`);
-    if(coverFit) cell.dataset.fit='cover';
-
-    if(slot.orient==='card'){
-      const card = buildCard(approvedMessages);
-      cell.appendChild(card);
-    } else {
-      let f;
-      if(slot.orient==='portrait')       f = portraits[pi++];
-      else if(slot.orient==='landscape') f = landscapes[li++];
-      else                               f = files[0];
-      if(!f){ cell.className='cell card-cell'; cell.appendChild(buildCard(approvedMessages)); slide.appendChild(cell); return; }
-      const img = document.createElement('img');
-      img.src = imgUrl(f.id); img.alt=''; img.loading=si<3?'eager':'lazy';
-      img.onerror = ()=>{ cell.innerHTML=''; cell.className='cell card-cell'; cell.appendChild(buildCard(approvedMessages)); };
-      cell.appendChild(img);
-    }
-    slide.appendChild(cell);
-  });
-
-  // Legacy badge support (none of the new layouts use this, but keep for safety)
-  if(layout.badge){
-    const badge = document.createElement('div');
-    badge.className = 'badge';
-    Object.assign(badge.style, layout.badgeStyle, {position:'absolute'});
-    badge.innerHTML = badgeHTML(approvedMessages);
-    slide.appendChild(badge);
-  }
-
-  return slide;
-}
-
-
-// ── Then & Now ──
-function buildThenNow(files){
-  const byMonth={};
-  files.forEach(f=>{const m=getMonth(f),y=getYear(f);if(!m||!y)return;if(!byMonth[m])byMonth[m]=[];byMonth[m].push({file:f,year:y});});
-  const pairs=[];
-  Object.entries(byMonth).forEach(([month,entries])=>{
-    if(entries.length<2)return;
-    const years=[...new Set(entries.map(e=>e.year))].sort();
-    if(years.length<2)return;
-    const oldest=entries.filter(e=>e.year===years[0]);
-    const newest=entries.filter(e=>e.year===years[years.length-1]);
-    if(oldest.length&&newest.length)pairs.push({month:parseInt(month),oldFile:pick(oldest).file,newFile:pick(newest).file,oldYear:years[0],newYear:years[years.length-1]});
-  });
-  return shuffle(pairs);
-}
-
-function buildThenNowSlide(pair){
-  const slide=document.createElement('div');slide.className='slide then-now';
-  const seasonal=SEASONAL[pair.month];slide.dataset.theme=seasonal?seasonal.theme:'';
-  const old=document.createElement('div');old.className='cell-old';
-  const oi=document.createElement('img');oi.src=imgUrl(pair.oldFile.id);oi.alt='';oi.loading='lazy';oi.onerror=()=>old.style.display='none';
-  old.appendChild(oi);slide.appendChild(old);
-  const nw=document.createElement('div');nw.className='cell-new';
-  const ni=document.createElement('img');ni.src=imgUrl(pair.newFile.id);ni.alt='';ni.loading='lazy';ni.onerror=()=>nw.style.display='none';
-  nw.appendChild(ni);slide.appendChild(nw);
-  const label=document.createElement('div');label.className='tn-label';
-  const M=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  label.innerHTML=`<div class="tn-line"></div><span class="tn-word">${M[pair.month]} ${pair.oldYear}</span><span class="tn-arrow">→</span><span class="tn-word">${M[pair.month]} ${pair.newYear}</span><div class="tn-line"></div>`;
-  slide.appendChild(label);return slide;
-}
-
-// ── Featured photo slide — submitted photo + message ──
-// Portrait submitted photo → photo left 42%, card right in dead space (Option E)
-// Landscape submitted photo → photo top 58%, card bottom 40% framed (Option C)
-function buildFeaturedPhotoSlide(sub, subFiles){
-  const slide = document.createElement('div');
-  slide.className = 'slide featured-photo';
-
-  // Dynamic duration based on word count
-  const words = sub.message.split(' ').length;
-  slide.dataset.duration = Math.max(10, Math.min(30, Math.ceil(words / 2.2)));
-
-  // Extract Drive file ID from photoUrl
-  const match = sub.photoUrl.match(/\/d\/([^\/]+)\//);
-  const fileId = match ? match[1] : null;
-
-  // Detect orientation from submitted files metadata
-  let orient = 'landscape';
-  if(fileId && subFiles){
-    const found = subFiles.find(f => f.id === fileId);
-    if(found) orient = photoOrient(found);
-  }
-
-  // Font size scales inversely with message length
-  const msgFs = words <= 15  ? 'clamp(1.8rem,3.2vw,3rem)'
-              : words <= 40  ? 'clamp(1.4rem,2.4vw,2.2rem)'
-              : words <= 80  ? 'clamp(1.1rem,2vw,1.8rem)'
-              :                'clamp(.95rem,1.6vw,1.5rem)';
-
-  const msgHTML = `<div class="feat-divider"></div><div class="feat-message" style="font-size:${msgFs}">"${sub.message}"</div><div class="feat-from">— ${sub.name}${sub.relationship?' · '+sub.relationship:''}</div>`;
-  const imgSrc = fileId ? imgUrl(fileId) : sub.photoUrl;
-
-  if(orient === 'portrait'){
-    // Option E: photo left, card right in dead space, slight overlap
-    const photoCell = document.createElement('div');
-    photoCell.className = 'feat-photo-cell';
-    photoCell.style.cssText = 'left:0;top:1%;width:58%;height:98%;';
-    const img = document.createElement('img');
-    img.src = imgSrc; img.alt=''; img.loading='lazy';
-    img.onerror = ()=>{ slide.style.display='none'; };
-    photoCell.appendChild(img);
-    slide.appendChild(photoCell);
-
-    const card = document.createElement('div');
-    card.className = 'feat-card';
-    card.style.cssText = 'left:56%;top:8%;width:42%;height:82%;';
-    card.innerHTML = msgHTML;
-    slide.appendChild(card);
-
-  } else {
-    // Option C: photo top, card bottom fully framed
-    const photoCell = document.createElement('div');
-    photoCell.className = 'feat-photo-cell';
-    photoCell.style.cssText = 'left:1%;top:1%;width:98%;height:56%;';
-    const img = document.createElement('img');
-    img.src = imgSrc; img.alt=''; img.loading='lazy';
-    img.onerror = ()=>{ slide.style.display='none'; };
-    photoCell.appendChild(img);
-    slide.appendChild(photoCell);
-
-    const card = document.createElement('div');
-    card.className = 'feat-card';
-    card.style.cssText = 'left:1%;top:59%;width:98%;height:39%;';
-    card.innerHTML = msgHTML;
-    slide.appendChild(card);
-  }
-
-  return slide;
-}
-
-
-// ── Guest wall — dynamic card count based on message length ──
-function chunkSize(messages, startIdx){
-  const sample=messages.slice(startIdx,startIdx+4);
-  const avgLen=sample.reduce((s,m)=>s+m.message.length,0)/Math.max(1,sample.length);
-  if(avgLen>300) return 1;
-  if(avgLen>150) return 2;
-  if(avgLen>80)  return 3;
-  return 4;
-}
-function buildGuestWallSlides(messages){
-  const slides=[];
-  let i=0;
-  while(i<messages.length){
-    const size=chunkSize(messages,i);
-    const chunk=messages.slice(i,i+size);if(!chunk.length)break;
-    i+=size;
-    const slide=document.createElement('div');slide.className='slide guest-wall';
-    const totalWords=chunk.reduce((s,m)=>s+m.message.split(' ').length,0);
-    slide.dataset.duration=Math.max(12,Math.min(35,Math.ceil(totalWords/2.5)));
-    const header=document.createElement('div');header.className='guest-wall-header';
-    header.innerHTML=`<h2>Messages for Abby</h2><p>From the people who love her most</p>`;
-    slide.appendChild(header);
-    const cols=chunk.length===1?'1fr':chunk.length===2?'repeat(2,1fr)':'repeat(3,1fr)';
-    const cards=document.createElement('div');cards.className='guest-cards';cards.style.gridTemplateColumns=cols;
-    chunk.forEach(m=>{
-      const card=document.createElement('div');card.className='guest-card';
-      const fs=chunk.length===1?'clamp(1.6rem,3vw,3rem)':chunk.length===2?'clamp(1.3rem,2.5vw,2.4rem)':'clamp(1.1rem,2vw,1.9rem)';
-      card.innerHTML=`<div class="gc-message" style="font-size:${fs}">"${m.message}"</div><div class="gc-from">${m.name}</div><div class="gc-rel">${m.relationship}</div>`;
-      cards.appendChild(card);
-    });
-    slide.appendChild(cards);slides.push(slide);
-  }
-  return slides;
-}
-
-
-// ── Build show ──
-function buildShowFromData(mainFiles, submittedFiles, approvedMessages){
-  const showEl=document.getElementById('show');const dotsEl=document.getElementById('dots');
-  showEl.innerHTML='';dotsEl.innerHTML='';
-  _badgeQueue=[];// reset badge queue each loop
-
-  const shuffled=shuffle(mainFiles);
-  const thenNowPairs=buildThenNow(mainFiles);let thenNowIdx=0;
-
-  // Chunk photos matching layout slot counts
-  const chunks=[];
-  let i=0;
-  while(i<shuffled.length){
-    const layout=pick(LAYOUTS);
-    const n=layout.slots.length;
-    const chunk=shuffled.slice(i,i+n);
-    if(chunk.length>=CONFIG.minPhotos) chunks.push(chunk);
-    else if(chunks.length) chunks[chunks.length-1].push(...chunk);
-    i+=n;
-  }
-
-  const featuredSlides=approvedMessages.filter(m=>m.photoUrl).map(sub=>buildFeaturedPhotoSlide(sub,submittedFiles));
-  const messageOnly=approvedMessages.filter(m=>!m.photoUrl);
-  const guestWalls=buildGuestWallSlides(approvedMessages);
-
-  const allSlides=[];
-  chunks.forEach((chunk,ci)=>{
-    if(ci%5===0&&ci>0) defaultThemeIdx=(defaultThemeIdx+1)%DEFAULT_THEMES.length;
-    allSlides.push({type:'collage',chunk,theme:DEFAULT_THEMES[defaultThemeIdx]});
-    if(ci%CONFIG.thenNowFreq===CONFIG.thenNowFreq-1&&thenNowIdx<thenNowPairs.length)
-      allSlides.push({type:'thenNow',pair:thenNowPairs[thenNowIdx++]});
-    if(ci%6===5&&featuredSlides.length){const f=featuredSlides.shift();if(f)allSlides.push({type:'featured',el:f});}
-  });
-  guestWalls.forEach(w=>allSlides.push({type:'guestWall',el:w}));
-
-  const rendered=[];
-  allSlides.forEach((item,si)=>{
-    let slide;
-    if(item.type==='collage') slide=buildCollageSlide(item.chunk,si,messageOnly,item.theme);
-    else if(item.type==='thenNow') slide=buildThenNowSlide(item.pair);
-    else slide=item.el;
-    if(si===0)slide.classList.add('active');
-    showEl.appendChild(slide);rendered.push(slide);
-    if(allSlides.length<=60){
-      const dot=document.createElement('div');dot.className=`dot${si===0?' active':''}`;
-      dot.onclick=()=>{clearAuto();goTo(si);startAuto();};dotsEl.appendChild(dot);
-    }
-  });
-  return rendered;
-}
-
-// ── Controller ──
-let slides=[],current=0,autoTimer=null;
-function getSlideInterval(s){return s.dataset.duration?parseInt(s.dataset.duration)*1000:CONFIG.defaultInterval*1000;}
-function updateCounter(){document.getElementById('counter').textContent=`${current+1} / ${slides.length}`;}
-function startProgress(dur){
-  const p=document.getElementById('progress');p.style.transition='none';p.style.width='0%';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{p.style.transition=`width ${dur/1000}s linear`;p.style.width='100%';}));
-}
-function goTo(n){
-  if(!slides.length)return;
-  slides[current].classList.remove('active');
-  const dots=document.querySelectorAll('.dot');if(dots[current])dots[current].classList.remove('active');
-  current=((n%slides.length)+slides.length)%slides.length;
-  slides[current].classList.add('active');if(dots[current])dots[current].classList.add('active');
-  applyTheme(slides[current].dataset.theme||'');
-  updateCounter();startProgress(getSlideInterval(slides[current]));
-}
-function next(){goTo(current+1);}
-function clearAuto(){clearTimeout(autoTimer);}
-function scheduleNext(){
-  autoTimer=setTimeout(async()=>{
-    if(current===slides.length-1){await showOutro();await refreshAndRestart();}
-    else{next();scheduleNext();}
-  },getSlideInterval(slides[current]));
-}
-function startAuto(){clearAuto();scheduleNext();}
-
-async function showOutro(){
-  return new Promise(resolve=>{
-    const outro=document.getElementById('outro');outro.style.display='flex';
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      outro.classList.add('visible');
-      setTimeout(()=>{outro.classList.remove('visible');setTimeout(()=>{outro.style.display='none';resolve();},1600);},10000);
-    }));
-  });
-}
-
-async function refreshAndRestart(){
-  try{
-    const[mf,sf,am]=await Promise.all([fetchFiles(CONFIG.mainFolderId),fetchFiles(CONFIG.subFolderId),fetchApprovedMessages()]);
-    slides=buildShowFromData(mf,sf,am);current=0;goTo(0);startAuto();
-  }catch(e){console.error('Refresh failed',e);current=0;goTo(0);startAuto();}
-}
-
-document.addEventListener('click',()=>{clearAuto();next();scheduleNext();});
-document.addEventListener('touchend',e=>{e.preventDefault();clearAuto();next();scheduleNext();},{passive:false});
-document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight'||e.key===' '){clearAuto();next();scheduleNext();}
-  if(e.key==='ArrowLeft'){clearAuto();goTo(current-1);scheduleNext();}
-  if(e.key==='f'||e.key==='F')document.documentElement.requestFullscreen?.();
+  fileNameEl.textContent = '📎 ' + file.name;
+  fileNameEl.style.display = 'block';
+  const reader = new FileReader();
+  reader.onload = e => {
+    previewImg.src = e.target.result;
+    previewWrap.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
 });
-navigator.wakeLock?.request('screen').catch(()=>{});
 
-// ── Particles ──
-const canvas=document.getElementById('particle-canvas');const ctx=canvas.getContext('2d');
-function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}resize();window.addEventListener('resize',resize);
-class Particle{
-  constructor(){this.reset(true);}
-  reset(init=false){this.x=Math.random()*canvas.width;this.y=init?Math.random()*canvas.height:-20;this.r=Math.random()*5+2;this.speed=Math.random()*1.2+.4;this.angle=Math.random()*Math.PI*2;this.spin=(Math.random()-.5)*.07;this.wobble=Math.random()*Math.PI*2;this.wobbleSpeed=Math.random()*.035+.01;this.shape=Math.random()>.4?'rect':'circle';this.w=Math.random()*7+3;this.h=Math.random()*13+5;this.alpha=Math.random()*.5+.3;}
-  getColor(){return getComputedStyle(document.body).getPropertyValue(pick(['--p1','--p2','--p3','--p4'])).trim()||'#F0C040';}
-  update(){this.wobble+=this.wobbleSpeed;this.angle+=this.spin;this.y+=this.speed;this.x+=Math.sin(this.wobble)*.65;if(this.y>canvas.height+20)this.reset();}
-  draw(){ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.angle);ctx.fillStyle=this.getColor();ctx.globalAlpha=this.alpha;if(this.shape==='rect')ctx.fillRect(-this.w/2,-this.h/2,this.w,this.h);else{ctx.beginPath();ctx.ellipse(0,0,this.r,this.r*.55,0,0,Math.PI*2);ctx.fill();}ctx.restore();}
-}
-const particles=Array.from({length:80},()=>new Particle());
-(function drawP(){ctx.clearRect(0,0,canvas.width,canvas.height);particles.forEach(p=>{p.update();p.draw();});requestAnimationFrame(drawP);})();
+// ── Form submit ───────────────────────────────────
+document.getElementById('wish-form').addEventListener('submit', async e => {
+  e.preventDefault();
 
-// ── Init ──
-async function init(){
-  try{
-    setStatus('Fetching photos...');setProgress(20);
-    const[mf,sf,am]=await Promise.all([fetchFiles(CONFIG.mainFolderId),fetchFiles(CONFIG.subFolderId),fetchApprovedMessages()]);
-    if(!mf.length)throw new Error('No photos found in Drive folder.');
-    setStatus(`${mf.length} photos · ${am.length} messages`);setProgress(70);
-    slides=buildShowFromData(mf,sf,am);setProgress(100);
-    const splash=document.getElementById('splash');splash.style.display='flex';
-    await new Promise(r=>setTimeout(r,400));
-    document.getElementById('loading').classList.add('gone');
-    setTimeout(()=>document.getElementById('loading').remove(),1100);
-    setTimeout(()=>{splash.classList.add('gone');setTimeout(()=>splash.remove(),1600);goTo(0);startAuto();},4000);
-  }catch(err){
-    console.error(err);document.getElementById('loading').style.display='none';
-    const e=document.getElementById('error-screen');e.style.display='flex';
-    document.getElementById('error-detail').textContent=err.message;
+  // Clear errors
+  ['name-err','rel-err','msg-err','submit-err'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+
+  const name     = document.getElementById('name').value.trim();
+  const rel      = document.getElementById('relationship').value;
+  const message  = msgEl.value.trim();
+  const file     = photoInput.files[0];
+
+  // Validate
+  let valid = true;
+  if (!name)    { document.getElementById('name-err').style.display='block'; valid=false; }
+  if (!rel)     { document.getElementById('rel-err').style.display='block';  valid=false; }
+  if (!message) { document.getElementById('msg-err').style.display='block';  valid=false; }
+  if (!valid) return;
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  try {
+    let photo_base64 = '', photo_name = '', photo_mime = '';
+
+    if (file) {
+      const b64 = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(r.result.split(',')[1]);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+      photo_base64 = b64;
+      photo_name   = file.name;
+      photo_mime   = file.type;
+    }
+
+    const payload = { name, relationship: rel, message, photo_base64, photo_name, photo_mime };
+
+    const res = await fetch(WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error('Server error ' + res.status);
+
+    // Success
+    document.getElementById('wish-form').style.display = 'none';
+    document.getElementById('success').style.display = 'block';
+    loadCounter(); // refresh count
+
+  } catch(err) {
+    console.error(err);
+    const errEl = document.getElementById('submit-err');
+    errEl.textContent = 'Something went wrong — please try again in a moment.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = '✦   Send My Message to Abby   ✦';
   }
-}
-init();
+});
 </script>
 </body>
 </html>
